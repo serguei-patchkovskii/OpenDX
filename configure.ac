@@ -11,13 +11,13 @@ AM_INIT_AUTOMAKE
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 
-VERSION_STRING="04.4.4000"
+VERSION_STRING="04.4.5000"
 MAJOR_VERSION=4
 MINOR_VERSION=4
-MICRO_VERSION=4
-AC_DEFINE(DXD_VERSION_STRING, "04.4.4000", [Version String Number])
+MICRO_VERSION=5
+AC_DEFINE(DXD_VERSION_STRING, "04.4.5000", [Version String Number])
 AC_DEFINE(DXD_COPYRIGHT_STRING,
-  ["Open Visualization Data Explorer\nMore Info at www.research.ibm.com/dx\nand www.opendx.org\nVersion - 4.4.4"], 
+  ["Open Visualization Data Explorer\nMore info at https://github.com/serguei-patchkovskii/OpenDX\nVersion - 4.4.5"], 
   [Copyright string placed on splash screen startup.])
 AC_DEFINE_UNQUOTED(DXD_VERSION, $MAJOR_VERSION, [Version Number])
 AC_DEFINE_UNQUOTED(DXD_RELEASE, $MINOR_VERSION, [Release Number])
@@ -73,7 +73,7 @@ dnl
 dnl For the time being, require a command-line arg to build with SMP 
 dnl support on linux platforms
 AC_ARG_ENABLE(smp_linux,
-	      [  --enable-smp-linux     build exec, libs with SMP-parallel capability for Linux platforms (default is disabled)],
+	      [  --enable-smp-linux     build exec, libs with SMP-parallel capability for Linux platforms (default is disabled). BREAKS LOADABLE-MODULE SUPPORT, DO NOT USE],
 	      [with_smp_linux=$enableval],
 	      [with_smp_linux='no'])
 
