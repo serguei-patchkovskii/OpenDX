@@ -198,7 +198,7 @@ InitializeSignals(void)
     }
 }            
 
-boolean GARApplication::initialize(unsigned int* argcp,
+boolean GARApplication::initialize(int* argcp,
 			       char**        argv)
 {
     ASSERT(argcp);

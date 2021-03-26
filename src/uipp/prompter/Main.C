@@ -17,7 +17,7 @@ extern "C" void HCLXmInit();
 #endif
 
 
-int main(unsigned int argc,
+int main(int argc,
 	  char**       argv)
 {
 #if defined(HAVE_HCLXMINIT)

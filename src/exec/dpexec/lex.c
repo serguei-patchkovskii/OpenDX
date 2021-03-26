@@ -504,6 +504,7 @@ int yylex(YYSTYPE *lvalp)
     for (;;)
     {
 	yyleng = 0;
+	errno = 0;
  
 	c = input();
  

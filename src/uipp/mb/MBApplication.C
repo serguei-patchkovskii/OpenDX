@@ -117,7 +117,7 @@ InitializeSignals(void)
 #endif       
 }            
 
-boolean MBApplication::initialize(unsigned int* argcp,
+boolean MBApplication::initialize(int* argcp,
 			       char**        argv)
 {
     ASSERT(argcp);

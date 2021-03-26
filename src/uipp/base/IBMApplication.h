@@ -77,7 +77,7 @@ class IBMApplication : public Application
     //
     // Initialize the window system.
     //
-    virtual boolean initializeWindowSystem(unsigned int *argcp, char **argv);
+    virtual boolean initializeWindowSystem(int *argcp, char **argv);
 
     //
     // Protected member data:
@@ -88,7 +88,7 @@ class IBMApplication : public Application
 
     HelpWin		*helpWindow;
 
-    boolean initialize(unsigned int* argcp, char** argv);
+    boolean initialize(int* argcp, char** argv);
 
     //
     // Load application specific action routines

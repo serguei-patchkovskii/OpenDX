@@ -1063,6 +1063,13 @@ InvertN(Matrix mIn, int nDim)
 	mOut.b[0] = -(mIn.b[0]*mOut.A[0][0] + mIn.b[1]*mOut.A[0][1]);
 	mOut.b[1] = -(mIn.b[0]*mOut.A[1][0] + mIn.b[1]*mOut.A[1][1]);
 
+/* initialize third component of matrix to zero */
+	mOut.A[0][2] = 0;
+	mOut.A[1][2] = 0;
+	mOut.A[2][0] = 0;
+	mOut.A[2][1] = 0;
+	mOut.A[2][2] = 0;
+	mOut.b[2] = 0;
 	return mOut;
     }
 }

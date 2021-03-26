@@ -1405,7 +1405,7 @@ boolean GraphLayout::hasNoCloserDescendant (Node* source, Node* dest)
 //
 void GraphLayout::repositionNewPlacements (Node* root, boolean disjoint, List& placed)
 {
-    Node* n;
+    Node* n = NULL;
     NodeInfo* ninfo = (NodeInfo*)root->getLayoutInformation();
     LayoutGroup* group = ninfo->getLayoutGroup();
     placed.appendElement(root);

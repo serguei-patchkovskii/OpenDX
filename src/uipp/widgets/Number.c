@@ -50,6 +50,8 @@
 #include <Xm/Xm.h>
 #include <Xm/DrawP.h>
 #include <Xm/GadgetP.h>
+#define XK_XKB_KEYS
+#include <X11/keysymdef.h>
 #include <math.h>	/* Define pow */
 #include "FFloat.h"
 #include "NumberP.h"

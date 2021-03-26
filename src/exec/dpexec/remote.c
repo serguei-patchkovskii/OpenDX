@@ -754,6 +754,15 @@ Error DXOutboard (Object *in, Object *out)
     return _dxfExRemote(in, out);
 }
 
+void
+_dxfExRemoteDXqmessage(char *who, char *message, ...)
+{
+    va_list arg;
+    va_start(arg,message);
+    DXqmessage(who, message, arg);
+    va_end(arg);
+}
+
 Error
 _dxfExRemote (Object *in, Object *out)
 {
@@ -991,7 +1000,7 @@ _dxfExRemote (Object *in, Object *out)
 		if (!msgObj || !DXExtractString(msgObj, &msg))
 		    goto message_cleanup;
 
-		DXqmessage (who, msg, nolist);
+		_dxfExRemoteDXqmessage (who, msg);
 	    }
 	    /* async request */
 	    if (isMsg == 2)

@@ -30,5 +30,5 @@ README.output:
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(srvoutputdir)
 	$(mkinstalldirs) $(DESTDIR)$(userhtmldir)
-	chmod 777 $(DESTDIR)$(srvoutputdir)
-	chmod 777 $(DESTDIR)$(userhtmldir)
+	chmod 755 $(DESTDIR)$(srvoutputdir)
+	chmod 755 $(DESTDIR)$(userhtmldir)

@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 #include <dxconfig.h>
-
+#include <unistd.h>
 
 #define tdmRender_c
 

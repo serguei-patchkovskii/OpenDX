@@ -218,10 +218,6 @@ AC_DEFINE_UNQUOTED(BSH, "$bsh_path", [Path to the system's Bourne shell.])
 dnl End of command line options configuration
 
 dnl Start DX configuration
-AC_LANG([C++])
-AC_CHECK_HEADERS(stdlib.h)
-AC_LANG([C])
-
 #
 # Check for large file support
 #
@@ -298,6 +294,10 @@ if test "$ARCH" = "intelnt" ; then
 else
 	ac_cv_header_windows_h="no"
 fi
+
+AC_LANG([C++])
+AC_CHECK_HEADERS(stdlib.h)
+AC_LANG([C])
 
 # On SGI, detect the ABI we're compiling for (handles all methods that
 #   can be used to set the ABI target).
@@ -801,8 +801,8 @@ then
 
     failed=0;
     passed=0;
-    AC_CHECK_HEADER([magick/api.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
 if test "$ARCH" = "intelnt" ; then
+    AC_CHECK_HEADER([magick/api.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
     AC_CHECK_LIB(CORE_RL_magick_,Hopen,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
     AC_MSG_CHECKING(if ImageMagick package is complete)
     if test $passed -gt 0
@@ -835,8 +835,13 @@ dnl routine. This allows us to simplify the configuration of all the
 dnl format configuration libraries.
 
  if test "$HAVE_MC" = "yes" ; then
+    INC_MAGICK="`Magick-config --cflags`"
+    SAVECPPFLAGS="$CPPFLAGS"
+    CPPFLAGS="`Magick-config --cppflags` $CPPFLAGS"
+    AC_CHECK_HEADER([magick/api.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
+    CPPFLAGS="$SAVECPPFLAGS"
     LIB_MAGICK="`Magick-config --ldflags` `Magick-config --libs`"
-    AC_CHECK_LIB( Magick,GetImageInfo, passed=`expr $passed + 1`, failed=`expr $failed + 1`, [ $LIB_MAGICK ])
+    AC_CHECK_LIB( c,GetImageInfo, passed=`expr $passed + 1`, failed=`expr $failed + 1`, [ $LIB_MAGICK ])
     AC_MSG_CHECKING(if ImageMagick package is complete)
     if test $passed -gt 0
     then

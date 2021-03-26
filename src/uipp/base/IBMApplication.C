@@ -349,7 +349,7 @@ int status;
 }
 
 
-boolean IBMApplication::initializeWindowSystem(unsigned int *argcp, char **argv)
+boolean IBMApplication::initializeWindowSystem(int *argcp, char **argv)
 {
 
     if (!this->Application::initializeWindowSystem(argcp, argv))
@@ -375,7 +375,7 @@ boolean IBMApplication::initializeWindowSystem(unsigned int *argcp, char **argv)
     return TRUE;
 }
 
-boolean IBMApplication::initialize(unsigned int* argcp,
+boolean IBMApplication::initialize(int* argcp,
 				   char**        argv)
 {
     if (!this->Application::initialize(argcp,argv))

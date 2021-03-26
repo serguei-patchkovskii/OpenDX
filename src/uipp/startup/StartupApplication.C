@@ -117,7 +117,7 @@ InitializeSignals(void)
 #endif       
 }            
 
-boolean StartupApplication::initialize(unsigned int* argcp,
+boolean StartupApplication::initialize(int* argcp,
 			       char**        argv)
 {
     ASSERT(argcp);

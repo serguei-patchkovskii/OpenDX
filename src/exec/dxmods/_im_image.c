@@ -329,7 +329,7 @@ static Error write_im(RWImageArgs *iargs) {
             DestroyImageInfo(new_frame_info);
             DestroyImageInfo(image_info);
 #if MagickLibVersion > 0x0537
-            DestroyConstitute();
+            ConstituteComponentTerminus();
 #endif
              DXSetError(ERROR_INTERNAL, "reason = %s, description = %s",
                         image->exception.reason,
@@ -346,7 +346,7 @@ static Error write_im(RWImageArgs *iargs) {
             DestroyImageInfo(new_frame_info);
             DestroyImageInfo(image_info);
 #if MagickLibVersion > 0x0537
-            DestroyConstitute();
+            ConstituteComponentTerminus();
 #endif
             DXErrorReturn( ERROR_INTERNAL , "out of memory allocating buffer _im_image.c");
         }
@@ -375,7 +375,7 @@ static Error write_im(RWImageArgs *iargs) {
         DestroyImageInfo(image_info);
         DestroyImageInfo(new_frame_info);
 #if MagickLibVersion > 0x0537
-        DestroyConstitute();
+        ConstituteComponentTerminus();
 #endif
         
         DEBUGMESSAGE("back from DestroyImage");
@@ -491,7 +491,7 @@ static Error write_im(RWImageArgs *iargs) {
         DestroyImage(image);
         DestroyImageInfo(image_info);
 #if MagickLibVersion > 0x0537
-        DestroyConstitute();
+        ConstituteComponentTerminus();
 #endif
     }
     return (OK);

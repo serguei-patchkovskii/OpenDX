@@ -4910,8 +4910,10 @@ extern "C" void GARMainWindow_ScalarMVCB(Widget w, XtPointer clientData, XtPoint
     text_str = XmTextGetString(w);
     ASSERT(STRLEN(text_str) + cbs->text->length < 4096);
     ptr = 0;
-    for(i = 0; i < cbs->startPos; i++)
-	tmp[ptr] = text_str[ptr++];
+    for(i = 0; i < cbs->startPos; i++){
+	tmp[ptr] = text_str[ptr];
+        ptr++;
+    }
     for(i = 0; i < cbs->text->length; i++)
 	tmp[ptr++] = cbs->text->ptr[i];
     for(i = (int)cbs->startPos; i < STRLEN(text_str); i++)

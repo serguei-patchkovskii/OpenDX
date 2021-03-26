@@ -147,7 +147,7 @@ int _dxf_StartWebBrowserWithURL(char *URL) {
     	if (child == 0) {
 	    int grandchild = fork();
 	    if (grandchild == 0) {
-		int ret = execlp(webApp, webApp, URL, NULL);
+		int ret = execlp(webApp, webApp, URL, (char *)NULL);
             	if (!ret) fprintf(stderr, "Unable to start web browser.\n");
             	exit (0);
 	    }

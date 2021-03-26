@@ -136,7 +136,7 @@ void Application::installDefaultResources(Widget baseWidget)
     //this->setDefaultResources(baseWidget, Application::DefaultResources);
 }
 
-boolean Application::initializeWindowSystem(unsigned int *argcp, char **argv) 
+boolean Application::initializeWindowSystem(int *argcp, char **argv) 
 {
 
     //
@@ -149,9 +149,9 @@ boolean Application::initializeWindowSystem(unsigned int *argcp, char **argv)
 	     NULL,			// command line options table
 	     0,				// number of entries in options table
 #if XtSpecificationRelease > 4
-	     (int*)argcp,
-#else
 	     argcp,
+#else
+	     (unsigned int *)argcp,
 #endif
 	     argv,			 // "argv" command line arguments
 #if XtSpecificationRelease > 4
@@ -235,7 +235,7 @@ boolean Application::initializeWindowSystem(unsigned int *argcp, char **argv)
     return TRUE;
 }
 
-void Application::parseCommand(unsigned int* argcp, char** argv,
+void Application::parseCommand(int* argcp, char** argv,
                                XrmOptionDescList optlist, int optlistsize)
 {
     char res_file[256];
@@ -251,7 +251,7 @@ void Application::parseCommand(unsigned int* argcp, char** argv,
     //
     char *appname = GetFileBaseName(argv[0],NULL);
     XrmParseCommand(&resourceDatabase, optlist, optlistsize, 
-	                  appname, (int *)argcp, argv);
+	                  appname, argcp, argv);
     delete[] appname;
 
     //
@@ -280,7 +280,7 @@ void Application::parseCommand(unsigned int* argcp, char** argv,
     //
 }
 
-boolean Application::initialize(unsigned int* argcp, char** argv)
+boolean Application::initialize(int* argcp, char** argv)
 {
     //
     // Initialize the window system if not done already.

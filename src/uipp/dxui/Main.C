@@ -48,7 +48,7 @@ extern unsigned long _etext;
 //
 const char *AssertMsgString = "Internal error detected at \"%s\":%d.\n";
  
-int main(unsigned int argc,
+int main(int argc,
 	  char**       argv)
 {
 #if defined(HAVE_HCLXMINIT)

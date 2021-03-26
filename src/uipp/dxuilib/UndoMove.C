@@ -154,6 +154,7 @@ VPEAnnotator* UndoDecoratorMove::lookupDecorator()
 	    return dec;
 	}
     }
+ return NULL; /* Added to avoid gcc warning. Suggesting while will ends succesfully. */
 }
 
 boolean UndoDecoratorMove::canUndo()

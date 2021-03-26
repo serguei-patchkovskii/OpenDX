@@ -70,8 +70,8 @@ static
 XtResource _TutorResourceList[] =
 {
     {
-        "tutorFile",
-        "Pathname",
+        (String)"tutorFile",
+        (String)"Pathname",
         XmRString,
         sizeof(String),
         XtOffset(TutorResource*, tutorFile),
@@ -79,8 +79,8 @@ XtResource _TutorResourceList[] =
         (XtPointer)"Tutorial"
     },
     {
-	"TutorInsensitiveColor",
-	"Color",
+	(String)"TutorInsensitiveColor",
+	(String)"Color",
 	XmRPixel,
 	sizeof(Pixel),
 	XtOffset(TutorResource*, insensitiveColor),
@@ -88,8 +88,8 @@ XtResource _TutorResourceList[] =
 	(XtPointer)"#888"
     },
     {
-        "root",
-        "Pathname",
+        (String)"root",
+        (String)"Pathname",
         XmRString,
         sizeof(String),
         XtOffset(TutorResource*, UIRoot),
@@ -196,7 +196,7 @@ InitializeSignals(void)
 #endif       
 }            
 
-boolean TutorApplication::initialize(unsigned int* argcp,
+boolean TutorApplication::initialize(int* argcp,
 			       char**        argv)
 {
     ASSERT(argcp);

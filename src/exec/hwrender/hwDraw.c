@@ -63,7 +63,7 @@ _dxfDrawMonoInCurrentContext (void* globals, dxObject o, Camera c, int buttonUp)
   DEFGLOBALDATA(globals);
   DEFPORT(PORT_HANDLE);
   gatherO gather = NULL;
-  int r;
+  int r = 0;
 
 
 #if defined(DX_NATIVE_WINDOWS)

@@ -138,6 +138,8 @@ unsigned long		blue_mult=0;
 		    tmp.green = cell_def[i].green;
 		    tmp.blue = cell_def[i].blue;
 		    tmp.pixel = cell_def[i].pixel;
+		    tmp.flags = DoRed | DoGreen | DoBlue;
+		    tmp.pad = 0;
 		    }
 		break;
 	    default:

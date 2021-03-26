@@ -1624,7 +1624,7 @@ _dxf_gi_extract(struct place_state *dataps,int *read_header)
       if (_dxd_gi_header.type==SKIP_MARKER && 
 	  strstr(str,_dxd_gi_header.marker)){
 	 if (sets_read == num_sets && 
-	      _dxd_gi_header.marker[strlen(_dxd_gi_header.marker-1)]=='\n')
+	      _dxd_gi_header.marker[strlen(_dxd_gi_header.marker)-1]=='\n')
 	    _dxd_gi_header.type = SKIP_NOTHING;
 	 else
 	    *read_header=1;

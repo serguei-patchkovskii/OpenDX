@@ -372,7 +372,7 @@ class DXApplication : public IBMApplication
     // Overrides the Application class version:
     //   Initializes Xt Intrinsics with option list (switches).
     //
-    virtual boolean initialize(unsigned int* argcp,
+    virtual boolean initialize(int* argcp,
 			    char**        argv);
 
     //

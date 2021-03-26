@@ -291,7 +291,7 @@ mark(
     static Matrix zero;		/* zero matrix */
     Matrix t;			/* matrix */
     float z;			/* z distance above face for marks */
-    Object font=NULL;		/* font for labels */
+    Object font = NULL;		/* font for labels */
     static float ascent;	/* baseline to top of label */
     float xwidth;		/* max width of x axis tick labels */
     float ywidth;		/* max width of y axis tick labels */

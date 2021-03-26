@@ -425,6 +425,7 @@ static int UpdateWorkers(char *host, char *user, char *options, int add)
     int optlen = 0;
     int opterr = FALSE;
 
+    dpentry.SwapMsg = 0;
     if(add) {
         if(options && *options != '-') {
             /* print error but add to table anyway */

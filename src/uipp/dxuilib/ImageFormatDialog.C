@@ -226,7 +226,7 @@ Widget ImageFormatDialog::createDialog(Widget parent)
 	XmNdValueStep,          DoubleVal(inc, dx_l2),
 	XmNdValue,		DoubleVal(value, dx_l1),
 	XmNdMinimum,		DoubleVal(min, dx_l3),
-	XmNdMaximum,		DoubleVal(max, dx_l3),
+	XmNdMaximum,		DoubleVal(max, dx_l4),
 	XmNdecimalPlaces,       2,
 	XmNfixedNotation,       False,
 	XmNeditable,		True,

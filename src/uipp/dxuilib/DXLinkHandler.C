@@ -402,12 +402,14 @@ boolean DXLinkHandler::CloseVPE(const char *c, int id, void *va)
 */
 boolean DXLinkHandler::OpenNetwork(const char *c, int id, void *va)
 {
-    char *buf = new char[strlen(c)+1];
+    char *buf;
     char *d, *e, *cfg, *net;
 	int len=0;
 
 	if( !c ) 
 	  return TRUE;
+
+    buf = new char[strlen(c)+1];
 
 	e = buf;
 	strcpy(buf, c);

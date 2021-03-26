@@ -49,7 +49,7 @@ class Application : public UIComponent, public Server
     //
     // The main program needs to access protected member functions.
     //
-    friend int main(unsigned int argc,
+    friend int main(int argc,
 		     char**       argv);
 
 
@@ -71,9 +71,9 @@ class Application : public UIComponent, public Server
     //
     // Initialize the window system.
     //
-    virtual boolean initializeWindowSystem(unsigned int *argcp, char **argv);
+    virtual boolean initializeWindowSystem(int *argcp, char **argv);
 
-    virtual void parseCommand(unsigned int* argcp, char** argv,
+    virtual void parseCommand(int* argcp, char** argv,
 			       XrmOptionDescList optlist, int optlistsize);
 
     //
@@ -145,7 +145,7 @@ class Application : public UIComponent, public Server
     // Initializes any Application specfic state.  This routine should 
     // be called by main() or subclasses only.
     //
-    virtual boolean initialize(unsigned int* argcp, char** argv);
+    virtual boolean initialize(int* argcp, char** argv);
 
     //
     // Allow others to access our event processing mechanism
