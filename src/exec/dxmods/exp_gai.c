@@ -422,7 +422,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -439,7 +439,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -456,7 +456,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -473,7 +473,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -490,7 +490,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -507,7 +507,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -524,7 +524,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -541,7 +541,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 	    if (first == ON) 
 	       first = OFF;
 	    else
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    if (blank == ON) 
 	       pblank(arinfo,h);
 	    else
@@ -554,7 +554,7 @@ static Error pvalue(struct array_info *arinfo,struct how *h,int item,int blank,i
 				  arinfo->last,scratch);
 	 arinfo->last = (Pointer)nextstr;
 	 if (first == OFF)
-	    fprintf(h->dfp,del);
+	    fprintf(h->dfp,"%s",del);
 	 if (blank == ON)
 	    pblank(arinfo,h);
 	 else {
@@ -830,7 +830,7 @@ static void field_header(Field f,struct how *h)
       if (rank > 0) {
 	 for (i=0; i<shape[0]; i++){
 	    if (i > 0)
-	       fprintf(h->dfp,del);
+	       fprintf(h->dfp,"%s",del);
 	    fprintf(h->dfp,"positions_cmp%d",i);
 	 }
       }
@@ -845,13 +845,13 @@ static void field_header(Field f,struct how *h)
           !strcmp("positions",depon) && strcmp("invalid positions",name) 
 	  && strcmp("positions",name) ) {
 	 if (first == OFF) 
-	    fprintf(h->dfp,del);
+	    fprintf(h->dfp,"%s",del);
 	 DXGetArrayInfo((Array)a,NULL,&type,NULL,&rank,shape);
 	 /* dim = (rank < 1) ? 1 : shape[0]; */
 	 if (type != TYPE_STRING && rank > 0 && shape[0] > 1) {
 	    cmp = (char *)DXAllocate(strlen(name)+6);
 	    for (j=0; j<shape[0]; j++) {
-	       if (j > 0) fprintf(h->dfp, del);
+	       if (j > 0) fprintf(h->dfp, "%s", del);
 	       sprintf(cmp,"%s_cmp%d",name,j);
 	       pstring(h->dfp,0,0,0,cmp);
 	    }

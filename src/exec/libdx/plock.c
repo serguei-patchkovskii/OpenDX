@@ -37,7 +37,8 @@ struct seminfo *__buf;      /* buffer for IPC_INFO */
 
 #define SEM_FLAGS  	 (IPC_CREAT | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
 #define SHM_FLAGS  	 (IPC_CREAT | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
-#define OPEN_FLAGS 	 (O_CREAT | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
+#define OPEN_FLAGS	 (O_CREAT)
+#define OPEN_MODE 	 (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
 #define IS_MINE(a)	 (locks->_owner[a] == getpid())
 #define SET_OWNER(a)	 (locks->_owner[a] = getpid())
 #define CLEAR_OWNER(a)	 (locks->_owner[a] = 0)
@@ -268,7 +269,7 @@ PLockInit()
 
     if (stat(LOCKFILE, &statbuf))
     {
-        int fd = open(LOCKFILE, OPEN_FLAGS);
+        int fd = open(LOCKFILE, OPEN_FLAGS, OPEN_MODE);
 	if (fd < 0)
 	{
 	    fprintf(stderr, "initLocks: error accessing locks shared block: open\n");

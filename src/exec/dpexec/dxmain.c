@@ -2129,7 +2129,7 @@ int ExCheckInput ()
     if ((SFILEisatty(yyin) || (_dxd_exRshInput && yyin == _dxd_exBaseFD)) &&
             !prompted && _dxf_ExGQAllDone() && !SFILECharReady(yyin)) {
         prompt = _dxf_ExPromptGet(PROMPT_ID_PROMPT);
-        printf (prompt? prompt: EX_PROMPT);
+        printf ("%s", prompt? prompt: EX_PROMPT);
         fflush (stdout);
         prompted = TRUE;
     }
@@ -2305,7 +2305,7 @@ static int ExInputAvailable (SFILE *fp)
 	_dxf_ExGQAllDone ())\
     {\
 	prompt = _dxf_ExPromptGet (PROMPT_ID_PROMPT);\
-	printf (prompt ? prompt : EX_PROMPT);\
+	printf ("%s", prompt ? prompt : EX_PROMPT);\
 	fflush (stdout);\
 	prompted = TRUE;\
     }\

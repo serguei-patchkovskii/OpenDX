@@ -960,7 +960,7 @@ boolean SelectionNode::printJavaValue (FILE* jf)
 	ListIterator it(selection_stmts);
 	char* cp;
 	while ( (cp = (char*)it.getNext()) ) {
-	    fprintf (jf, cp);
+	    fprintf (jf, "%s", cp);
 	    delete cp;
 	}
     }

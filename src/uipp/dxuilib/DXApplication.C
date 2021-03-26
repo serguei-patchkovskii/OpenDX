@@ -2553,7 +2553,7 @@ boolean DXApplication::initialize(int* argcp,
 		const char* errmsg = 
 			GraphLayout::SetHeightPerLevel (DXApplication::resource.autoLayoutHeight);
 		if (errmsg) {
-			fprintf (stderr, errmsg);
+			fprintf (stderr, "%s", errmsg);
 			return FALSE;
 		}
 	}
@@ -2561,7 +2561,7 @@ boolean DXApplication::initialize(int* argcp,
 		const char* errmsg = 
 			GraphLayout::SetGroupSpacing (DXApplication::resource.autoLayoutGroupSpacing);
 		if (errmsg) {
-			fprintf (stderr, errmsg);
+			fprintf (stderr, "%s", errmsg);
 			return FALSE;
 		}
 	}
@@ -2569,7 +2569,7 @@ boolean DXApplication::initialize(int* argcp,
 		const char* errmsg = 
 			GraphLayout::SetNodeSpacing (DXApplication::resource.autoLayoutNodeSpacing);
 		if (errmsg) {
-			fprintf (stderr, errmsg);
+			fprintf (stderr, "%s", errmsg);
 			return FALSE;
 		}
 	}
@@ -3787,7 +3787,7 @@ error:
     if (this->anchor)
 	InfoMessage(msg);
     else
-	fprintf(stderr,msg);
+	fprintf(stderr,"%s",msg);
 
     return NULL;
 }
@@ -5019,7 +5019,7 @@ DXApplication_HandleCoreDump(int dummy)
 	fprintf (stderr, "Attempting to save any modified files.\n"
 	    "Please check saved files for integrity by reloading them.\n");
  	theDXApplication->emergencySave (msg);
- 	fprintf (stderr, msg);
+ 	fprintf (stderr, "%s", msg);
     }
 
     fprintf(stderr,"The application will now abort.\n");
@@ -5035,7 +5035,7 @@ void DXApplication::abortApplication()
     if (theDXApplication) {
 	char msg[4096];	
 	this->emergencySave(msg);
- 	fprintf(stderr, msg);
+ 	fprintf(stderr, "%s", msg);
     }
 
     this->IBMApplication::abortApplication();

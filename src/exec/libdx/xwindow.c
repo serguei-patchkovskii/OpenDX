@@ -29,7 +29,9 @@ Error
 DXRegisterWindowHandlerWithCheckProc(Error (*proc) (int, Pointer),
 		int (*check)(int, Pointer), Display *d, Pointer arg)
 {
-    int fd = ConnectionNumber(d);
+    int fd;
+    if (d) fd = ConnectionNumber(d);
+    else return ERROR;
 
     if (! DXRegisterInputHandlerWithCheckProc(proc, check, fd, arg))
 	return ERROR;

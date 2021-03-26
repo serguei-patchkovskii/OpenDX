@@ -389,7 +389,7 @@ DXLStartChild(const char *string, const char *host, int* inp, int* outp, int* er
 	    char buf[2048];
 	    int n = read(err,buf,2048);
 	    buf[n] = '\0';
-	    fprintf(stderr,buf);
+	    fprintf(stderr,"%s",buf);
 	}
 #if defined(intelnt) || defined(WIN32)
     TerminateProcess(child, -1);

@@ -1167,7 +1167,7 @@ Error print_map(Field f,char *component,char *name, char *id)
       if (!ei.msgbuf)
 	 return ERROR;
       ei.mp = ei.msgbuf;
-      sprintf(ei.mp,name);  while(*ei.mp) ei.mp++;
+      sprintf("%s",ei.mp,name);  while(*ei.mp) ei.mp++;
       sprintf(ei.mp, "NULL");
       DXUIMessage(id,ei.msgbuf);
       DXFree(ei.msgbuf);
@@ -1186,7 +1186,7 @@ Error print_map(Field f,char *component,char *name, char *id)
    ei.mp = ei.msgbuf;
    shape[0]=2;
    strcpy(ei.mp,"");
-   sprintf(ei.mp,name); while(*ei.mp) ei.mp++;
+   sprintf("%s",ei.mp,name); while(*ei.mp) ei.mp++;
    if (num==1){
       sprintf(ei.mp,"{"); ei.mp++;
    }

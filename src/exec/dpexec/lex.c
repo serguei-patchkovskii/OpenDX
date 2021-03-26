@@ -649,7 +649,7 @@ int yylex(YYSTYPE *lvalp)
 		    if ((_dxd_exIsatty || _dxd_exRshInput) && !SFILECharReady(yyin))
 		    {
 			prompt = _dxf_ExPromptGet(PROMPT_ID_CPROMPT);
-			printf (prompt? prompt: EX_CPROMPT);
+			printf ("%s",prompt? prompt: EX_CPROMPT);
 			fflush (stdout);
 		    }
 		    break;
