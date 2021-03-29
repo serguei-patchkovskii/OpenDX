@@ -180,7 +180,7 @@ String ControlPanel::DefaultResources[] =
 #else
     "*panelDeleteOption.acceleratorText:                  Ctrl+Delete",
 #endif
-#if defined(macos) || defined(intelnt)
+#if defined(applemacos) || defined(intelnt)
     "*panelDeleteOption.accelerator:                      Ctrl<Key>BackSpace",
 #elif defined(aviion)
     "*panelDeleteOption.accelerator:                      Ctrl<Key>Delete",

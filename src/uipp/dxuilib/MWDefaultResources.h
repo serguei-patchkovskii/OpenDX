@@ -87,7 +87,7 @@ String  MsgWin::DefaultResources[] = {
 #else
     "*msgClearOption.acceleratorText:   Ctrl+Delete",
 #endif
-#if defined(macos) || defined(intelnt)
+#if defined(applemacos) || defined(intelnt)
     "*msgClearOption.accelerator:       Ctrl<Key>BackSpace",
 #elif defined(aviion)
     "*msgClearOption.accelerator:       Ctrl<Key>Delete",

@@ -65,7 +65,7 @@ boolean StartupWindow::ClassInitialized = FALSE;
 // On these platforms, the pipe doesn't work that way so we'll make a
 // polling loop that runs once every few seconds and checks the child pid.
 //
-#if defined(ibm6000) || defined(hp700) || defined(alphax) || defined(sun4) || defined(linux) || defined(cygwin) || defined(freebsd) || defined(macos)
+#if defined(ibm6000) || defined(hp700) || defined(alphax) || defined(sun4) || defined(linux) || defined(cygwin) || defined(freebsd) || defined(applemacos)
 #define USE_WAIT3 1
 #endif
 

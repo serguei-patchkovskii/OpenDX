@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#if defined(macos)
+#if defined(applemacos)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
@@ -87,7 +87,7 @@ int ExecuteCommand(char *cmd,int nCmdShow)
 int _dxf_StartWebBrowserWithURL(char *URL) {
     char *webApp = getenv("DX_WEB_BROWSER");
 
-#if defined(macos)
+#if defined(applemacos)
     if(webApp) {
         OSStatus oss;
         CFURLRef outAppURL;

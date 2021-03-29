@@ -190,7 +190,7 @@ AC_DEFUN([DX_ARCHITECTURE],
 	    elif test $unameS = "SunOS" ; then
 		ac_cv_dx_arch=solaris
 	    elif test $unameS = "Darwin" ; then
-		ac_cv_dx_arch=macos
+		ac_cv_dx_arch=applemacos
 	    fi
 	fi
     ])
@@ -241,7 +241,7 @@ AC_DEFUN([DX_ARCH_SPECIFIC],
 	    DXEXEC_EXP='-Wl,-export-dynamic'
 	    AC_DEFINE_UNQUOTED(DXEXEC_EXP, $DXEXEC_EXP)
 	    ;;
-	macos)
+	applemacos)
 	    DXUI_ALDFLAGS='-framework CoreFoundation -framework ApplicationServices'
 	    AC_DEFINE_UNQUOTED(DXUI_ALDFLAGS, $DXUI_ALDFLAGS, [Added arch specific LDFLAGS])
 	    ;;
@@ -945,7 +945,7 @@ changequote([, ])dnl
 	    sunos)     JAVA_ARCH=solaris ;;
 	    linux)     JAVA_ARCH=genunix 
 		       JNI_CFLAGS=-DIBM_LINUX;;
-	    darwin)    JAVA_ARCH=macos ;;
+	    darwin)    JAVA_ARCH=applemacos ;;
 	    *)         JAVA_ARCH=$lc ;;
 	esac
     fi
@@ -1052,7 +1052,7 @@ dnl has jni_md.h for the appropriate architecture.
 dnl The path that should be used now is DX_JBASE/include and DX_JBASE/include/JAVA_ARCH.
 DX_FOUND_PATH="$DX_JBASE/include:$DX_JBASE/include/$JAVA_ARCH"
 
-if test "$JAVA_ARCH" = "macos" ; then
+if test "$JAVA_ARCH" = "applemacos" ; then
 	DX_FOUND_PATH="/System/Library/Frameworks/JavaVM.framework/Headers"
 fi
 

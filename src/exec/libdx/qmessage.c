@@ -122,7 +122,7 @@ DXqflush()
 }
 
 
-#if !defined(pgcc) && !defined(intelnt) && !defined(WIN32) && !defined(macos)
+#if !defined(pgcc) && !defined(intelnt) && !defined(WIN32) && !defined(applemacos)
 #if DXD_OS2_SYSCALL
 void _Optlink
 #else

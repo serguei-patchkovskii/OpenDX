@@ -223,7 +223,7 @@ DXWaitTime(double seconds)
     while (DXGetTime() - old < seconds)
 	continue;
 
-#elif ibm6000 || sun4 || macos || linux || freebsd || cygwin
+#elif ibm6000 || sun4 || applemacos || linux || freebsd || cygwin
 
     usleep((int)(1000000.0 * seconds));
 

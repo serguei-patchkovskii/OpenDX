@@ -445,7 +445,7 @@ String EditorWindow::DefaultResources[] =
 #else
     "*vpeDeleteOption.acceleratorText:               	Ctrl+Delete",
 #endif
-#if defined(macos) || defined(intelnt)
+#if defined(applemacos) || defined(intelnt)
     "*vpeDeleteOption.accelerator:                   	Ctrl<Key>BackSpace",
 #elif defined(aviion)
     "*vpeDeleteOption.accelerator:			Ctrl<Key>Delete",

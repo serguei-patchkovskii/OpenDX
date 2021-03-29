@@ -200,7 +200,7 @@ String ColormapEditor::DefaultResources[] =
 #else
     "*cmeDeleteSelectedOption.acceleratorText:          Ctrl+Delete",
 #endif
-#if defined(macos) || defined(intelnt)
+#if defined(applemacos) || defined(intelnt)
     "*cmeDeleteSelectedOption.accelerator:              Ctrl<Key>BackSpace",
 #elif defined(aviion)
     "*cmeDeleteSelectedOption.accelerator:              Ctrl<Key>Delete",

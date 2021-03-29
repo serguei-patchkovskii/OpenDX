@@ -74,7 +74,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#if defined(macos)
+#if defined(applemacos)
 #include <mach/mach.h>
 #include <sys/param.h>
 extern mach_port_t host_self(void);
@@ -1128,7 +1128,7 @@ extern int end;				/* linker-provided end of used data  */
 #define LARGE(x) ((ulong)x>=(ulong)large)
 #endif
 
-#if defined(macos)
+#if defined(applemacos)
 #define initvalues
 #define SMALL_BASE    0               /* use data segment */
 #define SMALL_GET     _dxfgetmem      /* expand by using DosSetMem */
@@ -1503,7 +1503,7 @@ int _dxf_initmemory(void)
   physmem=hw_physmem/(1024*1024);
 #endif
 
-#if defined(macos)
+#if defined(applemacos)
 	kern_return_t		ret;
 	struct host_basic_info	basic_info;
 	unsigned int		count=HOST_BASIC_INFO_COUNT;

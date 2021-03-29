@@ -453,7 +453,7 @@ AC_STRUCT_TM
 
 if test "$ARCH" = "intelnt" -o "$ARCH" = "cygwin" ; then
     ANYDX=AnyDX.dll
-elif test "$ARCH" = "macos" ; then
+elif test "$ARCH" = "applemacos" ; then
     ANYDX=libAnyDX.jnilib
 else
     ANYDX=libAnyDX.so

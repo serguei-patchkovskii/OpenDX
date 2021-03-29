@@ -556,7 +556,7 @@ _dxfinmem(Pointer x)
 
 #endif   /* ibm6000, solaris, sgi, alpha, hp700 */
 
-#if defined(macos)
+#if defined(applemacos)
 #define memroutines
 
 /* Still need to write shared memory routines */
@@ -581,7 +581,7 @@ Pointer _dxfgetmem(Pointer base, ulong size)
 
     return base;
 }
-#endif /* defined(macos) */
+#endif /* defined(applemacos) */
 
 
 #if defined(intelnt) || defined(WIN32)
@@ -935,7 +935,7 @@ Pointer _dxfgetmem(Pointer base, ulong size) { return base; }
 
 #if !defined(os2) && !defined(intelnt) && !defined(WIN32)
 
-#if !defined(cygwin) && !defined(macos)
+#if !defined(cygwin) && !defined(applemacos)
 extern int end;   /* filled in by linker */
 #endif
 
@@ -959,11 +959,11 @@ Pointer _dxfgetbrk(Pointer base, ulong n)
 	m = MEM_DATASEG;
 
     if (x == ERR_PTR) {
-#if !(defined(cygwin) || defined (macos))
+#if !(defined(cygwin) || defined (applemacos))
 	unsigned int i;
 #endif
 	x = (Pointer)sbrk(0);
-#if defined(cygwin) || defined (macos)
+#if defined(cygwin) || defined (applemacos)
 	DXSetError(ERROR_NO_MEMORY, 
 		"cannot expand the data segment by %u bytes", n);
 #else
@@ -1053,7 +1053,7 @@ Error DXmemfork(int i)
  * in case something bad happens.  or print it out with Usage("memory info");
  */
 
-#if !defined(cygwin) && !defined(macos)
+#if !defined(cygwin) && !defined(applemacos)
 extern int end;   /* filled in by linker */
 #endif
 
@@ -1082,7 +1082,7 @@ void DXPrintMemoryInfo()
 		      i+1, alloc_addr_start[i], 
 		      (ulong)SUB_PTR(alloc_addr_end[i], alloc_addr_start[i]));
 	
-#if !defined(cygwin) && !defined(macos)
+#if !defined(cygwin) && !defined(applemacos)
 	DXMessage("end address = 0x%08x, data segment extended by %lu bytes", 
 		  alloc_addr_end[i-1],
 		  (ulong)SUB_PTR(alloc_addr_end[i-1], &end));

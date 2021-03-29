@@ -32,7 +32,7 @@ typedef struct _Network_ Network;
 extern "C" {
 #endif
 
-#if defined(macos)
+#if defined(applemacos)
 #define YYINITDEPTH 10
 #endif
 

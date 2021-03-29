@@ -88,7 +88,7 @@ String DXWindow::DefaultResources[] =
 #if defined(aviion)
     "*endExecutionOption.accelerator:             Ctrl<Key>End",
     "*endExecutionOption.acceleratorText:         Ctrl+End",
-#elif defined(macos)
+#elif defined(applemacos)
     "*endExecutionOption.accelerator:			Ctrl <Key>period",
     "*endExecutionOption.acceleratorText:		Ctrl+.",
 #else

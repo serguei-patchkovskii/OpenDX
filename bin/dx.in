@@ -227,7 +227,7 @@ environment variables:
 
  DXRSH                specifies the remote shell command to use when connecting to
                       other systems (such as those when using distributed execution).
-                      The default is the the path to rsh.
+                      The default is the the path to ssh.
  DXRSH_NOENV          prevents the remote "invoke dxexec" script from being written
                       with a full carbon copy of the local environment (only DISPLAY
                       is set).
@@ -333,7 +333,7 @@ thissys=`uname  -s | sed -e 's/ ..*$//'`
 thismach=`uname  -m`
 thishost=`hostname | sed -e 's/\..*$//'` 
 thisver=`uname  -r`
-remote=/usr/bin/rsh
+remote=/usr/bin/ssh
 showversion=0
 
 # determine the machine type, and set uiarch, exarch and thisver defaults
@@ -342,7 +342,7 @@ case $thissys in
     exarch=freebsd
     uiarch=freebsd
 
-    remote=/usr/bin/rsh
+    remote=/usr/bin/ssh
 
     ;;
 
@@ -459,7 +459,7 @@ case $thissys in
     exarch=linux
     uiarch=linux
 
-    remote=/usr/bin/rsh
+    remote=/usr/bin/ssh
 
     ;;
 
@@ -467,15 +467,15 @@ case $thissys in
    exarch=cygwin
    uiarch=cygwin    
  
-   remote=/usr/bin/rsh
+   remote=/usr/bin/ssh
  
    ;;
 
   Darwin*)
-   exarch=macos
-   uiarch=macos    
+   exarch=applemacos
+   uiarch=applemacos    
  
-   remote=/usr/bin/rsh
+   remote=/usr/bin/ssh
  
    if [ -z "$DXMACROS" ]; then
       if [ -d "$HOME/Library/Application Support/OpenDX/macros" ]; then
@@ -1821,7 +1821,7 @@ case $uiarch in
       echo "WARNING!  This machine appears to NOT be a model 7xx/8xx"
       echo "Continuing, but unexpected errors may result."
     fi ;;
-  sun4|solaris|aviion|alphax|linux|freebsd|macos|cygwin)
+  sun4|solaris|aviion|alphax|linux|freebsd|applemacos|cygwin)
     ;;
   *)
     echo "DX user interface does not run on this architecture"

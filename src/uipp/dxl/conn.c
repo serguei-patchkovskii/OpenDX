@@ -110,7 +110,7 @@ int select(
 #include <io.h>
 #endif
 
-#if defined(macos)
+#if defined(applemacos)
 #include <crt_externs.h>
 #endif
 
@@ -297,7 +297,7 @@ DXLStartChild(const char *string, const char *host, int* inp, int* outp, int* er
   #endif
     int i, n;
     char *c, *s;
-#if defined(macos)
+#if defined(applemacos)
     char **environ = *_NSGetEnviron();
 #else
     extern char **environ;
