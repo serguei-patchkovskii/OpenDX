@@ -1,2 +1,9 @@
 *.orig
 *.o
+*.lo
+*.a
+*.la
+*~
+Makefile
+autom4te.cache/
+.deps/
