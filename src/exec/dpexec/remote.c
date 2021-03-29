@@ -1233,7 +1233,7 @@ Pointer DXCopyModuleId(Pointer id)
 {
     Pointer nid;
 
-    if (id == NULL || (char *)id == '\0')
+    if (id == NULL || *(char *)id == '\0')
 	return NULL;
 
     nid = DXAllocate(strlen((char *)id) + 1);
