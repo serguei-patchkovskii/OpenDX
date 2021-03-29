@@ -92,7 +92,7 @@ libAnyDX.jnilib: DXLink.o
 		jObjs=`ls ../dxl/.libs/*.o` ;  	\
 	fi ;					\
 	jObjs=`echo $$jObjs |sed -e "s&[^ ]*object\.o&&" -e "s&[^ ]*dylib[^ ]*\.o&&" -e "s&[^ ]*x11\.o&&"` ; \
-	cc -bundle -o libAnyDX.jnilib -framework JavaVM $${jObjs} DXLink.o -L/usr/X11R6/lib -lXt
+	$(CC) -bundle -o libAnyDX.jnilib -framework JavaVM $${jObjs} DXLink.o -L/usr/X11R6/lib -lXt
 
 usual_shared_object: DXLink.o
 	jObjs=`ls ../dxl/*.o` ;                 \
@@ -132,7 +132,7 @@ windows_shared_object: DXLink.o
 	fi ;                                    \
 	jObjs=`echo $$jObjs |sed -e "s&[^ ]*object\.obj&&" -e "s&[^ ]*x11\.obj&&"` ; \
 	ar -ruv tmpAnyDX.a $${jObjs} DXLink.obj
-	cc /LD -o AnyDX.dll DXLink.obj tmpAnyDX.a $(LIBS)
+	$(CC) /LD -o AnyDX.dll DXLink.obj tmpAnyDX.a $(LIBS)
 #	cc /LD -o AnyDX.dll DXLink.obj -L../dxl/.libs libDXL.lib $(LIBS)
 	rm -f tmpAnyDX.*
 
