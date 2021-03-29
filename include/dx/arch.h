@@ -202,7 +202,7 @@ char *strrstr(char *, char *);
 
 /* Macos X - typically on Apple hardware
  */
-#ifdef macos
+#ifdef applemacos
 
 /* #define trunc(value) ((float)((int)(value))) - trunc now defined in OS 10.2 */
 
@@ -220,7 +220,7 @@ char *strrstr(char *, char *);
 #define DXD_GAMMA_24BIT	1.0
 #define DXD_GAMMA_32BIT	1.0
 
-#endif /* macos */
+#endif /* applemacos */
 
 /* silicon graphics: indigo, crimson, 280/gtx, onyx, extreme
  */

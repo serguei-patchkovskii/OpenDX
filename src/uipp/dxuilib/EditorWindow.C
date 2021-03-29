@@ -5997,7 +5997,7 @@ char msg[128];
     //
     const char *tmpdir = theDXApplication->getTmpDirectory();
     int tmpdirlen = STRLEN(tmpdir);
-    if (!tmpdirlen) return FALSE;
+    if (!tmpdirlen) return NUL(char*) ;
     if (tmpdir[tmpdirlen-1] == '/') {
 	sprintf(netfilename, "%sdx%d.net", tmpdir, getpid());
 	sprintf(cfgfilename, "%sdx%d.cfg", tmpdir, getpid());

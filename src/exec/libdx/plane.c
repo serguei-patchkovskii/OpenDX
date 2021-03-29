@@ -219,7 +219,8 @@ shear(Pointer icstart, char cstc, RGBColor *cmap,
  } 
  } 
 }; 
- };
+ }
+                                ;
     } else if (cmap && !omap) {
  unsigned char *icp;
  RGBColor *ocp;
@@ -399,7 +400,8 @@ shear(Pointer icstart, char cstc, RGBColor *cmap,
  } 
  } 
 }; 
- };
+ }
+                             ;
  } else {
      
  if (((scale)<0? -(scale) : (scale)) > 1.0) { 
@@ -575,7 +577,8 @@ shear(Pointer icstart, char cstc, RGBColor *cmap,
  } 
  } 
 }; 
- };
+ }
+                             ;
  }
     } else if (otype==type_colors) {
  { 
@@ -1655,7 +1658,8 @@ shear(Pointer icstart, char cstc, RGBColor *cmap,
  
  
  } 
-};
+}
+                                      ;
     } else if (otype==type_big) {
  if (clip) {
      { 
@@ -2195,7 +2199,8 @@ shear(Pointer icstart, char cstc, RGBColor *cmap,
  
  
  } 
-};
+}
+                                       ;
  } else {
      { 
  RGBColor *icp; 
@@ -2734,7 +2739,8 @@ shear(Pointer icstart, char cstc, RGBColor *cmap,
  
  
  } 
-};
+}
+                                         ;
  }
     }
     return OK;

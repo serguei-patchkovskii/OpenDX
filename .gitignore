@@ -28,6 +28,17 @@ src/exec/dxmods/dxcm.mdf
 src/exec/libdx/local.mk
 
 src/misc/arch.mak
+src/misc/dxlocal
 
 src/uipp/dxuilib/lex.yy.c
 src/uipp/dxuilib/netlex.c
+
+src/uipp/dxui/dxui
+
+src/uipp/mb/builder
+
+src/uipp/prompter/prompter
+
+src/uipp/startup/startupui
+
+src/uipp/tutor/tutor

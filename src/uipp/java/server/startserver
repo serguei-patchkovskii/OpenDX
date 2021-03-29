@@ -20,9 +20,9 @@ export DXROOT
 PATH=$PATH:/usr/local/dx/bin
 export PATH
 if [ "$CLASSPATH" = "" ]; then
-	CLASSPATH=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:/Users/dthompsn/src/java40.jar:/Users/dthompsn/src/npcosmop211.jar:./:./:./server.jar
+	CLASSPATH=:./:./server.jar
 	else
-	CLASSPATH=$CLASSPATH:/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:/Users/dthompsn/src/java40.jar:/Users/dthompsn/src/npcosmop211.jar:./:./:./server.jar
+	CLASSPATH=$CLASSPATH::./:./server.jar
 fi
 export CLASSPATH
 ##
@@ -357,7 +357,7 @@ fi
 
 cd $serverdir
 libarch=`dx -whicharch`
-if test "$libarch" = "macos" ; then
+if test "$libarch" = "applemacos" ; then
   if test -z $DYLD_LIBRARY_PATH ; then
      DYLD_LIBRARY_PATH=$serverdir/../lib_$libarch
   else
@@ -365,7 +365,7 @@ if test "$libarch" = "macos" ; then
   fi
   export DYLD_LIBRARY_PATH
 fi
-if test "$libarch" != "macos" ; then
+if test "$libarch" != "applemacos" ; then
    if [ "$LD_LIBRARY_PATH" = "" ]; then
    LD_LIBRARY_PATH=$serverdir/../lib_$libarch
    else

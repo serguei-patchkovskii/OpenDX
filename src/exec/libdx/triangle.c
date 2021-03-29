@@ -1265,7 +1265,8 @@
  CAT(ttcdc,1) :
  continue;
  }
-};
+}
+                                    ;
     } else if (buf->pix_type==pix_fast) {
       {
  Point *p;
@@ -1617,7 +1618,8 @@
  CAT(ttfdc,1) :
  continue;
  }
-};
+}
+                                 ;
     } else if (buf->pix_type==pix_big) {
       {
  Point *p;
@@ -1969,7 +1971,8 @@
  CAT(ttbdc,1) :
  continue;
  }
-};
+}
+                                 ;
     } else {
       DXSetError(ERROR_INTERNAL, "unknown pix_type %d", buf->pix_type);
       return ERROR;
@@ -2329,7 +2332,8 @@
  CAT(ttcdp,1) :
  continue;
  }
-};
+}
+                                    ;
     } else if (buf->pix_type==pix_fast) {
       {
  Point *p;
@@ -2681,7 +2685,8 @@
  CAT(ttfdp,1) :
  continue;
  }
-};
+}
+                                 ;
     } else if (buf->pix_type==pix_big) {
       {
  Point *p;
@@ -3033,7 +3038,8 @@
  CAT(ttbdp,1) :
  continue;
  }
-};
+}
+                                 ;
     } else {
       DXSetError(ERROR_INTERNAL, "unknown pix_type %d", buf->pix_type);
       return ERROR;
@@ -5380,7 +5386,8 @@ _dxf_Triangle(
  CAT(tftc,1) :
  continue;
  }
-};
+}
+                                    ;
     } else if (buf->pix_type==pix_fast) {
       {
  Point *p;
@@ -5732,7 +5739,8 @@ _dxf_Triangle(
  CAT(tftf,1) :
  continue;
  }
-};
+}
+                                 ;
     } else if (buf->pix_type==pix_big) {
       {
  Point *p;
@@ -6084,7 +6092,8 @@ _dxf_Triangle(
  CAT(tftb,1) :
  continue;
  }
-};
+}
+                                ;
     } else {
       DXSetError(ERROR_INTERNAL, "unknown pix_type %d", buf->pix_type);
       return ERROR;
@@ -6470,7 +6479,8 @@ _dxf_Triangle(
  CAT(tfoc,1) :
  continue;
  }
-};
+}
+                         ;
     } else if (buf->pix_type==pix_fast) {
       {
  Point *p;
@@ -6822,7 +6832,8 @@ _dxf_Triangle(
  CAT(tfof,1) :
  continue;
  }
-};
+}
+                           ;
     } else if (buf->pix_type==pix_big) {
       {
  Point *p;
@@ -7174,7 +7185,8 @@ _dxf_Triangle(
  CAT(tfob,1) :
  continue;
  }
-};
+}
+                           ;
     } else {
       DXSetError(ERROR_INTERNAL, "unknown pix_type %d", buf->pix_type);
       return ERROR;

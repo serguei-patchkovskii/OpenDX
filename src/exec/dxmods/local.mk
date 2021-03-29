@@ -14,23 +14,23 @@ user.c:  dx.mdf
 
 dxcm.mdf:  ${srcdir}/dxmdf.src
 	-rm -f dxcm.mdf
-	cp ${srcdir}/dxmdf.src tmp.c
-	$(CPP) $(INCLUDES) $(MDF) $(DEFS) tmp.c > dxcm.mdf
-	-rm -f tmp.c
+	cp ${srcdir}/dxmdf.src tmp.dxcm.c
+	$(CPP) $(INCLUDES) $(MDF) $(DEFS) tmp.dxcm.c > dxcm.mdf
+	-rm -f tmp.dxcm.c
 
 dx.mdf:  ${srcdir}/dxmdf.src
 	echo MYINC: $(MYINC)
 	-rm -f dx.mdf
-	cp ${srcdir}/dxmdf.src tmp.c
-	$(CPP) $(INCLUDES) $(MYINC) $(MDF) $(DEFS) -DCPLUSPLUS_UI -DEXECUTIVE_MODS tmp.c > dx.mdf
-	@echo '/^ *$$/{' > stripl.sed
-	@echo 'N' >> stripl.sed
-	@echo '/^ *\\n *$$/D' >> stripl.sed
-	@echo '}' >> stripl.sed
-	cat dx.mdf |sed '/^#/d' > tmp.mdf
-	cat tmp.mdf |sed -f stripl.sed > dx.mdf
-	@rm -f stripl.sed tmp.mdf
-	-rm -f tmp.c
+	cp ${srcdir}/dxmdf.src tmp.dx.c
+	$(CPP) $(INCLUDES) $(MYINC) $(MDF) $(DEFS) -DCPLUSPLUS_UI -DEXECUTIVE_MODS tmp.dx.c > dx.mdf
+	@echo '/^ *$$/{' > stripl.dx.sed
+	@echo 'N' >> stripl.dx.sed
+	@echo '/^ *\\n *$$/D' >> stripl.dx.sed
+	@echo '}' >> stripl.dx.sed
+	cat dx.mdf |sed '/^#/d' > tmp.dx.mdf
+	cat tmp.dx.mdf |sed -f stripl.dx.sed > dx.mdf
+	@rm -f stripl.dx.sed tmp.dx.mdf
+	-rm -f tmp.dx.c
 
 .y.h:
 	$(YACC) $(YFLAGS) -d ${srcdir}/$*.y

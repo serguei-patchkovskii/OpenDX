@@ -1,5 +1,8 @@
 /* include/dxconfig.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
 /* Define to 1 to use alternate signal argument list in C++ */
 #undef ALTERNATE_CXX_SIGNAL
 
@@ -629,6 +632,9 @@
 /* Define to 1 if you have the `_unlink' function. */
 #undef HAVE__UNLINK
 
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#undef LT_OBJDIR
+
 /* Define to 1 if Using old version of lesstif */
 #undef OLD_LESSTIF
 
@@ -650,11 +656,11 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
-
-/* Define to 1 if the C compiler supports function prototypes. */
-#undef PROTOTYPES
 
 /* Define to 1 if bzero needs declared */
 #undef REQUIRES_BZERO_DECLARATION
@@ -670,11 +676,6 @@
 
 /* Arguments for select */
 #undef SELECT_ARG_TYPE
-
-/* Define to 1 if the `setvbuf' function takes the buffering type as its
-   second argument and the buffer pointer as the third, as on System V before
-   release 3. */
-#undef SETVBUF_REVERSED
 
 /* SGI specific ABI */
 #undef SGI_ABI
@@ -706,9 +707,17 @@
 /* Version number of package */
 #undef VERSION
 
-/* Define to 1 if your processor stores words with the most significant byte
-   first (like Motorola and SPARC, unlike Intel and VAX). */
-#undef WORDS_BIGENDIAN
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
 
 /* set to 1 if lexer adds yylineno */
 #undef YYLINENO_DEFINED
@@ -716,9 +725,6 @@
 /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
    `char[]'. */
 #undef YYTEXT_POINTER
-
-/* Define like PROTOTYPES; this can be used by system headers. */
-#undef __PROTOTYPES
 
 /* Do not define __int64 if already have type __int64 */
 #undef __int64
@@ -753,7 +759,7 @@
 /* Do not define short if already have type short */
 #undef short
 
-/* Define to `unsigned' if <sys/types.h> does not define. */
+/* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t
 
 /* Do not define ubyte if already have type ubyte */

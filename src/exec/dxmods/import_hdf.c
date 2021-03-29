@@ -70,7 +70,7 @@
 #include <hdf/dfsd.h>
 #endif
 
-#if !defined(macos)
+#if !defined(applemacos)
 #include <ctype.h>
 #endif
 
