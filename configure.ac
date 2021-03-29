@@ -2,13 +2,13 @@
 
 AC_PREREQ(2.57)
 dnl Start of configuration ----
-AC_INIT([dx],[4.4.4])
+AC_INIT([dx],[4.4.5])
 
 dnl Process this file with autoconf to produce a configure script.
 AC_CONFIG_SRCDIR([include/dx/arch.h])
 AC_CONFIG_HEADERS([include/dxconfig.h])
 AM_INIT_AUTOMAKE
-AC_DISABLE_SHARED
+AC_ENABLE_SHARED
 AC_PROG_LIBTOOL
 
 VERSION_STRING="04.4.5000"
@@ -73,7 +73,7 @@ dnl
 dnl For the time being, require a command-line arg to build with SMP 
 dnl support on linux platforms
 AC_ARG_ENABLE(smp_linux,
-	      [  --enable-smp-linux     build exec, libs with SMP-parallel capability for Linux platforms (default is disabled). BREAKS LOADABLE-MODULE SUPPORT, DO NOT USE],
+	      [  --enable-smp-linux      build exec, libs with SMP-parallel capability for Linux platforms (default is disabled). BREAKS LOADABLE-MODULE SUPPORT, DO NOT USE],
 	      [with_smp_linux=$enableval],
 	      [with_smp_linux='no'])
 
@@ -150,9 +150,9 @@ AC_ARG_WITH(netcdf,
 
 # Enable 64-bit arenas, if supported
 AC_ARG_WITH(large-arenas,
-              [  --with-large-arenas     enable 64-bit arenas, when available (default is no)],
+              [  --with-large-arenas     enable 64-bit arenas, when available (default is yes, SGI -n64 only)],
               [with_large_arenas=$withval],
-              [with_large_arenas='no'])
+              [with_large_arenas='yes'])
 
 AC_ARG_WITH(javadx,
 	      [  --with-javadx           enable JAVADX (default is yes)],
@@ -196,7 +196,7 @@ AC_ARG_WITH(rsh,
 if test "$ARCH" = "intelnt" ; then
 	rsh_path="rsh"
 else
-                AC_PATH_PROG(rsh_path, rsh)
+                AC_PATH_PROG(rsh_path, ssh)
 fi
         ]
 )
