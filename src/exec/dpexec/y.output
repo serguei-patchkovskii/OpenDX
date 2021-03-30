@@ -1,0 +1,4533 @@
+   0  $accept : start $end
+
+   1  $$1 :
+
+   2  start : $$1 top
+
+   3  top : statement
+   4      | macro
+   5      | packet
+   6      | vcr
+   7      | K_INCLUDE T_STRING
+   8      | K_INCLUDE T_ID
+   9      | K_QUIT
+  10      | T_EOF
+  11      | T_EOL
+  12      | semicolon
+
+  13  vcr : K_VCR statement
+  14      | K_PAUSE semicolon
+  15      | K_PLAY semicolon
+  16      | K_STEP semicolon
+  17      | K_STOP semicolon
+  18      | K_FORWARD semicolon
+  19      | K_BACKWARD semicolon
+  20      | K_PALINDROME switch semicolon
+  21      | K_LOOP switch semicolon
+
+  22  switch : K_ON
+  23         | K_OFF
+
+  24  $$2 :
+
+  25  packet : T_BAR int T_BAR P_INTERRUPT T_BAR int $$2 T_BAR interrupt_data T_BAR
+
+  26  $$3 :
+
+  27  packet : T_BAR int T_BAR P_SYSTEM T_BAR int $$3 T_BAR system_data T_BAR
+
+  28  $$4 :
+
+  29  packet : T_BAR int T_BAR P_ACK T_BAR int $$4 T_BAR ack_data T_BAR
+
+  30  $$5 :
+
+  31  packet : T_BAR int T_BAR P_MACRO T_BAR int $$5 T_BAR macro_data T_BAR
+
+  32  $$6 :
+
+  33  packet : T_BAR int T_BAR P_FOREGROUND T_BAR int $$6 T_BAR foreground_data T_BAR
+
+  34  $$7 :
+
+  35  packet : T_BAR int T_BAR P_BACKGROUND T_BAR int $$7 T_BAR background_data T_BAR
+
+  36  $$8 :
+
+  37  packet : T_BAR int T_BAR P_ERROR T_BAR int $$8 T_BAR error_data T_BAR
+
+  38  $$9 :
+
+  39  packet : T_BAR int T_BAR P_MESSAGE T_BAR int $$9 T_BAR message_data T_BAR
+
+  40  $$10 :
+
+  41  packet : T_BAR int T_BAR P_INFO T_BAR int $$10 T_BAR info_data T_BAR
+
+  42  $$11 :
+
+  43  packet : T_BAR int T_BAR P_LINQ T_BAR int $$11 T_BAR l_inquiry_data T_BAR
+
+  44  $$12 :
+
+  45  packet : T_BAR int T_BAR P_SINQ T_BAR int $$12 T_BAR s_inquiry_data T_BAR
+
+  46  $$13 :
+
+  47  packet : T_BAR int T_BAR P_VINQ T_BAR int $$13 T_BAR v_inquiry_data T_BAR
+
+  48  $$14 :
+
+  49  packet : T_BAR int T_BAR P_LRESP T_BAR int $$14 T_BAR l_response_data T_BAR
+
+  50  $$15 :
+
+  51  packet : T_BAR int T_BAR P_SRESP T_BAR int $$15 T_BAR s_response_data T_BAR
+
+  52  $$16 :
+
+  53  packet : T_BAR int T_BAR P_VRESP T_BAR int $$16 T_BAR v_response_data T_BAR
+
+  54  $$17 :
+
+  55  packet : T_BAR int T_BAR P_DATA T_BAR int $$17 T_BAR data_data T_BAR
+
+  56  $$18 :
+
+  57  packet : T_BAR int T_BAR P_IMPORT T_BAR int $$18 T_BAR import_data T_BAR
+
+  58  interrupt_data : int
+
+  59  system_data : system_s
+
+  60  system_s : system
+  61           | system_s T_COMMA system
+
+  62  system : id T_ASSIGN constant
+
+  63  ack_data : message_id T_COLON data
+
+  64  macro_data : macro
+
+  65  foreground_data : statement
+  66                  | vcr
+
+  67  background_data : statement
+  68                  | K_CANCEL
+
+  69  message_data : data
+
+  70  info_data : data
+
+  71  l_inquiry_data : handle T_COLON ex_id_s
+
+  72  s_inquiry_data : handle T_COLON expression_s
+  73                 | handle T_COLON ex_id_s
+
+  74  v_inquiry_data : handle T_COLON expression_s
+  75                 | handle T_COLON ex_id_s
+
+  76  l_response_data : handle T_COLON id_s0
+
+  77  s_response_data : handle T_COLON data
+
+  78  v_response_data : handle T_COLON s_assignment_0
+
+  79  data_data : handle T_COLON s_assignment_0
+
+  80  import_data : data
+
+  81  macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 rightparen attributes_0 block
+  82        | K_MACRO id T_LPAR formal_s0 rightparen attributes_0 block
+
+  83  formal_s0 : empty
+  84            | formal_s
+
+  85  formal_s : formal attributes_0
+  86           | formal_s T_COMMA formal attributes_0
+
+  87  formal : id
+  88         | id T_ASSIGN constant
+  89         | id T_ASSIGN A_MINUS constant
+
+  90  block : T_LBRA statement_s0 rightbracket
+
+  91  statement_s0 : empty
+  92               | statement_s
+
+  93  statement_s : statement
+  94              | statement_s statement
+
+  95  statement : block
+  96            | assignment semicolon
+  97            | function_call semicolon
+
+  98  assignment : f_assignment
+  99             | s_assignment
+
+ 100  f_assignment : id_s T_ASSIGN function_call
+
+ 101  s_assignment : id_s T_ASSIGN expression_s
+ 102               | id T_PP
+ 103               | id T_MM
+
+ 104  s_assignment_0 : empty
+ 105                 | s_assignment
+
+ 106  attributes_0 : empty
+ 107               | attributes
+
+ 108  attributes : T_LSQB attribute_s0 T_RSQB
+
+ 109  attribute_s0 : empty
+ 110               | attribute_s
+
+ 111  attribute_s : attribute
+ 112              | attribute_s T_COMMA attribute
+
+ 113  attribute : id T_COLON constant
+
+ 114  function_call : id T_LPAR argument_s0 rightparen attributes_0
+
+ 115  argument_s0 : empty
+ 116              | argument_s
+
+ 117  argument_s : argument
+ 118             | argument_s T_COMMA argument
+
+ 119  argument : value
+ 120           | id T_ASSIGN value
+
+ 121  value : expression
+
+ 122  expression_s : expression
+ 123               | expression_s T_COMMA expression
+
+ 124  expression : constant
+ 125             | id
+ 126             | T_LPAR expression rightparen
+ 127             | arithmetic
+
+ 128  arithmetic : expression A_EXP expression
+ 129             | expression A_TIMES expression
+ 130             | expression A_DIV expression
+ 131             | expression A_IDIV expression
+ 132             | expression A_MOD expression
+ 133             | expression A_PLUS expression
+ 134             | expression A_MINUS expression
+ 135             | A_MINUS expression
+
+ 136  constant : scalar
+ 137           | tensor
+ 138           | list
+ 139           | string
+
+ 140  list : T_LBRA scalar_s rightbracket
+ 141       | T_LBRA tensor_s rightbracket
+ 142       | T_LBRA string_s rightbracket
+ 143       | T_LBRA nreal T_DOTDOT nreal rightbracket
+ 144       | T_LBRA nreal T_DOTDOT nreal T_COLON nreal rightbracket
+
+ 145  tensor_s : tensor
+ 146           | tensor_s tensor
+ 147           | A_MINUS tensor
+ 148           | tensor_s A_MINUS tensor
+ 149           | tensor_s T_COMMA tensor
+ 150           | tensor_s T_COMMA A_MINUS tensor
+
+ 151  tensor : T_LSQB scalar_s T_RSQB
+ 152         | T_LSQB tensor_s T_RSQB
+
+ 153  scalar_s : scalar
+ 154           | scalar_s scalar
+ 155           | A_MINUS scalar
+ 156           | scalar_s A_MINUS scalar
+ 157           | scalar_s T_COMMA scalar
+ 158           | scalar_s T_COMMA A_MINUS scalar
+
+ 159  string_s : string
+ 160           | string_s string
+ 161           | string_s T_COMMA string
+
+ 162  scalar : real
+ 163         | complex
+ 164         | quaternion
+
+ 165  nreal : real
+ 166        | A_MINUS real
+
+ 167  real : int
+ 168       | float
+
+ 169  complex : T_LPAR nint T_COMMA nint rightparen
+ 170          | T_LPAR nint T_COMMA nfloat rightparen
+ 171          | T_LPAR nfloat T_COMMA nint rightparen
+ 172          | T_LPAR nfloat T_COMMA nfloat rightparen
+
+ 173  quaternion : T_LPAR nint T_COMMA nint T_COMMA nint T_COMMA nint rightparen
+ 174             | T_LPAR nfloat T_COMMA nfloat T_COMMA nfloat T_COMMA nfloat rightparen
+
+ 175  nint : int
+ 176       | A_MINUS int
+
+ 177  int : T_INT
+
+ 178  nfloat : float
+ 179         | A_MINUS float
+
+ 180  float : T_FLOAT
+
+ 181  string : T_STRING
+
+ 182  semicolon : T_SEMI
+
+ 183  rightparen : T_RPAR
+
+ 184  rightbracket : T_RBRA
+
+ 185  id : T_ID
+
+ 186  ex_id : T_EXID
+
+ 187  empty :
+
+ 188  id_s0 : empty
+ 189        | id_s
+
+ 190  id_s : id attributes_0
+ 191       | id_s T_COMMA id attributes_0
+
+ 192  ex_id_s : ex_id
+ 193          | ex_id_s T_COMMA ex_id
+
+ 194  message_id : int
+
+ 195  handle : int
+
+ 196  error_data :
+
+ 197  data :
+
+state 0
+	$accept : . start $end  (0)
+	$$1 : .  (1)
+
+	.  reduce 1
+
+	start  goto 1
+	$$1  goto 2
+
+
+state 1
+	$accept : start . $end  (0)
+
+	$end  accept
+
+
+state 2
+	start : $$1 . top  (2)
+
+	T_EOF  shift 3
+	T_EOL  shift 4
+	T_BAR  shift 5
+	T_LBRA  shift 6
+	T_SEMI  shift 7
+	K_INCLUDE  shift 8
+	K_MACRO  shift 9
+	K_QUIT  shift 10
+	K_BACKWARD  shift 11
+	K_FORWARD  shift 12
+	K_LOOP  shift 13
+	K_PALINDROME  shift 14
+	K_PAUSE  shift 15
+	K_PLAY  shift 16
+	K_STEP  shift 17
+	K_STOP  shift 18
+	K_VCR  shift 19
+	T_ID  shift 20
+	.  error
+
+	assignment  goto 21
+	block  goto 22
+	f_assignment  goto 23
+	function_call  goto 24
+	id  goto 25
+	id_s  goto 26
+	macro  goto 27
+	packet  goto 28
+	s_assignment  goto 29
+	statement  goto 30
+	top  goto 31
+	vcr  goto 32
+	semicolon  goto 33
+
+
+state 3
+	top : T_EOF .  (10)
+
+	.  reduce 10
+
+
+state 4
+	top : T_EOL .  (11)
+
+	.  reduce 11
+
+
+state 5
+	packet : T_BAR . int T_BAR P_INTERRUPT T_BAR int $$2 T_BAR interrupt_data T_BAR  (25)
+	packet : T_BAR . int T_BAR P_SYSTEM T_BAR int $$3 T_BAR system_data T_BAR  (27)
+	packet : T_BAR . int T_BAR P_ACK T_BAR int $$4 T_BAR ack_data T_BAR  (29)
+	packet : T_BAR . int T_BAR P_MACRO T_BAR int $$5 T_BAR macro_data T_BAR  (31)
+	packet : T_BAR . int T_BAR P_FOREGROUND T_BAR int $$6 T_BAR foreground_data T_BAR  (33)
+	packet : T_BAR . int T_BAR P_BACKGROUND T_BAR int $$7 T_BAR background_data T_BAR  (35)
+	packet : T_BAR . int T_BAR P_ERROR T_BAR int $$8 T_BAR error_data T_BAR  (37)
+	packet : T_BAR . int T_BAR P_MESSAGE T_BAR int $$9 T_BAR message_data T_BAR  (39)
+	packet : T_BAR . int T_BAR P_INFO T_BAR int $$10 T_BAR info_data T_BAR  (41)
+	packet : T_BAR . int T_BAR P_LINQ T_BAR int $$11 T_BAR l_inquiry_data T_BAR  (43)
+	packet : T_BAR . int T_BAR P_SINQ T_BAR int $$12 T_BAR s_inquiry_data T_BAR  (45)
+	packet : T_BAR . int T_BAR P_VINQ T_BAR int $$13 T_BAR v_inquiry_data T_BAR  (47)
+	packet : T_BAR . int T_BAR P_LRESP T_BAR int $$14 T_BAR l_response_data T_BAR  (49)
+	packet : T_BAR . int T_BAR P_SRESP T_BAR int $$15 T_BAR s_response_data T_BAR  (51)
+	packet : T_BAR . int T_BAR P_VRESP T_BAR int $$16 T_BAR v_response_data T_BAR  (53)
+	packet : T_BAR . int T_BAR P_DATA T_BAR int $$17 T_BAR data_data T_BAR  (55)
+	packet : T_BAR . int T_BAR P_IMPORT T_BAR int $$18 T_BAR import_data T_BAR  (57)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 35
+
+
+state 6
+	block : T_LBRA . statement_s0 rightbracket  (90)
+	empty : .  (187)
+
+	T_LBRA  shift 6
+	T_ID  shift 20
+	T_RBRA  reduce 187
+
+	assignment  goto 21
+	block  goto 22
+	empty  goto 36
+	f_assignment  goto 23
+	function_call  goto 24
+	id  goto 25
+	id_s  goto 26
+	s_assignment  goto 29
+	statement  goto 37
+	statement_s  goto 38
+	statement_s0  goto 39
+
+
+state 7
+	semicolon : T_SEMI .  (182)
+
+	.  reduce 182
+
+
+state 8
+	top : K_INCLUDE . T_STRING  (7)
+	top : K_INCLUDE . T_ID  (8)
+
+	T_STRING  shift 40
+	T_ID  shift 41
+	.  error
+
+
+state 9
+	macro : K_MACRO . id T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 rightparen attributes_0 block  (81)
+	macro : K_MACRO . id T_LPAR formal_s0 rightparen attributes_0 block  (82)
+
+	T_ID  shift 20
+	.  error
+
+	id  goto 42
+
+
+state 10
+	top : K_QUIT .  (9)
+
+	.  reduce 9
+
+
+state 11
+	vcr : K_BACKWARD . semicolon  (19)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 43
+
+
+state 12
+	vcr : K_FORWARD . semicolon  (18)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 44
+
+
+state 13
+	vcr : K_LOOP . switch semicolon  (21)
+
+	K_OFF  shift 45
+	K_ON  shift 46
+	.  error
+
+	switch  goto 47
+
+
+state 14
+	vcr : K_PALINDROME . switch semicolon  (20)
+
+	K_OFF  shift 45
+	K_ON  shift 46
+	.  error
+
+	switch  goto 48
+
+
+state 15
+	vcr : K_PAUSE . semicolon  (14)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 49
+
+
+state 16
+	vcr : K_PLAY . semicolon  (15)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 50
+
+
+state 17
+	vcr : K_STEP . semicolon  (16)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 51
+
+
+state 18
+	vcr : K_STOP . semicolon  (17)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 52
+
+
+state 19
+	vcr : K_VCR . statement  (13)
+
+	T_LBRA  shift 6
+	T_ID  shift 20
+	.  error
+
+	assignment  goto 21
+	block  goto 22
+	f_assignment  goto 23
+	function_call  goto 24
+	id  goto 25
+	id_s  goto 26
+	s_assignment  goto 29
+	statement  goto 53
+
+
+state 20
+	id : T_ID .  (185)
+
+	.  reduce 185
+
+
+state 21
+	statement : assignment . semicolon  (96)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 54
+
+
+state 22
+	statement : block .  (95)
+
+	.  reduce 95
+
+
+state 23
+	assignment : f_assignment .  (98)
+
+	.  reduce 98
+
+
+state 24
+	statement : function_call . semicolon  (97)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 55
+
+
+state 25
+	s_assignment : id . T_PP  (102)
+	s_assignment : id . T_MM  (103)
+	function_call : id . T_LPAR argument_s0 rightparen attributes_0  (114)
+	id_s : id . attributes_0  (190)
+	empty : .  (187)
+
+	T_LPAR  shift 56
+	T_LSQB  shift 57
+	T_PP  shift 58
+	T_MM  shift 59
+	T_ASSIGN  reduce 187
+	T_COMMA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 61
+	empty  goto 62
+
+
+state 26
+	f_assignment : id_s . T_ASSIGN function_call  (100)
+	s_assignment : id_s . T_ASSIGN expression_s  (101)
+	id_s : id_s . T_COMMA id attributes_0  (191)
+
+	T_ASSIGN  shift 63
+	T_COMMA  shift 64
+	.  error
+
+
+state 27
+	top : macro .  (4)
+
+	.  reduce 4
+
+
+state 28
+	top : packet .  (5)
+
+	.  reduce 5
+
+
+state 29
+	assignment : s_assignment .  (99)
+
+	.  reduce 99
+
+
+state 30
+	top : statement .  (3)
+
+	.  reduce 3
+
+
+state 31
+	start : $$1 top .  (2)
+
+	.  reduce 2
+
+
+state 32
+	top : vcr .  (6)
+
+	.  reduce 6
+
+
+state 33
+	top : semicolon .  (12)
+
+	.  reduce 12
+
+
+state 34
+	int : T_INT .  (177)
+
+	.  reduce 177
+
+
+state 35
+	packet : T_BAR int . T_BAR P_INTERRUPT T_BAR int $$2 T_BAR interrupt_data T_BAR  (25)
+	packet : T_BAR int . T_BAR P_SYSTEM T_BAR int $$3 T_BAR system_data T_BAR  (27)
+	packet : T_BAR int . T_BAR P_ACK T_BAR int $$4 T_BAR ack_data T_BAR  (29)
+	packet : T_BAR int . T_BAR P_MACRO T_BAR int $$5 T_BAR macro_data T_BAR  (31)
+	packet : T_BAR int . T_BAR P_FOREGROUND T_BAR int $$6 T_BAR foreground_data T_BAR  (33)
+	packet : T_BAR int . T_BAR P_BACKGROUND T_BAR int $$7 T_BAR background_data T_BAR  (35)
+	packet : T_BAR int . T_BAR P_ERROR T_BAR int $$8 T_BAR error_data T_BAR  (37)
+	packet : T_BAR int . T_BAR P_MESSAGE T_BAR int $$9 T_BAR message_data T_BAR  (39)
+	packet : T_BAR int . T_BAR P_INFO T_BAR int $$10 T_BAR info_data T_BAR  (41)
+	packet : T_BAR int . T_BAR P_LINQ T_BAR int $$11 T_BAR l_inquiry_data T_BAR  (43)
+	packet : T_BAR int . T_BAR P_SINQ T_BAR int $$12 T_BAR s_inquiry_data T_BAR  (45)
+	packet : T_BAR int . T_BAR P_VINQ T_BAR int $$13 T_BAR v_inquiry_data T_BAR  (47)
+	packet : T_BAR int . T_BAR P_LRESP T_BAR int $$14 T_BAR l_response_data T_BAR  (49)
+	packet : T_BAR int . T_BAR P_SRESP T_BAR int $$15 T_BAR s_response_data T_BAR  (51)
+	packet : T_BAR int . T_BAR P_VRESP T_BAR int $$16 T_BAR v_response_data T_BAR  (53)
+	packet : T_BAR int . T_BAR P_DATA T_BAR int $$17 T_BAR data_data T_BAR  (55)
+	packet : T_BAR int . T_BAR P_IMPORT T_BAR int $$18 T_BAR import_data T_BAR  (57)
+
+	T_BAR  shift 65
+	.  error
+
+
+state 36
+	statement_s0 : empty .  (91)
+
+	.  reduce 91
+
+
+state 37
+	statement_s : statement .  (93)
+
+	.  reduce 93
+
+
+state 38
+	statement_s0 : statement_s .  (92)
+	statement_s : statement_s . statement  (94)
+
+	T_LBRA  shift 6
+	T_ID  shift 20
+	T_RBRA  reduce 92
+
+	assignment  goto 21
+	block  goto 22
+	f_assignment  goto 23
+	function_call  goto 24
+	id  goto 25
+	id_s  goto 26
+	s_assignment  goto 29
+	statement  goto 66
+
+
+state 39
+	block : T_LBRA statement_s0 . rightbracket  (90)
+
+	T_RBRA  shift 67
+	.  error
+
+	rightbracket  goto 68
+
+
+state 40
+	top : K_INCLUDE T_STRING .  (7)
+
+	.  reduce 7
+
+
+state 41
+	top : K_INCLUDE T_ID .  (8)
+
+	.  reduce 8
+
+
+state 42
+	macro : K_MACRO id . T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 rightparen attributes_0 block  (81)
+	macro : K_MACRO id . T_LPAR formal_s0 rightparen attributes_0 block  (82)
+
+	T_LPAR  shift 69
+	.  error
+
+
+state 43
+	vcr : K_BACKWARD semicolon .  (19)
+
+	.  reduce 19
+
+
+state 44
+	vcr : K_FORWARD semicolon .  (18)
+
+	.  reduce 18
+
+
+state 45
+	switch : K_OFF .  (23)
+
+	.  reduce 23
+
+
+state 46
+	switch : K_ON .  (22)
+
+	.  reduce 22
+
+
+state 47
+	vcr : K_LOOP switch . semicolon  (21)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 70
+
+
+state 48
+	vcr : K_PALINDROME switch . semicolon  (20)
+
+	T_SEMI  shift 7
+	.  error
+
+	semicolon  goto 71
+
+
+state 49
+	vcr : K_PAUSE semicolon .  (14)
+
+	.  reduce 14
+
+
+state 50
+	vcr : K_PLAY semicolon .  (15)
+
+	.  reduce 15
+
+
+state 51
+	vcr : K_STEP semicolon .  (16)
+
+	.  reduce 16
+
+
+state 52
+	vcr : K_STOP semicolon .  (17)
+
+	.  reduce 17
+
+
+state 53
+	vcr : K_VCR statement .  (13)
+
+	.  reduce 13
+
+
+state 54
+	statement : assignment semicolon .  (96)
+
+	.  reduce 96
+
+
+state 55
+	statement : function_call semicolon .  (97)
+
+	.  reduce 97
+
+
+state 56
+	function_call : id T_LPAR . argument_s0 rightparen attributes_0  (114)
+	empty : .  (187)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	T_RPAR  reduce 187
+
+	argument  goto 78
+	argument_s  goto 79
+	argument_s0  goto 80
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	empty  goto 84
+	expression  goto 85
+	float  goto 86
+	id  goto 87
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+	value  goto 95
+
+
+state 57
+	attributes : T_LSQB . attribute_s0 T_RSQB  (108)
+	empty : .  (187)
+
+	T_ID  shift 20
+	T_RSQB  reduce 187
+
+	attribute  goto 96
+	attribute_s  goto 97
+	attribute_s0  goto 98
+	empty  goto 99
+	id  goto 100
+
+
+state 58
+	s_assignment : id T_PP .  (102)
+
+	.  reduce 102
+
+
+state 59
+	s_assignment : id T_MM .  (103)
+
+	.  reduce 103
+
+
+state 60
+	attributes_0 : attributes .  (107)
+
+	.  reduce 107
+
+
+state 61
+	id_s : id attributes_0 .  (190)
+
+	.  reduce 190
+
+
+state 62
+	attributes_0 : empty .  (106)
+
+	.  reduce 106
+
+
+state 63
+	f_assignment : id_s T_ASSIGN . function_call  (100)
+	s_assignment : id_s T_ASSIGN . expression_s  (101)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 101
+	expression_s  goto 102
+	float  goto 86
+	function_call  goto 103
+	id  goto 104
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 64
+	id_s : id_s T_COMMA . id attributes_0  (191)
+
+	T_ID  shift 20
+	.  error
+
+	id  goto 105
+
+
+state 65
+	packet : T_BAR int T_BAR . P_INTERRUPT T_BAR int $$2 T_BAR interrupt_data T_BAR  (25)
+	packet : T_BAR int T_BAR . P_SYSTEM T_BAR int $$3 T_BAR system_data T_BAR  (27)
+	packet : T_BAR int T_BAR . P_ACK T_BAR int $$4 T_BAR ack_data T_BAR  (29)
+	packet : T_BAR int T_BAR . P_MACRO T_BAR int $$5 T_BAR macro_data T_BAR  (31)
+	packet : T_BAR int T_BAR . P_FOREGROUND T_BAR int $$6 T_BAR foreground_data T_BAR  (33)
+	packet : T_BAR int T_BAR . P_BACKGROUND T_BAR int $$7 T_BAR background_data T_BAR  (35)
+	packet : T_BAR int T_BAR . P_ERROR T_BAR int $$8 T_BAR error_data T_BAR  (37)
+	packet : T_BAR int T_BAR . P_MESSAGE T_BAR int $$9 T_BAR message_data T_BAR  (39)
+	packet : T_BAR int T_BAR . P_INFO T_BAR int $$10 T_BAR info_data T_BAR  (41)
+	packet : T_BAR int T_BAR . P_LINQ T_BAR int $$11 T_BAR l_inquiry_data T_BAR  (43)
+	packet : T_BAR int T_BAR . P_SINQ T_BAR int $$12 T_BAR s_inquiry_data T_BAR  (45)
+	packet : T_BAR int T_BAR . P_VINQ T_BAR int $$13 T_BAR v_inquiry_data T_BAR  (47)
+	packet : T_BAR int T_BAR . P_LRESP T_BAR int $$14 T_BAR l_response_data T_BAR  (49)
+	packet : T_BAR int T_BAR . P_SRESP T_BAR int $$15 T_BAR s_response_data T_BAR  (51)
+	packet : T_BAR int T_BAR . P_VRESP T_BAR int $$16 T_BAR v_response_data T_BAR  (53)
+	packet : T_BAR int T_BAR . P_DATA T_BAR int $$17 T_BAR data_data T_BAR  (55)
+	packet : T_BAR int T_BAR . P_IMPORT T_BAR int $$18 T_BAR import_data T_BAR  (57)
+
+	P_INTERRUPT  shift 106
+	P_SYSTEM  shift 107
+	P_ACK  shift 108
+	P_MACRO  shift 109
+	P_FOREGROUND  shift 110
+	P_BACKGROUND  shift 111
+	P_ERROR  shift 112
+	P_MESSAGE  shift 113
+	P_INFO  shift 114
+	P_LINQ  shift 115
+	P_SINQ  shift 116
+	P_VINQ  shift 117
+	P_LRESP  shift 118
+	P_SRESP  shift 119
+	P_VRESP  shift 120
+	P_DATA  shift 121
+	P_IMPORT  shift 122
+	.  error
+
+
+state 66
+	statement_s : statement_s statement .  (94)
+
+	.  reduce 94
+
+
+state 67
+	rightbracket : T_RBRA .  (184)
+
+	.  reduce 184
+
+
+state 68
+	block : T_LBRA statement_s0 rightbracket .  (90)
+
+	.  reduce 90
+
+
+state 69
+	macro : K_MACRO id T_LPAR . formal_s0 rightparen T_RA T_LPAR id_s0 rightparen attributes_0 block  (81)
+	macro : K_MACRO id T_LPAR . formal_s0 rightparen attributes_0 block  (82)
+	empty : .  (187)
+
+	T_ID  shift 20
+	T_RPAR  reduce 187
+
+	empty  goto 123
+	formal_s0  goto 124
+	formal_s  goto 125
+	formal  goto 126
+	id  goto 127
+
+
+state 70
+	vcr : K_LOOP switch semicolon .  (21)
+
+	.  reduce 21
+
+
+state 71
+	vcr : K_PALINDROME switch semicolon .  (20)
+
+	.  reduce 20
+
+
+state 72
+	arithmetic : A_MINUS . expression  (135)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 128
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 73
+	expression : T_LPAR . expression rightparen  (126)
+	complex : T_LPAR . nint T_COMMA nint rightparen  (169)
+	complex : T_LPAR . nint T_COMMA nfloat rightparen  (170)
+	complex : T_LPAR . nfloat T_COMMA nint rightparen  (171)
+	complex : T_LPAR . nfloat T_COMMA nfloat rightparen  (172)
+	quaternion : T_LPAR . nint T_COMMA nint T_COMMA nint T_COMMA nint rightparen  (173)
+	quaternion : T_LPAR . nfloat T_COMMA nfloat T_COMMA nfloat T_COMMA nfloat rightparen  (174)
+
+	A_MINUS  shift 130
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 131
+	float  goto 132
+	nfloat  goto 133
+	id  goto 129
+	int  goto 134
+	nint  goto 135
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 74
+	list : T_LBRA . scalar_s rightbracket  (140)
+	list : T_LBRA . tensor_s rightbracket  (141)
+	list : T_LBRA . string_s rightbracket  (142)
+	list : T_LBRA . nreal T_DOTDOT nreal rightbracket  (143)
+	list : T_LBRA . nreal T_DOTDOT nreal T_COLON nreal rightbracket  (144)
+
+	A_MINUS  shift 136
+	T_LPAR  shift 137
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	nreal  goto 138
+	quaternion  goto 90
+	real  goto 139
+	scalar  goto 140
+	scalar_s  goto 141
+	string  goto 142
+	string_s  goto 143
+	tensor  goto 144
+	tensor_s  goto 145
+
+
+state 75
+	tensor : T_LSQB . scalar_s T_RSQB  (151)
+	tensor : T_LSQB . tensor_s T_RSQB  (152)
+
+	A_MINUS  shift 146
+	T_LPAR  shift 137
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 140
+	scalar_s  goto 147
+	tensor  goto 144
+	tensor_s  goto 148
+
+
+state 76
+	float : T_FLOAT .  (180)
+
+	.  reduce 180
+
+
+state 77
+	string : T_STRING .  (181)
+
+	.  reduce 181
+
+
+state 78
+	argument_s : argument .  (117)
+
+	.  reduce 117
+
+
+state 79
+	argument_s0 : argument_s .  (116)
+	argument_s : argument_s . T_COMMA argument  (118)
+
+	T_COMMA  shift 149
+	T_RPAR  reduce 116
+
+
+state 80
+	function_call : id T_LPAR argument_s0 . rightparen attributes_0  (114)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 151
+
+
+state 81
+	expression : arithmetic .  (127)
+
+	.  reduce 127
+
+
+state 82
+	scalar : complex .  (163)
+
+	.  reduce 163
+
+
+state 83
+	expression : constant .  (124)
+
+	.  reduce 124
+
+
+state 84
+	argument_s0 : empty .  (115)
+
+	.  reduce 115
+
+
+state 85
+	value : expression .  (121)
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_PLUS  shift 152
+	A_MINUS  shift 153
+	A_TIMES  shift 154
+	A_DIV  shift 155
+	A_IDIV  shift 156
+	A_MOD  shift 157
+	A_EXP  shift 158
+	T_RPAR  reduce 121
+	T_COMMA  reduce 121
+
+
+state 86
+	real : float .  (168)
+
+	.  reduce 168
+
+
+state 87
+	argument : id . T_ASSIGN value  (120)
+	expression : id .  (125)
+
+	T_ASSIGN  shift 159
+	A_PLUS  reduce 125
+	A_MINUS  reduce 125
+	A_TIMES  reduce 125
+	A_DIV  reduce 125
+	A_IDIV  reduce 125
+	A_MOD  reduce 125
+	A_EXP  reduce 125
+	T_RPAR  reduce 125
+	T_COMMA  reduce 125
+
+
+state 88
+	real : int .  (167)
+
+	.  reduce 167
+
+
+state 89
+	constant : list .  (138)
+
+	.  reduce 138
+
+
+state 90
+	scalar : quaternion .  (164)
+
+	.  reduce 164
+
+
+state 91
+	scalar : real .  (162)
+
+	.  reduce 162
+
+
+state 92
+	constant : scalar .  (136)
+
+	.  reduce 136
+
+
+state 93
+	constant : string .  (139)
+
+	.  reduce 139
+
+
+state 94
+	constant : tensor .  (137)
+
+	.  reduce 137
+
+
+state 95
+	argument : value .  (119)
+
+	.  reduce 119
+
+
+state 96
+	attribute_s : attribute .  (111)
+
+	.  reduce 111
+
+
+state 97
+	attribute_s0 : attribute_s .  (110)
+	attribute_s : attribute_s . T_COMMA attribute  (112)
+
+	T_COMMA  shift 160
+	T_RSQB  reduce 110
+
+
+state 98
+	attributes : T_LSQB attribute_s0 . T_RSQB  (108)
+
+	T_RSQB  shift 161
+	.  error
+
+
+state 99
+	attribute_s0 : empty .  (109)
+
+	.  reduce 109
+
+
+state 100
+	attribute : id . T_COLON constant  (113)
+
+	T_COLON  shift 162
+	.  error
+
+
+state 101
+	expression_s : expression .  (122)
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_PLUS  shift 152
+	A_MINUS  shift 153
+	A_TIMES  shift 154
+	A_DIV  shift 155
+	A_IDIV  shift 156
+	A_MOD  shift 157
+	A_EXP  shift 158
+	T_BAR  reduce 122
+	T_COMMA  reduce 122
+	T_SEMI  reduce 122
+
+
+state 102
+	s_assignment : id_s T_ASSIGN expression_s .  (101)
+	expression_s : expression_s . T_COMMA expression  (123)
+
+	T_COMMA  shift 163
+	T_BAR  reduce 101
+	T_SEMI  reduce 101
+
+
+state 103
+	f_assignment : id_s T_ASSIGN function_call .  (100)
+
+	.  reduce 100
+
+
+state 104
+	function_call : id . T_LPAR argument_s0 rightparen attributes_0  (114)
+	expression : id .  (125)
+
+	T_LPAR  shift 56
+	A_PLUS  reduce 125
+	A_MINUS  reduce 125
+	A_TIMES  reduce 125
+	A_DIV  reduce 125
+	A_IDIV  reduce 125
+	A_MOD  reduce 125
+	A_EXP  reduce 125
+	T_COMMA  reduce 125
+	T_SEMI  reduce 125
+
+
+state 105
+	id_s : id_s T_COMMA id . attributes_0  (191)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_BAR  reduce 187
+	T_RPAR  reduce 187
+	T_ASSIGN  reduce 187
+	T_COMMA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 164
+	empty  goto 62
+
+
+state 106
+	packet : T_BAR int T_BAR P_INTERRUPT . T_BAR int $$2 T_BAR interrupt_data T_BAR  (25)
+
+	T_BAR  shift 165
+	.  error
+
+
+state 107
+	packet : T_BAR int T_BAR P_SYSTEM . T_BAR int $$3 T_BAR system_data T_BAR  (27)
+
+	T_BAR  shift 166
+	.  error
+
+
+state 108
+	packet : T_BAR int T_BAR P_ACK . T_BAR int $$4 T_BAR ack_data T_BAR  (29)
+
+	T_BAR  shift 167
+	.  error
+
+
+state 109
+	packet : T_BAR int T_BAR P_MACRO . T_BAR int $$5 T_BAR macro_data T_BAR  (31)
+
+	T_BAR  shift 168
+	.  error
+
+
+state 110
+	packet : T_BAR int T_BAR P_FOREGROUND . T_BAR int $$6 T_BAR foreground_data T_BAR  (33)
+
+	T_BAR  shift 169
+	.  error
+
+
+state 111
+	packet : T_BAR int T_BAR P_BACKGROUND . T_BAR int $$7 T_BAR background_data T_BAR  (35)
+
+	T_BAR  shift 170
+	.  error
+
+
+state 112
+	packet : T_BAR int T_BAR P_ERROR . T_BAR int $$8 T_BAR error_data T_BAR  (37)
+
+	T_BAR  shift 171
+	.  error
+
+
+state 113
+	packet : T_BAR int T_BAR P_MESSAGE . T_BAR int $$9 T_BAR message_data T_BAR  (39)
+
+	T_BAR  shift 172
+	.  error
+
+
+state 114
+	packet : T_BAR int T_BAR P_INFO . T_BAR int $$10 T_BAR info_data T_BAR  (41)
+
+	T_BAR  shift 173
+	.  error
+
+
+state 115
+	packet : T_BAR int T_BAR P_LINQ . T_BAR int $$11 T_BAR l_inquiry_data T_BAR  (43)
+
+	T_BAR  shift 174
+	.  error
+
+
+state 116
+	packet : T_BAR int T_BAR P_SINQ . T_BAR int $$12 T_BAR s_inquiry_data T_BAR  (45)
+
+	T_BAR  shift 175
+	.  error
+
+
+state 117
+	packet : T_BAR int T_BAR P_VINQ . T_BAR int $$13 T_BAR v_inquiry_data T_BAR  (47)
+
+	T_BAR  shift 176
+	.  error
+
+
+state 118
+	packet : T_BAR int T_BAR P_LRESP . T_BAR int $$14 T_BAR l_response_data T_BAR  (49)
+
+	T_BAR  shift 177
+	.  error
+
+
+state 119
+	packet : T_BAR int T_BAR P_SRESP . T_BAR int $$15 T_BAR s_response_data T_BAR  (51)
+
+	T_BAR  shift 178
+	.  error
+
+
+state 120
+	packet : T_BAR int T_BAR P_VRESP . T_BAR int $$16 T_BAR v_response_data T_BAR  (53)
+
+	T_BAR  shift 179
+	.  error
+
+
+state 121
+	packet : T_BAR int T_BAR P_DATA . T_BAR int $$17 T_BAR data_data T_BAR  (55)
+
+	T_BAR  shift 180
+	.  error
+
+
+state 122
+	packet : T_BAR int T_BAR P_IMPORT . T_BAR int $$18 T_BAR import_data T_BAR  (57)
+
+	T_BAR  shift 181
+	.  error
+
+
+state 123
+	formal_s0 : empty .  (83)
+
+	.  reduce 83
+
+
+state 124
+	macro : K_MACRO id T_LPAR formal_s0 . rightparen T_RA T_LPAR id_s0 rightparen attributes_0 block  (81)
+	macro : K_MACRO id T_LPAR formal_s0 . rightparen attributes_0 block  (82)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 182
+
+
+state 125
+	formal_s0 : formal_s .  (84)
+	formal_s : formal_s . T_COMMA formal attributes_0  (86)
+
+	T_COMMA  shift 183
+	T_RPAR  reduce 84
+
+
+state 126
+	formal_s : formal . attributes_0  (85)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_RPAR  reduce 187
+	T_COMMA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 184
+	empty  goto 62
+
+
+state 127
+	formal : id .  (87)
+	formal : id . T_ASSIGN constant  (88)
+	formal : id . T_ASSIGN A_MINUS constant  (89)
+
+	T_ASSIGN  shift 185
+	T_RPAR  reduce 87
+	T_LSQB  reduce 87
+	T_COMMA  reduce 87
+
+
+state 128
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+	arithmetic : A_MINUS expression .  (135)
+
+	.  reduce 135
+
+
+state 129
+	expression : id .  (125)
+
+	.  reduce 125
+
+
+state 130
+	arithmetic : A_MINUS . expression  (135)
+	nint : A_MINUS . int  (176)
+	nfloat : A_MINUS . float  (179)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 128
+	float  goto 186
+	id  goto 129
+	int  goto 187
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 131
+	expression : T_LPAR expression . rightparen  (126)
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_PLUS  shift 152
+	A_MINUS  shift 153
+	A_TIMES  shift 154
+	A_DIV  shift 155
+	A_IDIV  shift 156
+	A_MOD  shift 157
+	A_EXP  shift 158
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 188
+
+
+state 132
+	real : float .  (168)
+	nfloat : float .  (178)
+
+	A_PLUS  reduce 168
+	A_MINUS  reduce 168
+	A_TIMES  reduce 168
+	A_DIV  reduce 168
+	A_IDIV  reduce 168
+	A_MOD  reduce 168
+	A_EXP  reduce 168
+	T_RPAR  reduce 168
+	T_COMMA  reduce 178
+
+
+state 133
+	complex : T_LPAR nfloat . T_COMMA nint rightparen  (171)
+	complex : T_LPAR nfloat . T_COMMA nfloat rightparen  (172)
+	quaternion : T_LPAR nfloat . T_COMMA nfloat T_COMMA nfloat T_COMMA nfloat rightparen  (174)
+
+	T_COMMA  shift 189
+	.  error
+
+
+state 134
+	real : int .  (167)
+	nint : int .  (175)
+
+	A_PLUS  reduce 167
+	A_MINUS  reduce 167
+	A_TIMES  reduce 167
+	A_DIV  reduce 167
+	A_IDIV  reduce 167
+	A_MOD  reduce 167
+	A_EXP  reduce 167
+	T_RPAR  reduce 167
+	T_COMMA  reduce 175
+
+
+state 135
+	complex : T_LPAR nint . T_COMMA nint rightparen  (169)
+	complex : T_LPAR nint . T_COMMA nfloat rightparen  (170)
+	quaternion : T_LPAR nint . T_COMMA nint T_COMMA nint T_COMMA nint rightparen  (173)
+
+	T_COMMA  shift 190
+	.  error
+
+
+state 136
+	tensor_s : A_MINUS . tensor  (147)
+	scalar_s : A_MINUS . scalar  (155)
+	nreal : A_MINUS . real  (166)
+
+	T_LPAR  shift 137
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 191
+	scalar  goto 192
+	tensor  goto 193
+
+
+state 137
+	complex : T_LPAR . nint T_COMMA nint rightparen  (169)
+	complex : T_LPAR . nint T_COMMA nfloat rightparen  (170)
+	complex : T_LPAR . nfloat T_COMMA nint rightparen  (171)
+	complex : T_LPAR . nfloat T_COMMA nfloat rightparen  (172)
+	quaternion : T_LPAR . nint T_COMMA nint T_COMMA nint T_COMMA nint rightparen  (173)
+	quaternion : T_LPAR . nfloat T_COMMA nfloat T_COMMA nfloat T_COMMA nfloat rightparen  (174)
+
+	A_MINUS  shift 194
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 195
+	nfloat  goto 133
+	int  goto 196
+	nint  goto 135
+
+
+state 138
+	list : T_LBRA nreal . T_DOTDOT nreal rightbracket  (143)
+	list : T_LBRA nreal . T_DOTDOT nreal T_COLON nreal rightbracket  (144)
+
+	T_DOTDOT  shift 197
+	.  error
+
+
+state 139
+	scalar : real .  (162)
+	nreal : real .  (165)
+
+	A_MINUS  reduce 162
+	T_LPAR  reduce 162
+	T_RBRA  reduce 162
+	T_COMMA  reduce 162
+	T_DOTDOT  reduce 165
+	T_INT  reduce 162
+	T_FLOAT  reduce 162
+
+
+state 140
+	scalar_s : scalar .  (153)
+
+	.  reduce 153
+
+
+state 141
+	list : T_LBRA scalar_s . rightbracket  (140)
+	scalar_s : scalar_s . scalar  (154)
+	scalar_s : scalar_s . A_MINUS scalar  (156)
+	scalar_s : scalar_s . T_COMMA scalar  (157)
+	scalar_s : scalar_s . T_COMMA A_MINUS scalar  (158)
+
+	A_MINUS  shift 198
+	T_LPAR  shift 137
+	T_RBRA  shift 67
+	T_COMMA  shift 199
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 200
+	rightbracket  goto 201
+
+
+state 142
+	string_s : string .  (159)
+
+	.  reduce 159
+
+
+state 143
+	list : T_LBRA string_s . rightbracket  (142)
+	string_s : string_s . string  (160)
+	string_s : string_s . T_COMMA string  (161)
+
+	T_RBRA  shift 67
+	T_COMMA  shift 202
+	T_STRING  shift 77
+	.  error
+
+	string  goto 203
+	rightbracket  goto 204
+
+
+state 144
+	tensor_s : tensor .  (145)
+
+	.  reduce 145
+
+
+state 145
+	list : T_LBRA tensor_s . rightbracket  (141)
+	tensor_s : tensor_s . tensor  (146)
+	tensor_s : tensor_s . A_MINUS tensor  (148)
+	tensor_s : tensor_s . T_COMMA tensor  (149)
+	tensor_s : tensor_s . T_COMMA A_MINUS tensor  (150)
+
+	A_MINUS  shift 205
+	T_RBRA  shift 67
+	T_LSQB  shift 75
+	T_COMMA  shift 206
+	.  error
+
+	tensor  goto 207
+	rightbracket  goto 208
+
+
+state 146
+	tensor_s : A_MINUS . tensor  (147)
+	scalar_s : A_MINUS . scalar  (155)
+
+	T_LPAR  shift 137
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 192
+	tensor  goto 193
+
+
+state 147
+	tensor : T_LSQB scalar_s . T_RSQB  (151)
+	scalar_s : scalar_s . scalar  (154)
+	scalar_s : scalar_s . A_MINUS scalar  (156)
+	scalar_s : scalar_s . T_COMMA scalar  (157)
+	scalar_s : scalar_s . T_COMMA A_MINUS scalar  (158)
+
+	A_MINUS  shift 198
+	T_LPAR  shift 137
+	T_RSQB  shift 209
+	T_COMMA  shift 199
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 200
+
+
+state 148
+	tensor_s : tensor_s . tensor  (146)
+	tensor_s : tensor_s . A_MINUS tensor  (148)
+	tensor_s : tensor_s . T_COMMA tensor  (149)
+	tensor_s : tensor_s . T_COMMA A_MINUS tensor  (150)
+	tensor : T_LSQB tensor_s . T_RSQB  (152)
+
+	A_MINUS  shift 205
+	T_LSQB  shift 75
+	T_RSQB  shift 210
+	T_COMMA  shift 206
+	.  error
+
+	tensor  goto 207
+
+
+state 149
+	argument_s : argument_s T_COMMA . argument  (118)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	argument  goto 211
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 85
+	float  goto 86
+	id  goto 87
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+	value  goto 95
+
+
+state 150
+	rightparen : T_RPAR .  (183)
+
+	.  reduce 183
+
+
+state 151
+	function_call : id T_LPAR argument_s0 rightparen . attributes_0  (114)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_SEMI  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 212
+	empty  goto 62
+
+
+state 152
+	arithmetic : expression A_PLUS . expression  (133)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 213
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 153
+	arithmetic : expression A_MINUS . expression  (134)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 214
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 154
+	arithmetic : expression A_TIMES . expression  (129)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 215
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 155
+	arithmetic : expression A_DIV . expression  (130)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 216
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 156
+	arithmetic : expression A_IDIV . expression  (131)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 217
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 157
+	arithmetic : expression A_MOD . expression  (132)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 218
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 158
+	arithmetic : expression A_EXP . expression  (128)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 219
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 159
+	argument : id T_ASSIGN . value  (120)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 85
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+	value  goto 220
+
+
+state 160
+	attribute_s : attribute_s T_COMMA . attribute  (112)
+
+	T_ID  shift 20
+	.  error
+
+	attribute  goto 221
+	id  goto 100
+
+
+state 161
+	attributes : T_LSQB attribute_s0 T_RSQB .  (108)
+
+	.  reduce 108
+
+
+state 162
+	attribute : id T_COLON . constant  (113)
+
+	T_LPAR  shift 137
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	.  error
+
+	complex  goto 82
+	constant  goto 222
+	float  goto 86
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 163
+	expression_s : expression_s T_COMMA . expression  (123)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 223
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 164
+	id_s : id_s T_COMMA id attributes_0 .  (191)
+
+	.  reduce 191
+
+
+state 165
+	packet : T_BAR int T_BAR P_INTERRUPT T_BAR . int $$2 T_BAR interrupt_data T_BAR  (25)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 224
+
+
+state 166
+	packet : T_BAR int T_BAR P_SYSTEM T_BAR . int $$3 T_BAR system_data T_BAR  (27)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 225
+
+
+state 167
+	packet : T_BAR int T_BAR P_ACK T_BAR . int $$4 T_BAR ack_data T_BAR  (29)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 226
+
+
+state 168
+	packet : T_BAR int T_BAR P_MACRO T_BAR . int $$5 T_BAR macro_data T_BAR  (31)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 227
+
+
+state 169
+	packet : T_BAR int T_BAR P_FOREGROUND T_BAR . int $$6 T_BAR foreground_data T_BAR  (33)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 228
+
+
+state 170
+	packet : T_BAR int T_BAR P_BACKGROUND T_BAR . int $$7 T_BAR background_data T_BAR  (35)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 229
+
+
+state 171
+	packet : T_BAR int T_BAR P_ERROR T_BAR . int $$8 T_BAR error_data T_BAR  (37)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 230
+
+
+state 172
+	packet : T_BAR int T_BAR P_MESSAGE T_BAR . int $$9 T_BAR message_data T_BAR  (39)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 231
+
+
+state 173
+	packet : T_BAR int T_BAR P_INFO T_BAR . int $$10 T_BAR info_data T_BAR  (41)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 232
+
+
+state 174
+	packet : T_BAR int T_BAR P_LINQ T_BAR . int $$11 T_BAR l_inquiry_data T_BAR  (43)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 233
+
+
+state 175
+	packet : T_BAR int T_BAR P_SINQ T_BAR . int $$12 T_BAR s_inquiry_data T_BAR  (45)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 234
+
+
+state 176
+	packet : T_BAR int T_BAR P_VINQ T_BAR . int $$13 T_BAR v_inquiry_data T_BAR  (47)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 235
+
+
+state 177
+	packet : T_BAR int T_BAR P_LRESP T_BAR . int $$14 T_BAR l_response_data T_BAR  (49)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 236
+
+
+state 178
+	packet : T_BAR int T_BAR P_SRESP T_BAR . int $$15 T_BAR s_response_data T_BAR  (51)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 237
+
+
+state 179
+	packet : T_BAR int T_BAR P_VRESP T_BAR . int $$16 T_BAR v_response_data T_BAR  (53)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 238
+
+
+state 180
+	packet : T_BAR int T_BAR P_DATA T_BAR . int $$17 T_BAR data_data T_BAR  (55)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 239
+
+
+state 181
+	packet : T_BAR int T_BAR P_IMPORT T_BAR . int $$18 T_BAR import_data T_BAR  (57)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 240
+
+
+state 182
+	macro : K_MACRO id T_LPAR formal_s0 rightparen . T_RA T_LPAR id_s0 rightparen attributes_0 block  (81)
+	macro : K_MACRO id T_LPAR formal_s0 rightparen . attributes_0 block  (82)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_RA  shift 241
+	T_LBRA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 242
+	empty  goto 62
+
+
+state 183
+	formal_s : formal_s T_COMMA . formal attributes_0  (86)
+
+	T_ID  shift 20
+	.  error
+
+	formal  goto 243
+	id  goto 127
+
+
+state 184
+	formal_s : formal attributes_0 .  (85)
+
+	.  reduce 85
+
+
+state 185
+	formal : id T_ASSIGN . constant  (88)
+	formal : id T_ASSIGN . A_MINUS constant  (89)
+
+	A_MINUS  shift 244
+	T_LPAR  shift 137
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	.  error
+
+	complex  goto 82
+	constant  goto 245
+	float  goto 86
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 186
+	real : float .  (168)
+	nfloat : A_MINUS float .  (179)
+
+	A_PLUS  reduce 168
+	A_MINUS  reduce 168
+	A_TIMES  reduce 168
+	A_DIV  reduce 168
+	A_IDIV  reduce 168
+	A_MOD  reduce 168
+	A_EXP  reduce 168
+	T_RPAR  reduce 168
+	T_COMMA  reduce 179
+
+
+state 187
+	real : int .  (167)
+	nint : A_MINUS int .  (176)
+
+	A_PLUS  reduce 167
+	A_MINUS  reduce 167
+	A_TIMES  reduce 167
+	A_DIV  reduce 167
+	A_IDIV  reduce 167
+	A_MOD  reduce 167
+	A_EXP  reduce 167
+	T_RPAR  reduce 167
+	T_COMMA  reduce 176
+
+
+state 188
+	expression : T_LPAR expression rightparen .  (126)
+
+	.  reduce 126
+
+
+state 189
+	complex : T_LPAR nfloat T_COMMA . nint rightparen  (171)
+	complex : T_LPAR nfloat T_COMMA . nfloat rightparen  (172)
+	quaternion : T_LPAR nfloat T_COMMA . nfloat T_COMMA nfloat T_COMMA nfloat rightparen  (174)
+
+	A_MINUS  shift 194
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 195
+	nfloat  goto 246
+	int  goto 196
+	nint  goto 247
+
+
+state 190
+	complex : T_LPAR nint T_COMMA . nint rightparen  (169)
+	complex : T_LPAR nint T_COMMA . nfloat rightparen  (170)
+	quaternion : T_LPAR nint T_COMMA . nint T_COMMA nint T_COMMA nint rightparen  (173)
+
+	A_MINUS  shift 194
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 195
+	nfloat  goto 248
+	int  goto 196
+	nint  goto 249
+
+
+state 191
+	scalar : real .  (162)
+	nreal : A_MINUS real .  (166)
+
+	A_MINUS  reduce 162
+	T_LPAR  reduce 162
+	T_RBRA  reduce 162
+	T_COMMA  reduce 162
+	T_DOTDOT  reduce 166
+	T_INT  reduce 162
+	T_FLOAT  reduce 162
+
+
+state 192
+	scalar_s : A_MINUS scalar .  (155)
+
+	.  reduce 155
+
+
+state 193
+	tensor_s : A_MINUS tensor .  (147)
+
+	.  reduce 147
+
+
+state 194
+	nint : A_MINUS . int  (176)
+	nfloat : A_MINUS . float  (179)
+
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 250
+	int  goto 251
+
+
+state 195
+	nfloat : float .  (178)
+
+	.  reduce 178
+
+
+state 196
+	nint : int .  (175)
+
+	.  reduce 175
+
+
+state 197
+	list : T_LBRA nreal T_DOTDOT . nreal rightbracket  (143)
+	list : T_LBRA nreal T_DOTDOT . nreal T_COLON nreal rightbracket  (144)
+
+	A_MINUS  shift 252
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 86
+	int  goto 88
+	nreal  goto 253
+	real  goto 254
+
+
+state 198
+	scalar_s : scalar_s A_MINUS . scalar  (156)
+
+	T_LPAR  shift 137
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 255
+
+
+state 199
+	scalar_s : scalar_s T_COMMA . scalar  (157)
+	scalar_s : scalar_s T_COMMA . A_MINUS scalar  (158)
+
+	A_MINUS  shift 256
+	T_LPAR  shift 137
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 257
+
+
+state 200
+	scalar_s : scalar_s scalar .  (154)
+
+	.  reduce 154
+
+
+state 201
+	list : T_LBRA scalar_s rightbracket .  (140)
+
+	.  reduce 140
+
+
+state 202
+	string_s : string_s T_COMMA . string  (161)
+
+	T_STRING  shift 77
+	.  error
+
+	string  goto 258
+
+
+state 203
+	string_s : string_s string .  (160)
+
+	.  reduce 160
+
+
+state 204
+	list : T_LBRA string_s rightbracket .  (142)
+
+	.  reduce 142
+
+
+state 205
+	tensor_s : tensor_s A_MINUS . tensor  (148)
+
+	T_LSQB  shift 75
+	.  error
+
+	tensor  goto 259
+
+
+state 206
+	tensor_s : tensor_s T_COMMA . tensor  (149)
+	tensor_s : tensor_s T_COMMA . A_MINUS tensor  (150)
+
+	A_MINUS  shift 260
+	T_LSQB  shift 75
+	.  error
+
+	tensor  goto 261
+
+
+state 207
+	tensor_s : tensor_s tensor .  (146)
+
+	.  reduce 146
+
+
+state 208
+	list : T_LBRA tensor_s rightbracket .  (141)
+
+	.  reduce 141
+
+
+state 209
+	tensor : T_LSQB scalar_s T_RSQB .  (151)
+
+	.  reduce 151
+
+
+state 210
+	tensor : T_LSQB tensor_s T_RSQB .  (152)
+
+	.  reduce 152
+
+
+state 211
+	argument_s : argument_s T_COMMA argument .  (118)
+
+	.  reduce 118
+
+
+state 212
+	function_call : id T_LPAR argument_s0 rightparen attributes_0 .  (114)
+
+	.  reduce 114
+
+
+state 213
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression A_PLUS expression .  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_TIMES  shift 154
+	A_DIV  shift 155
+	A_IDIV  shift 156
+	A_MOD  shift 157
+	A_EXP  shift 158
+	A_PLUS  reduce 133
+	A_MINUS  reduce 133
+	T_BAR  reduce 133
+	T_RPAR  reduce 133
+	T_COMMA  reduce 133
+	T_SEMI  reduce 133
+
+
+state 214
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+	arithmetic : expression A_MINUS expression .  (134)
+
+	A_TIMES  shift 154
+	A_DIV  shift 155
+	A_IDIV  shift 156
+	A_MOD  shift 157
+	A_EXP  shift 158
+	A_PLUS  reduce 134
+	A_MINUS  reduce 134
+	T_BAR  reduce 134
+	T_RPAR  reduce 134
+	T_COMMA  reduce 134
+	T_SEMI  reduce 134
+
+
+state 215
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression A_TIMES expression .  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_EXP  shift 158
+	A_PLUS  reduce 129
+	A_MINUS  reduce 129
+	A_TIMES  reduce 129
+	A_DIV  reduce 129
+	A_IDIV  reduce 129
+	A_MOD  reduce 129
+	T_BAR  reduce 129
+	T_RPAR  reduce 129
+	T_COMMA  reduce 129
+	T_SEMI  reduce 129
+
+
+state 216
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression A_DIV expression .  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_EXP  shift 158
+	A_PLUS  reduce 130
+	A_MINUS  reduce 130
+	A_TIMES  reduce 130
+	A_DIV  reduce 130
+	A_IDIV  reduce 130
+	A_MOD  reduce 130
+	T_BAR  reduce 130
+	T_RPAR  reduce 130
+	T_COMMA  reduce 130
+	T_SEMI  reduce 130
+
+
+state 217
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression A_IDIV expression .  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_EXP  shift 158
+	A_PLUS  reduce 131
+	A_MINUS  reduce 131
+	A_TIMES  reduce 131
+	A_DIV  reduce 131
+	A_IDIV  reduce 131
+	A_MOD  reduce 131
+	T_BAR  reduce 131
+	T_RPAR  reduce 131
+	T_COMMA  reduce 131
+	T_SEMI  reduce 131
+
+
+state 218
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression A_MOD expression .  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_EXP  shift 158
+	A_PLUS  reduce 132
+	A_MINUS  reduce 132
+	A_TIMES  reduce 132
+	A_DIV  reduce 132
+	A_IDIV  reduce 132
+	A_MOD  reduce 132
+	T_BAR  reduce 132
+	T_RPAR  reduce 132
+	T_COMMA  reduce 132
+	T_SEMI  reduce 132
+
+
+state 219
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression A_EXP expression .  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	.  reduce 128
+
+
+state 220
+	argument : id T_ASSIGN value .  (120)
+
+	.  reduce 120
+
+
+state 221
+	attribute_s : attribute_s T_COMMA attribute .  (112)
+
+	.  reduce 112
+
+
+state 222
+	attribute : id T_COLON constant .  (113)
+
+	.  reduce 113
+
+
+state 223
+	expression_s : expression_s T_COMMA expression .  (123)
+	arithmetic : expression . A_EXP expression  (128)
+	arithmetic : expression . A_TIMES expression  (129)
+	arithmetic : expression . A_DIV expression  (130)
+	arithmetic : expression . A_IDIV expression  (131)
+	arithmetic : expression . A_MOD expression  (132)
+	arithmetic : expression . A_PLUS expression  (133)
+	arithmetic : expression . A_MINUS expression  (134)
+
+	A_PLUS  shift 152
+	A_MINUS  shift 153
+	A_TIMES  shift 154
+	A_DIV  shift 155
+	A_IDIV  shift 156
+	A_MOD  shift 157
+	A_EXP  shift 158
+	T_BAR  reduce 123
+	T_COMMA  reduce 123
+	T_SEMI  reduce 123
+
+
+state 224
+	packet : T_BAR int T_BAR P_INTERRUPT T_BAR int . $$2 T_BAR interrupt_data T_BAR  (25)
+	$$2 : .  (24)
+
+	.  reduce 24
+
+	$$2  goto 262
+
+
+state 225
+	packet : T_BAR int T_BAR P_SYSTEM T_BAR int . $$3 T_BAR system_data T_BAR  (27)
+	$$3 : .  (26)
+
+	.  reduce 26
+
+	$$3  goto 263
+
+
+state 226
+	packet : T_BAR int T_BAR P_ACK T_BAR int . $$4 T_BAR ack_data T_BAR  (29)
+	$$4 : .  (28)
+
+	.  reduce 28
+
+	$$4  goto 264
+
+
+state 227
+	packet : T_BAR int T_BAR P_MACRO T_BAR int . $$5 T_BAR macro_data T_BAR  (31)
+	$$5 : .  (30)
+
+	.  reduce 30
+
+	$$5  goto 265
+
+
+state 228
+	packet : T_BAR int T_BAR P_FOREGROUND T_BAR int . $$6 T_BAR foreground_data T_BAR  (33)
+	$$6 : .  (32)
+
+	.  reduce 32
+
+	$$6  goto 266
+
+
+state 229
+	packet : T_BAR int T_BAR P_BACKGROUND T_BAR int . $$7 T_BAR background_data T_BAR  (35)
+	$$7 : .  (34)
+
+	.  reduce 34
+
+	$$7  goto 267
+
+
+state 230
+	packet : T_BAR int T_BAR P_ERROR T_BAR int . $$8 T_BAR error_data T_BAR  (37)
+	$$8 : .  (36)
+
+	.  reduce 36
+
+	$$8  goto 268
+
+
+state 231
+	packet : T_BAR int T_BAR P_MESSAGE T_BAR int . $$9 T_BAR message_data T_BAR  (39)
+	$$9 : .  (38)
+
+	.  reduce 38
+
+	$$9  goto 269
+
+
+state 232
+	packet : T_BAR int T_BAR P_INFO T_BAR int . $$10 T_BAR info_data T_BAR  (41)
+	$$10 : .  (40)
+
+	.  reduce 40
+
+	$$10  goto 270
+
+
+state 233
+	packet : T_BAR int T_BAR P_LINQ T_BAR int . $$11 T_BAR l_inquiry_data T_BAR  (43)
+	$$11 : .  (42)
+
+	.  reduce 42
+
+	$$11  goto 271
+
+
+state 234
+	packet : T_BAR int T_BAR P_SINQ T_BAR int . $$12 T_BAR s_inquiry_data T_BAR  (45)
+	$$12 : .  (44)
+
+	.  reduce 44
+
+	$$12  goto 272
+
+
+state 235
+	packet : T_BAR int T_BAR P_VINQ T_BAR int . $$13 T_BAR v_inquiry_data T_BAR  (47)
+	$$13 : .  (46)
+
+	.  reduce 46
+
+	$$13  goto 273
+
+
+state 236
+	packet : T_BAR int T_BAR P_LRESP T_BAR int . $$14 T_BAR l_response_data T_BAR  (49)
+	$$14 : .  (48)
+
+	.  reduce 48
+
+	$$14  goto 274
+
+
+state 237
+	packet : T_BAR int T_BAR P_SRESP T_BAR int . $$15 T_BAR s_response_data T_BAR  (51)
+	$$15 : .  (50)
+
+	.  reduce 50
+
+	$$15  goto 275
+
+
+state 238
+	packet : T_BAR int T_BAR P_VRESP T_BAR int . $$16 T_BAR v_response_data T_BAR  (53)
+	$$16 : .  (52)
+
+	.  reduce 52
+
+	$$16  goto 276
+
+
+state 239
+	packet : T_BAR int T_BAR P_DATA T_BAR int . $$17 T_BAR data_data T_BAR  (55)
+	$$17 : .  (54)
+
+	.  reduce 54
+
+	$$17  goto 277
+
+
+state 240
+	packet : T_BAR int T_BAR P_IMPORT T_BAR int . $$18 T_BAR import_data T_BAR  (57)
+	$$18 : .  (56)
+
+	.  reduce 56
+
+	$$18  goto 278
+
+
+state 241
+	macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA . T_LPAR id_s0 rightparen attributes_0 block  (81)
+
+	T_LPAR  shift 279
+	.  error
+
+
+state 242
+	macro : K_MACRO id T_LPAR formal_s0 rightparen attributes_0 . block  (82)
+
+	T_LBRA  shift 6
+	.  error
+
+	block  goto 280
+
+
+state 243
+	formal_s : formal_s T_COMMA formal . attributes_0  (86)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_RPAR  reduce 187
+	T_COMMA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 281
+	empty  goto 62
+
+
+state 244
+	formal : id T_ASSIGN A_MINUS . constant  (89)
+
+	T_LPAR  shift 137
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	.  error
+
+	complex  goto 82
+	constant  goto 282
+	float  goto 86
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 245
+	formal : id T_ASSIGN constant .  (88)
+
+	.  reduce 88
+
+
+state 246
+	complex : T_LPAR nfloat T_COMMA nfloat . rightparen  (172)
+	quaternion : T_LPAR nfloat T_COMMA nfloat . T_COMMA nfloat T_COMMA nfloat rightparen  (174)
+
+	T_RPAR  shift 150
+	T_COMMA  shift 283
+	.  error
+
+	rightparen  goto 284
+
+
+state 247
+	complex : T_LPAR nfloat T_COMMA nint . rightparen  (171)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 285
+
+
+state 248
+	complex : T_LPAR nint T_COMMA nfloat . rightparen  (170)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 286
+
+
+state 249
+	complex : T_LPAR nint T_COMMA nint . rightparen  (169)
+	quaternion : T_LPAR nint T_COMMA nint . T_COMMA nint T_COMMA nint rightparen  (173)
+
+	T_RPAR  shift 150
+	T_COMMA  shift 287
+	.  error
+
+	rightparen  goto 288
+
+
+state 250
+	nfloat : A_MINUS float .  (179)
+
+	.  reduce 179
+
+
+state 251
+	nint : A_MINUS int .  (176)
+
+	.  reduce 176
+
+
+state 252
+	nreal : A_MINUS . real  (166)
+
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 86
+	int  goto 88
+	real  goto 289
+
+
+state 253
+	list : T_LBRA nreal T_DOTDOT nreal . rightbracket  (143)
+	list : T_LBRA nreal T_DOTDOT nreal . T_COLON nreal rightbracket  (144)
+
+	T_RBRA  shift 67
+	T_COLON  shift 290
+	.  error
+
+	rightbracket  goto 291
+
+
+state 254
+	nreal : real .  (165)
+
+	.  reduce 165
+
+
+state 255
+	scalar_s : scalar_s A_MINUS scalar .  (156)
+
+	.  reduce 156
+
+
+state 256
+	scalar_s : scalar_s T_COMMA A_MINUS . scalar  (158)
+
+	T_LPAR  shift 137
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	complex  goto 82
+	float  goto 86
+	int  goto 88
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 292
+
+
+state 257
+	scalar_s : scalar_s T_COMMA scalar .  (157)
+
+	.  reduce 157
+
+
+state 258
+	string_s : string_s T_COMMA string .  (161)
+
+	.  reduce 161
+
+
+state 259
+	tensor_s : tensor_s A_MINUS tensor .  (148)
+
+	.  reduce 148
+
+
+state 260
+	tensor_s : tensor_s T_COMMA A_MINUS . tensor  (150)
+
+	T_LSQB  shift 75
+	.  error
+
+	tensor  goto 293
+
+
+state 261
+	tensor_s : tensor_s T_COMMA tensor .  (149)
+
+	.  reduce 149
+
+
+state 262
+	packet : T_BAR int T_BAR P_INTERRUPT T_BAR int $$2 . T_BAR interrupt_data T_BAR  (25)
+
+	T_BAR  shift 294
+	.  error
+
+
+state 263
+	packet : T_BAR int T_BAR P_SYSTEM T_BAR int $$3 . T_BAR system_data T_BAR  (27)
+
+	T_BAR  shift 295
+	.  error
+
+
+state 264
+	packet : T_BAR int T_BAR P_ACK T_BAR int $$4 . T_BAR ack_data T_BAR  (29)
+
+	T_BAR  shift 296
+	.  error
+
+
+state 265
+	packet : T_BAR int T_BAR P_MACRO T_BAR int $$5 . T_BAR macro_data T_BAR  (31)
+
+	T_BAR  shift 297
+	.  error
+
+
+state 266
+	packet : T_BAR int T_BAR P_FOREGROUND T_BAR int $$6 . T_BAR foreground_data T_BAR  (33)
+
+	T_BAR  shift 298
+	.  error
+
+
+state 267
+	packet : T_BAR int T_BAR P_BACKGROUND T_BAR int $$7 . T_BAR background_data T_BAR  (35)
+
+	T_BAR  shift 299
+	.  error
+
+
+state 268
+	packet : T_BAR int T_BAR P_ERROR T_BAR int $$8 . T_BAR error_data T_BAR  (37)
+
+	T_BAR  shift 300
+	.  error
+
+
+state 269
+	packet : T_BAR int T_BAR P_MESSAGE T_BAR int $$9 . T_BAR message_data T_BAR  (39)
+
+	T_BAR  shift 301
+	.  error
+
+
+state 270
+	packet : T_BAR int T_BAR P_INFO T_BAR int $$10 . T_BAR info_data T_BAR  (41)
+
+	T_BAR  shift 302
+	.  error
+
+
+state 271
+	packet : T_BAR int T_BAR P_LINQ T_BAR int $$11 . T_BAR l_inquiry_data T_BAR  (43)
+
+	T_BAR  shift 303
+	.  error
+
+
+state 272
+	packet : T_BAR int T_BAR P_SINQ T_BAR int $$12 . T_BAR s_inquiry_data T_BAR  (45)
+
+	T_BAR  shift 304
+	.  error
+
+
+state 273
+	packet : T_BAR int T_BAR P_VINQ T_BAR int $$13 . T_BAR v_inquiry_data T_BAR  (47)
+
+	T_BAR  shift 305
+	.  error
+
+
+state 274
+	packet : T_BAR int T_BAR P_LRESP T_BAR int $$14 . T_BAR l_response_data T_BAR  (49)
+
+	T_BAR  shift 306
+	.  error
+
+
+state 275
+	packet : T_BAR int T_BAR P_SRESP T_BAR int $$15 . T_BAR s_response_data T_BAR  (51)
+
+	T_BAR  shift 307
+	.  error
+
+
+state 276
+	packet : T_BAR int T_BAR P_VRESP T_BAR int $$16 . T_BAR v_response_data T_BAR  (53)
+
+	T_BAR  shift 308
+	.  error
+
+
+state 277
+	packet : T_BAR int T_BAR P_DATA T_BAR int $$17 . T_BAR data_data T_BAR  (55)
+
+	T_BAR  shift 309
+	.  error
+
+
+state 278
+	packet : T_BAR int T_BAR P_IMPORT T_BAR int $$18 . T_BAR import_data T_BAR  (57)
+
+	T_BAR  shift 310
+	.  error
+
+
+state 279
+	macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA T_LPAR . id_s0 rightparen attributes_0 block  (81)
+	empty : .  (187)
+
+	T_ID  shift 20
+	T_RPAR  reduce 187
+
+	empty  goto 311
+	id  goto 312
+	id_s  goto 313
+	id_s0  goto 314
+
+
+state 280
+	macro : K_MACRO id T_LPAR formal_s0 rightparen attributes_0 block .  (82)
+
+	.  reduce 82
+
+
+state 281
+	formal_s : formal_s T_COMMA formal attributes_0 .  (86)
+
+	.  reduce 86
+
+
+state 282
+	formal : id T_ASSIGN A_MINUS constant .  (89)
+
+	.  reduce 89
+
+
+state 283
+	quaternion : T_LPAR nfloat T_COMMA nfloat T_COMMA . nfloat T_COMMA nfloat rightparen  (174)
+
+	A_MINUS  shift 315
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 195
+	nfloat  goto 316
+
+
+state 284
+	complex : T_LPAR nfloat T_COMMA nfloat rightparen .  (172)
+
+	.  reduce 172
+
+
+state 285
+	complex : T_LPAR nfloat T_COMMA nint rightparen .  (171)
+
+	.  reduce 171
+
+
+state 286
+	complex : T_LPAR nint T_COMMA nfloat rightparen .  (170)
+
+	.  reduce 170
+
+
+state 287
+	quaternion : T_LPAR nint T_COMMA nint T_COMMA . nint T_COMMA nint rightparen  (173)
+
+	A_MINUS  shift 317
+	T_INT  shift 34
+	.  error
+
+	int  goto 196
+	nint  goto 318
+
+
+state 288
+	complex : T_LPAR nint T_COMMA nint rightparen .  (169)
+
+	.  reduce 169
+
+
+state 289
+	nreal : A_MINUS real .  (166)
+
+	.  reduce 166
+
+
+state 290
+	list : T_LBRA nreal T_DOTDOT nreal T_COLON . nreal rightbracket  (144)
+
+	A_MINUS  shift 252
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 86
+	int  goto 88
+	nreal  goto 319
+	real  goto 254
+
+
+state 291
+	list : T_LBRA nreal T_DOTDOT nreal rightbracket .  (143)
+
+	.  reduce 143
+
+
+state 292
+	scalar_s : scalar_s T_COMMA A_MINUS scalar .  (158)
+
+	.  reduce 158
+
+
+state 293
+	tensor_s : tensor_s T_COMMA A_MINUS tensor .  (150)
+
+	.  reduce 150
+
+
+state 294
+	packet : T_BAR int T_BAR P_INTERRUPT T_BAR int $$2 T_BAR . interrupt_data T_BAR  (25)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 320
+	interrupt_data  goto 321
+
+
+state 295
+	packet : T_BAR int T_BAR P_SYSTEM T_BAR int $$3 T_BAR . system_data T_BAR  (27)
+
+	T_ID  shift 20
+	.  error
+
+	id  goto 322
+	system_data  goto 323
+	system_s  goto 324
+	system  goto 325
+
+
+state 296
+	packet : T_BAR int T_BAR P_ACK T_BAR int $$4 T_BAR . ack_data T_BAR  (29)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 326
+	ack_data  goto 327
+	message_id  goto 328
+
+
+state 297
+	packet : T_BAR int T_BAR P_MACRO T_BAR int $$5 T_BAR . macro_data T_BAR  (31)
+
+	K_MACRO  shift 9
+	.  error
+
+	macro  goto 329
+	macro_data  goto 330
+
+
+state 298
+	packet : T_BAR int T_BAR P_FOREGROUND T_BAR int $$6 T_BAR . foreground_data T_BAR  (33)
+
+	T_LBRA  shift 6
+	K_BACKWARD  shift 11
+	K_FORWARD  shift 12
+	K_LOOP  shift 13
+	K_PALINDROME  shift 14
+	K_PAUSE  shift 15
+	K_PLAY  shift 16
+	K_STEP  shift 17
+	K_STOP  shift 18
+	K_VCR  shift 19
+	T_ID  shift 20
+	.  error
+
+	assignment  goto 21
+	block  goto 22
+	f_assignment  goto 23
+	foreground_data  goto 331
+	function_call  goto 24
+	id  goto 25
+	id_s  goto 26
+	s_assignment  goto 29
+	statement  goto 332
+	vcr  goto 333
+
+
+state 299
+	packet : T_BAR int T_BAR P_BACKGROUND T_BAR int $$7 T_BAR . background_data T_BAR  (35)
+
+	T_LBRA  shift 6
+	K_CANCEL  shift 334
+	T_ID  shift 20
+	.  error
+
+	assignment  goto 21
+	background_data  goto 335
+	block  goto 22
+	f_assignment  goto 23
+	function_call  goto 24
+	id  goto 25
+	id_s  goto 26
+	s_assignment  goto 29
+	statement  goto 336
+
+
+state 300
+	packet : T_BAR int T_BAR P_ERROR T_BAR int $$8 T_BAR . error_data T_BAR  (37)
+	error_data : .  (196)
+
+	.  reduce 196
+
+	error_data  goto 337
+
+
+state 301
+	packet : T_BAR int T_BAR P_MESSAGE T_BAR int $$9 T_BAR . message_data T_BAR  (39)
+	data : .  (197)
+
+	.  reduce 197
+
+	data  goto 338
+	message_data  goto 339
+
+
+state 302
+	packet : T_BAR int T_BAR P_INFO T_BAR int $$10 T_BAR . info_data T_BAR  (41)
+	data : .  (197)
+
+	.  reduce 197
+
+	data  goto 340
+	info_data  goto 341
+
+
+state 303
+	packet : T_BAR int T_BAR P_LINQ T_BAR int $$11 T_BAR . l_inquiry_data T_BAR  (43)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 342
+	int  goto 343
+	l_inquiry_data  goto 344
+
+
+state 304
+	packet : T_BAR int T_BAR P_SINQ T_BAR int $$12 T_BAR . s_inquiry_data T_BAR  (45)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 345
+	int  goto 343
+	s_inquiry_data  goto 346
+
+
+state 305
+	packet : T_BAR int T_BAR P_VINQ T_BAR int $$13 T_BAR . v_inquiry_data T_BAR  (47)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 347
+	int  goto 343
+	v_inquiry_data  goto 348
+
+
+state 306
+	packet : T_BAR int T_BAR P_LRESP T_BAR int $$14 T_BAR . l_response_data T_BAR  (49)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 349
+	int  goto 343
+	l_response_data  goto 350
+
+
+state 307
+	packet : T_BAR int T_BAR P_SRESP T_BAR int $$15 T_BAR . s_response_data T_BAR  (51)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 351
+	int  goto 343
+	s_response_data  goto 352
+
+
+state 308
+	packet : T_BAR int T_BAR P_VRESP T_BAR int $$16 T_BAR . v_response_data T_BAR  (53)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 353
+	int  goto 343
+	v_response_data  goto 354
+
+
+state 309
+	packet : T_BAR int T_BAR P_DATA T_BAR int $$17 T_BAR . data_data T_BAR  (55)
+
+	T_INT  shift 34
+	.  error
+
+	handle  goto 355
+	int  goto 343
+	data_data  goto 356
+
+
+state 310
+	packet : T_BAR int T_BAR P_IMPORT T_BAR int $$18 T_BAR . import_data T_BAR  (57)
+	data : .  (197)
+
+	.  reduce 197
+
+	data  goto 357
+	import_data  goto 358
+
+
+state 311
+	id_s0 : empty .  (188)
+
+	.  reduce 188
+
+
+state 312
+	id_s : id . attributes_0  (190)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_BAR  reduce 187
+	T_RPAR  reduce 187
+	T_COMMA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 61
+	empty  goto 62
+
+
+state 313
+	id_s0 : id_s .  (189)
+	id_s : id_s . T_COMMA id attributes_0  (191)
+
+	T_COMMA  shift 64
+	T_BAR  reduce 189
+	T_RPAR  reduce 189
+
+
+state 314
+	macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 . rightparen attributes_0 block  (81)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 359
+
+
+state 315
+	nfloat : A_MINUS . float  (179)
+
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 250
+
+
+state 316
+	quaternion : T_LPAR nfloat T_COMMA nfloat T_COMMA nfloat . T_COMMA nfloat rightparen  (174)
+
+	T_COMMA  shift 360
+	.  error
+
+
+state 317
+	nint : A_MINUS . int  (176)
+
+	T_INT  shift 34
+	.  error
+
+	int  goto 251
+
+
+state 318
+	quaternion : T_LPAR nint T_COMMA nint T_COMMA nint . T_COMMA nint rightparen  (173)
+
+	T_COMMA  shift 361
+	.  error
+
+
+state 319
+	list : T_LBRA nreal T_DOTDOT nreal T_COLON nreal . rightbracket  (144)
+
+	T_RBRA  shift 67
+	.  error
+
+	rightbracket  goto 362
+
+
+state 320
+	interrupt_data : int .  (58)
+
+	.  reduce 58
+
+
+state 321
+	packet : T_BAR int T_BAR P_INTERRUPT T_BAR int $$2 T_BAR interrupt_data . T_BAR  (25)
+
+	T_BAR  shift 363
+	.  error
+
+
+state 322
+	system : id . T_ASSIGN constant  (62)
+
+	T_ASSIGN  shift 364
+	.  error
+
+
+state 323
+	packet : T_BAR int T_BAR P_SYSTEM T_BAR int $$3 T_BAR system_data . T_BAR  (27)
+
+	T_BAR  shift 365
+	.  error
+
+
+state 324
+	system_data : system_s .  (59)
+	system_s : system_s . T_COMMA system  (61)
+
+	T_COMMA  shift 366
+	T_BAR  reduce 59
+
+
+state 325
+	system_s : system .  (60)
+
+	.  reduce 60
+
+
+state 326
+	message_id : int .  (194)
+
+	.  reduce 194
+
+
+state 327
+	packet : T_BAR int T_BAR P_ACK T_BAR int $$4 T_BAR ack_data . T_BAR  (29)
+
+	T_BAR  shift 367
+	.  error
+
+
+state 328
+	ack_data : message_id . T_COLON data  (63)
+
+	T_COLON  shift 368
+	.  error
+
+
+state 329
+	macro_data : macro .  (64)
+
+	.  reduce 64
+
+
+state 330
+	packet : T_BAR int T_BAR P_MACRO T_BAR int $$5 T_BAR macro_data . T_BAR  (31)
+
+	T_BAR  shift 369
+	.  error
+
+
+state 331
+	packet : T_BAR int T_BAR P_FOREGROUND T_BAR int $$6 T_BAR foreground_data . T_BAR  (33)
+
+	T_BAR  shift 370
+	.  error
+
+
+state 332
+	foreground_data : statement .  (65)
+
+	.  reduce 65
+
+
+state 333
+	foreground_data : vcr .  (66)
+
+	.  reduce 66
+
+
+state 334
+	background_data : K_CANCEL .  (68)
+
+	.  reduce 68
+
+
+state 335
+	packet : T_BAR int T_BAR P_BACKGROUND T_BAR int $$7 T_BAR background_data . T_BAR  (35)
+
+	T_BAR  shift 371
+	.  error
+
+
+state 336
+	background_data : statement .  (67)
+
+	.  reduce 67
+
+
+state 337
+	packet : T_BAR int T_BAR P_ERROR T_BAR int $$8 T_BAR error_data . T_BAR  (37)
+
+	T_BAR  shift 372
+	.  error
+
+
+state 338
+	message_data : data .  (69)
+
+	.  reduce 69
+
+
+state 339
+	packet : T_BAR int T_BAR P_MESSAGE T_BAR int $$9 T_BAR message_data . T_BAR  (39)
+
+	T_BAR  shift 373
+	.  error
+
+
+state 340
+	info_data : data .  (70)
+
+	.  reduce 70
+
+
+state 341
+	packet : T_BAR int T_BAR P_INFO T_BAR int $$10 T_BAR info_data . T_BAR  (41)
+
+	T_BAR  shift 374
+	.  error
+
+
+state 342
+	l_inquiry_data : handle . T_COLON ex_id_s  (71)
+
+	T_COLON  shift 375
+	.  error
+
+
+state 343
+	handle : int .  (195)
+
+	.  reduce 195
+
+
+state 344
+	packet : T_BAR int T_BAR P_LINQ T_BAR int $$11 T_BAR l_inquiry_data . T_BAR  (43)
+
+	T_BAR  shift 376
+	.  error
+
+
+state 345
+	s_inquiry_data : handle . T_COLON expression_s  (72)
+	s_inquiry_data : handle . T_COLON ex_id_s  (73)
+
+	T_COLON  shift 377
+	.  error
+
+
+state 346
+	packet : T_BAR int T_BAR P_SINQ T_BAR int $$12 T_BAR s_inquiry_data . T_BAR  (45)
+
+	T_BAR  shift 378
+	.  error
+
+
+state 347
+	v_inquiry_data : handle . T_COLON expression_s  (74)
+	v_inquiry_data : handle . T_COLON ex_id_s  (75)
+
+	T_COLON  shift 379
+	.  error
+
+
+state 348
+	packet : T_BAR int T_BAR P_VINQ T_BAR int $$13 T_BAR v_inquiry_data . T_BAR  (47)
+
+	T_BAR  shift 380
+	.  error
+
+
+state 349
+	l_response_data : handle . T_COLON id_s0  (76)
+
+	T_COLON  shift 381
+	.  error
+
+
+state 350
+	packet : T_BAR int T_BAR P_LRESP T_BAR int $$14 T_BAR l_response_data . T_BAR  (49)
+
+	T_BAR  shift 382
+	.  error
+
+
+state 351
+	s_response_data : handle . T_COLON data  (77)
+
+	T_COLON  shift 383
+	.  error
+
+
+state 352
+	packet : T_BAR int T_BAR P_SRESP T_BAR int $$15 T_BAR s_response_data . T_BAR  (51)
+
+	T_BAR  shift 384
+	.  error
+
+
+state 353
+	v_response_data : handle . T_COLON s_assignment_0  (78)
+
+	T_COLON  shift 385
+	.  error
+
+
+state 354
+	packet : T_BAR int T_BAR P_VRESP T_BAR int $$16 T_BAR v_response_data . T_BAR  (53)
+
+	T_BAR  shift 386
+	.  error
+
+
+state 355
+	data_data : handle . T_COLON s_assignment_0  (79)
+
+	T_COLON  shift 387
+	.  error
+
+
+state 356
+	packet : T_BAR int T_BAR P_DATA T_BAR int $$17 T_BAR data_data . T_BAR  (55)
+
+	T_BAR  shift 388
+	.  error
+
+
+state 357
+	import_data : data .  (80)
+
+	.  reduce 80
+
+
+state 358
+	packet : T_BAR int T_BAR P_IMPORT T_BAR int $$18 T_BAR import_data . T_BAR  (57)
+
+	T_BAR  shift 389
+	.  error
+
+
+state 359
+	macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 rightparen . attributes_0 block  (81)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_LBRA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 390
+	empty  goto 62
+
+
+state 360
+	quaternion : T_LPAR nfloat T_COMMA nfloat T_COMMA nfloat T_COMMA . nfloat rightparen  (174)
+
+	A_MINUS  shift 315
+	T_FLOAT  shift 76
+	.  error
+
+	float  goto 195
+	nfloat  goto 391
+
+
+state 361
+	quaternion : T_LPAR nint T_COMMA nint T_COMMA nint T_COMMA . nint rightparen  (173)
+
+	A_MINUS  shift 317
+	T_INT  shift 34
+	.  error
+
+	int  goto 196
+	nint  goto 392
+
+
+state 362
+	list : T_LBRA nreal T_DOTDOT nreal T_COLON nreal rightbracket .  (144)
+
+	.  reduce 144
+
+
+state 363
+	packet : T_BAR int T_BAR P_INTERRUPT T_BAR int $$2 T_BAR interrupt_data T_BAR .  (25)
+
+	.  reduce 25
+
+
+state 364
+	system : id T_ASSIGN . constant  (62)
+
+	T_LPAR  shift 137
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	.  error
+
+	complex  goto 82
+	constant  goto 393
+	float  goto 86
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 365
+	packet : T_BAR int T_BAR P_SYSTEM T_BAR int $$3 T_BAR system_data T_BAR .  (27)
+
+	.  reduce 27
+
+
+state 366
+	system_s : system_s T_COMMA . system  (61)
+
+	T_ID  shift 20
+	.  error
+
+	id  goto 322
+	system  goto 394
+
+
+state 367
+	packet : T_BAR int T_BAR P_ACK T_BAR int $$4 T_BAR ack_data T_BAR .  (29)
+
+	.  reduce 29
+
+
+state 368
+	ack_data : message_id T_COLON . data  (63)
+	data : .  (197)
+
+	.  reduce 197
+
+	data  goto 395
+
+
+state 369
+	packet : T_BAR int T_BAR P_MACRO T_BAR int $$5 T_BAR macro_data T_BAR .  (31)
+
+	.  reduce 31
+
+
+state 370
+	packet : T_BAR int T_BAR P_FOREGROUND T_BAR int $$6 T_BAR foreground_data T_BAR .  (33)
+
+	.  reduce 33
+
+
+state 371
+	packet : T_BAR int T_BAR P_BACKGROUND T_BAR int $$7 T_BAR background_data T_BAR .  (35)
+
+	.  reduce 35
+
+
+state 372
+	packet : T_BAR int T_BAR P_ERROR T_BAR int $$8 T_BAR error_data T_BAR .  (37)
+
+	.  reduce 37
+
+
+state 373
+	packet : T_BAR int T_BAR P_MESSAGE T_BAR int $$9 T_BAR message_data T_BAR .  (39)
+
+	.  reduce 39
+
+
+state 374
+	packet : T_BAR int T_BAR P_INFO T_BAR int $$10 T_BAR info_data T_BAR .  (41)
+
+	.  reduce 41
+
+
+state 375
+	l_inquiry_data : handle T_COLON . ex_id_s  (71)
+
+	T_EXID  shift 396
+	.  error
+
+	ex_id  goto 397
+	ex_id_s  goto 398
+
+
+state 376
+	packet : T_BAR int T_BAR P_LINQ T_BAR int $$11 T_BAR l_inquiry_data T_BAR .  (43)
+
+	.  reduce 43
+
+
+state 377
+	s_inquiry_data : handle T_COLON . expression_s  (72)
+	s_inquiry_data : handle T_COLON . ex_id_s  (73)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	T_EXID  shift 396
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	ex_id  goto 397
+	expression  goto 101
+	expression_s  goto 399
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+	ex_id_s  goto 400
+
+
+state 378
+	packet : T_BAR int T_BAR P_SINQ T_BAR int $$12 T_BAR s_inquiry_data T_BAR .  (45)
+
+	.  reduce 45
+
+
+state 379
+	v_inquiry_data : handle T_COLON . expression_s  (74)
+	v_inquiry_data : handle T_COLON . ex_id_s  (75)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	T_EXID  shift 396
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	ex_id  goto 397
+	expression  goto 101
+	expression_s  goto 401
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+	ex_id_s  goto 402
+
+
+state 380
+	packet : T_BAR int T_BAR P_VINQ T_BAR int $$13 T_BAR v_inquiry_data T_BAR .  (47)
+
+	.  reduce 47
+
+
+state 381
+	l_response_data : handle T_COLON . id_s0  (76)
+	empty : .  (187)
+
+	T_ID  shift 20
+	T_BAR  reduce 187
+
+	empty  goto 311
+	id  goto 312
+	id_s  goto 313
+	id_s0  goto 403
+
+
+state 382
+	packet : T_BAR int T_BAR P_LRESP T_BAR int $$14 T_BAR l_response_data T_BAR .  (49)
+
+	.  reduce 49
+
+
+state 383
+	s_response_data : handle T_COLON . data  (77)
+	data : .  (197)
+
+	.  reduce 197
+
+	data  goto 404
+
+
+state 384
+	packet : T_BAR int T_BAR P_SRESP T_BAR int $$15 T_BAR s_response_data T_BAR .  (51)
+
+	.  reduce 51
+
+
+state 385
+	v_response_data : handle T_COLON . s_assignment_0  (78)
+	empty : .  (187)
+
+	T_ID  shift 20
+	T_BAR  reduce 187
+
+	empty  goto 405
+	id  goto 406
+	id_s  goto 407
+	s_assignment  goto 408
+	s_assignment_0  goto 409
+
+
+state 386
+	packet : T_BAR int T_BAR P_VRESP T_BAR int $$16 T_BAR v_response_data T_BAR .  (53)
+
+	.  reduce 53
+
+
+state 387
+	data_data : handle T_COLON . s_assignment_0  (79)
+	empty : .  (187)
+
+	T_ID  shift 20
+	T_BAR  reduce 187
+
+	empty  goto 405
+	id  goto 406
+	id_s  goto 407
+	s_assignment  goto 408
+	s_assignment_0  goto 410
+
+
+state 388
+	packet : T_BAR int T_BAR P_DATA T_BAR int $$17 T_BAR data_data T_BAR .  (55)
+
+	.  reduce 55
+
+
+state 389
+	packet : T_BAR int T_BAR P_IMPORT T_BAR int $$18 T_BAR import_data T_BAR .  (57)
+
+	.  reduce 57
+
+
+state 390
+	macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 rightparen attributes_0 . block  (81)
+
+	T_LBRA  shift 6
+	.  error
+
+	block  goto 411
+
+
+state 391
+	quaternion : T_LPAR nfloat T_COMMA nfloat T_COMMA nfloat T_COMMA nfloat . rightparen  (174)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 412
+
+
+state 392
+	quaternion : T_LPAR nint T_COMMA nint T_COMMA nint T_COMMA nint . rightparen  (173)
+
+	T_RPAR  shift 150
+	.  error
+
+	rightparen  goto 413
+
+
+state 393
+	system : id T_ASSIGN constant .  (62)
+
+	.  reduce 62
+
+
+state 394
+	system_s : system_s T_COMMA system .  (61)
+
+	.  reduce 61
+
+
+state 395
+	ack_data : message_id T_COLON data .  (63)
+
+	.  reduce 63
+
+
+state 396
+	ex_id : T_EXID .  (186)
+
+	.  reduce 186
+
+
+state 397
+	ex_id_s : ex_id .  (192)
+
+	.  reduce 192
+
+
+state 398
+	l_inquiry_data : handle T_COLON ex_id_s .  (71)
+	ex_id_s : ex_id_s . T_COMMA ex_id  (193)
+
+	T_COMMA  shift 414
+	T_BAR  reduce 71
+
+
+state 399
+	s_inquiry_data : handle T_COLON expression_s .  (72)
+	expression_s : expression_s . T_COMMA expression  (123)
+
+	T_COMMA  shift 163
+	T_BAR  reduce 72
+
+
+state 400
+	s_inquiry_data : handle T_COLON ex_id_s .  (73)
+	ex_id_s : ex_id_s . T_COMMA ex_id  (193)
+
+	T_COMMA  shift 414
+	T_BAR  reduce 73
+
+
+state 401
+	v_inquiry_data : handle T_COLON expression_s .  (74)
+	expression_s : expression_s . T_COMMA expression  (123)
+
+	T_COMMA  shift 163
+	T_BAR  reduce 74
+
+
+state 402
+	v_inquiry_data : handle T_COLON ex_id_s .  (75)
+	ex_id_s : ex_id_s . T_COMMA ex_id  (193)
+
+	T_COMMA  shift 414
+	T_BAR  reduce 75
+
+
+state 403
+	l_response_data : handle T_COLON id_s0 .  (76)
+
+	.  reduce 76
+
+
+state 404
+	s_response_data : handle T_COLON data .  (77)
+
+	.  reduce 77
+
+
+state 405
+	s_assignment_0 : empty .  (104)
+
+	.  reduce 104
+
+
+state 406
+	s_assignment : id . T_PP  (102)
+	s_assignment : id . T_MM  (103)
+	id_s : id . attributes_0  (190)
+	empty : .  (187)
+
+	T_LSQB  shift 57
+	T_PP  shift 58
+	T_MM  shift 59
+	T_ASSIGN  reduce 187
+	T_COMMA  reduce 187
+
+	attributes  goto 60
+	attributes_0  goto 61
+	empty  goto 62
+
+
+state 407
+	s_assignment : id_s . T_ASSIGN expression_s  (101)
+	id_s : id_s . T_COMMA id attributes_0  (191)
+
+	T_ASSIGN  shift 415
+	T_COMMA  shift 64
+	.  error
+
+
+state 408
+	s_assignment_0 : s_assignment .  (105)
+
+	.  reduce 105
+
+
+state 409
+	v_response_data : handle T_COLON s_assignment_0 .  (78)
+
+	.  reduce 78
+
+
+state 410
+	data_data : handle T_COLON s_assignment_0 .  (79)
+
+	.  reduce 79
+
+
+state 411
+	macro : K_MACRO id T_LPAR formal_s0 rightparen T_RA T_LPAR id_s0 rightparen attributes_0 block .  (81)
+
+	.  reduce 81
+
+
+state 412
+	quaternion : T_LPAR nfloat T_COMMA nfloat T_COMMA nfloat T_COMMA nfloat rightparen .  (174)
+
+	.  reduce 174
+
+
+state 413
+	quaternion : T_LPAR nint T_COMMA nint T_COMMA nint T_COMMA nint rightparen .  (173)
+
+	.  reduce 173
+
+
+state 414
+	ex_id_s : ex_id_s T_COMMA . ex_id  (193)
+
+	T_EXID  shift 396
+	.  error
+
+	ex_id  goto 416
+
+
+state 415
+	s_assignment : id_s T_ASSIGN . expression_s  (101)
+
+	A_MINUS  shift 72
+	T_LPAR  shift 73
+	T_LBRA  shift 74
+	T_LSQB  shift 75
+	T_INT  shift 34
+	T_FLOAT  shift 76
+	T_STRING  shift 77
+	T_ID  shift 20
+	.  error
+
+	arithmetic  goto 81
+	complex  goto 82
+	constant  goto 83
+	expression  goto 101
+	expression_s  goto 102
+	float  goto 86
+	id  goto 129
+	int  goto 88
+	list  goto 89
+	quaternion  goto 90
+	real  goto 91
+	scalar  goto 92
+	string  goto 93
+	tensor  goto 94
+
+
+state 416
+	ex_id_s : ex_id_s T_COMMA ex_id .  (193)
+
+	.  reduce 193
+
+
+87 terminals, 96 nonterminals
+198 grammar rules, 417 states

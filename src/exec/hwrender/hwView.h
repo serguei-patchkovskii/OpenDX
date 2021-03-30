@@ -13,7 +13,7 @@
 #define tdmView_h
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwView.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwView.h,v $
   Author: Tim Murphy
 
   This file contains definitions for the 'view' structure. This structure

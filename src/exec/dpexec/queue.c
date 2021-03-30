@@ -14,8 +14,8 @@
 #include "queue.h"
 
 
-#define	Q_LOCK(l,q)		if (l) DXlock (&(q)->lock, exJID)
-#define	Q_UNLOCK(l,q)		if (l) DXunlock (&(q)->lock, exJID)
+#define	Q_LOCK(l,q)		if (l) DXlock (&(q)->lock, DXProcessorId())
+#define	Q_UNLOCK(l,q)		if (l) DXunlock (&(q)->lock, DXProcessorId())
 
 
 typedef struct _EXQueueElement
@@ -86,7 +86,7 @@ EXQueue _dxf_ExQueueCreate (int local, int locking,
      */
 
     n = sizeof (_EXQueue);
-    q = (EXQueue) (local ? DXAllocateLocal (n) : DXAllocate (n));
+    q = (EXQueue) (local ? DXAllocate (n) : DXAllocate (n));
     if (! q)
 	_dxf_ExDie ("_dxf_ExQueueCreate:  allocate failed");
     ExZero (q, n);
@@ -281,7 +281,7 @@ static Error ExQueueInsert (EXQueue q, Pointer val, int head)
     {
 	Q_UNLOCK (l, q);
 	s = sizeof (_EXQueueElement);
-	e = (EXQueueElement) (q->local ? DXAllocateLocal (s) : DXAllocate (s));
+	e = (EXQueueElement) (q->local ? DXAllocate (s) : DXAllocate (s));
 	if (! e)
 	    _dxf_ExDie ("ExQueueInsert:  can't allocate");
 	Q_LOCK (l, q);
@@ -395,41 +395,3 @@ static Pointer ExQueueRemove (EXQueue q, int head)
 
     return (val);
 }
-
-
-#if 0
-
-ExWorker_TestQueue ()
-{
-    extern int		exDEBUGQ; /* defd out */
-    EXQueue		q;
-    int			i;
-    int			n;
-
-#if 1
-    q = _dxf_ExQueueCreate (FALSE, TRUE, NULL, NULL, NULL, NULL);
-#else
-    q = (EXQueue) exDEBUGQ;
-#endif
-
-    for (i = 0; i < 32; i++)
-    {
-	n = i << 8;
-	n &= 0xffffff00;
-	n |= exJID;
-	i & 1 ? _dxf_ExQueueEnqueue (q, (Pointer) n)
-	      : _dxf_ExQueuePush    (q, (Pointer) n);
-    }
-
-    for (i = 0; i < 32; i++)
-	DXMessage ("#1230", _dxf_ExQueuePop (q));
-
-    if (exJID == 1)
-    {
-	_dxf_ExQueuePrint (q);
-    }
-
-    pause ();
-}
-
-#endif

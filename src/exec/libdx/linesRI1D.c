@@ -270,20 +270,10 @@ _dxfInitialize(LinesRI1DInterpolator li)
     li->nElements = DXGetItemSize(li->dataArray) /
 			DXTypeSize(((Interpolator)li)->type);
 
-    if (li->fieldInterpolator.localized)
-    {
-	if (li->linesArray)
-	    li->lines  = (int *)DXGetArrayDataLocal(li->linesArray);
-	else
-	    li->lines  = NULL;
-    }
+    if (li->linesArray)
+	li->lines  = (int *)DXGetArrayData(li->linesArray);
     else
-    {
-	if (li->linesArray)
-	    li->lines  = (int *)DXGetArrayDataLocal(li->linesArray);
-	else
-	    li->lines  = NULL;
-    }
+	li->lines  = NULL;
 
     if (DXGetError())
 	return ERROR;
@@ -642,7 +632,7 @@ _dxfCleanup(LinesRI1DInterpolator li)
 
     if (li->lines)
     {
-	DXFreeArrayDataLocal(li->linesArray, (Pointer)li->lines);
+	DXDelete((Object)li->lines);
 	li->lines = NULL;
     }
 
@@ -691,22 +681,6 @@ linear_coords (float pt, float p0, float p1, LinearCoord *b, float fuzz)
     return code;
 }
 
-
-Interpolator
-_dxfLinesRI1DInterpolator_LocalizeInterpolator(LinesRI1DInterpolator li)
-{
-    if (li->fieldInterpolator.localized)
-	return (Interpolator)li;
-
-    li->fieldInterpolator.localized = 1;
-
-    if (li->fieldInterpolator.initialized)
-    {
-        li->lines  = (int   *)DXGetArrayDataLocal(li->linesArray);
-    }
-    return (Interpolator)li;
-}
-
 Object
 _dxfLinesRI1DInterpolator_Copy(LinesRI1DInterpolator old, enum _dxd_copy copy)
 {
@@ -744,14 +718,7 @@ _dxf_CopyLinesRI1DInterpolator(LinesRI1DInterpolator new,
 	new->linesArray  = (Array)DXReference((Object)old->linesArray);
 	new->dataArray   = (Array)DXReference((Object)old->dataArray);
 
-	if (new->fieldInterpolator.localized)
-	{
-	    new->lines  = (int   *)DXGetArrayDataLocal(new->linesArray);
-	}
-	else
-	{
-	    new->lines  = (int   *)DXGetArrayData(new->linesArray);
-	}
+	new->lines  = (int   *)DXGetArrayData(new->linesArray);
 
 	new->pHandle = DXCreateArrayHandle(new->pointsArray);
 	if (! new->pHandle)

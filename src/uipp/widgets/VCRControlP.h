@@ -98,13 +98,13 @@ typedef struct ButtonImageRec {
 
 typedef struct _XmVCRControlPart {
     Widget              parent;
-    short		min_value;		/* Min app frame number i.e.1 */
-    short		max_value;
-    short		start_value;
-    short		next_value;
-    short		current_value;
-    short		stop_value;
-    short		frame_increment;
+    int  		min_value;		/* Min app frame number i.e.1 */
+    int  		max_value;
+    int  		start_value;
+    int  		next_value;
+    int  		current_value;
+    int  		stop_value;
+    int  		frame_increment;
     XtCallbackList	action_callback;	/* Callback for VCR switches  */
     XtCallbackList	frame_callback;		/* Callback for frame numbers */
     void *		user_data;		/* To be passed with callback */

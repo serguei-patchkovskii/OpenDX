@@ -12,7 +12,7 @@
 #ifndef hwCacheUtilSB_h
 #define hwCacheUtilSB_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwCacheUtilSB.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwCacheUtilSB.h,v $
   Author: Mark Hood
 
   Data structures and prototypes for caching Starbase primitives.

@@ -272,7 +272,7 @@ static XtResource resources[] =
    {
       XmNcharPlaces, XmCCharPlaces, XmRShort, sizeof(short),
       XtOffset(XmNumberWidget, number.char_places),
-      XmRImmediate, (XtPointer) 4
+      XmRImmediate, (XtPointer) 8
    },
    {
       XmNdecimalPlaces, XmCDecimalPlaces, XmRShort, sizeof(short),

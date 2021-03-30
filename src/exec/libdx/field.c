@@ -234,7 +234,7 @@ _ComponentXX(Array a, Pointer *data, int *n, int nreq, Type t, int dim,
     
     /* get data */
     if (data)
-	*data = LOCAL? DXGetArrayDataLocal(a) : DXGetArrayData(a);
+	*data = DXGetArrayData(a);
 
     /* more info */
     DXGetArrayInfo(a, &nn, &tt, &category, &rank, NULL);

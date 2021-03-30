@@ -80,8 +80,14 @@ Object _dxf_SetPermanent(Object o)
 #define ID 0
 #endif
 
+static Object ref_target = NULL;
+void found_reference(){}
+
 Object DXReference(Object o)
 {
+    if (o && o == ref_target)
+        found_reference();
+
     if (!o)
 	return NULL;
     if (o->count==PERMANENT)
@@ -93,12 +99,14 @@ Object DXReference(Object o)
     return o;
 }
 
-
 Error
 DXDelete(Object o)
 {
     int rc = 0, i, n;
     Class class;
+
+    if (o && o == ref_target)
+        found_reference();
 
     if (!o)
 	return OK;
@@ -166,6 +174,9 @@ DXUnreference(Object o)
 {
     Class class;
 
+    if (o && o == ref_target)
+        found_reference();
+
     if (!o)
 	return ERROR;
     if (o->count==PERMANENT || o->count==0)
@@ -201,6 +212,9 @@ _dxf_NewObject(struct object_class *class)
     o = (Object) DXAllocate(CLASS_SIZE(class));
     if (!o)
 	return NULL;
+
+    if (o && o == ref_target)
+        found_reference();
 
 #if DEBUGGED
     /* tracing */
@@ -248,11 +262,13 @@ DXGetObjectTag(Object o)
 Object
 DXSetObjectTag(Object o, int tag)
 {
+#if 0
     if (tag>=0) {
 	DXSetError(ERROR_INTERNAL,
 		 "tag value %d is illegal: must be less than 0", tag);
 	return NULL;
     }
+#endif
     if (!o)
 	return NULL;
     o->tag = tag;

@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwWinSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwWinSB.c,v $
   Authors: Ellen Ball
 	   Mark Hood
 

@@ -148,6 +148,10 @@ void _dxf_sigcatch();
 Error 
 DXVisualizeMemory(int which, int procid)
 {
+#if 1
+    DXSetError(ERROR_NOT_IMPLEMENTED, "DXVisualizeMemory needs to be upgraded for large memory model\n");
+    return ERROR;
+#else
     int nprocs = 0;
     int i, start, end;
 
@@ -175,8 +179,8 @@ DXVisualizeMemory(int which, int procid)
 	    if (!d_small)
 		return ERROR;
 	    
-	    if (DXGetMemorySize(&d_small->arena_size, NULL, NULL)
-		&& DXGetMemoryBase(&d_small->arena_base, NULL, NULL)) {
+	    if (DXGetMemorySize(&d_small->arena_size, NULL)
+		&& DXGetMemoryBase(&d_small->arena_base, NULL)) {
 
 		d_small->which = MEMORY_SMALL;
 		d_small->alloc_unit = 16;
@@ -206,8 +210,8 @@ DXVisualizeMemory(int which, int procid)
 		return ERROR;
 	    
 	    
-	    if (DXGetMemorySize(NULL, &d_large->arena_size, NULL) 
-		&& DXGetMemoryBase(NULL, &d_large->arena_base, NULL)) {
+	    if (DXGetMemorySize(NULL, &d_large->arena_size) 
+		&& DXGetMemoryBase(NULL, &d_large->arena_base)) {
 	
 		d_large->which = MEMORY_LARGE;
 #if ibmpvs
@@ -233,62 +237,10 @@ DXVisualizeMemory(int which, int procid)
     }
 
     if (which & 4) {			/* local memory */
-	ulong local_size;
-
-	if (!DXGetMemorySize(NULL, NULL, &local_size) || local_size == 0) {
-	    DXSetError(ERROR_DATA_INVALID, "local memory not supported");
-	    return ERROR;
-	}
-	
-	nprocs = DXProcessors(0);
-	if (procid >= 0 && procid < nprocs)
-	    goto done;
-	
-	/* -1 means all, N means just that specific processor */
-	if (procid < 0) {
-	    start = 0;
-	    end = nprocs;
-	} else {
-	    start = procid;
-	    end = procid + 1;
-	}
-	
-	for (i=start; i < end; i++) {
-	    
-	    /* if already active, just update again and return */
-	    if (d_local[i]) {
-		d_local[i]->refresh = 1;
-		continue;
-	    }
-	    
-	    
-	    d_local[i] = 
-		(struct dispinfo *)DXAllocateZero(sizeof(struct dispinfo));
-	    if (!d_local[i])
-		return ERROR;
-	    
-	    
-	    if (!DXGetMemorySize(NULL, NULL, &d_local[i]->arena_size) 
-		|| d_local[i]->arena_size == 0)
-		continue;
-	    if (!DXGetMemoryBase(NULL, NULL, &d_local[i]->arena_base))
-		continue;
-	
-	    d_local[i]->which = MEMORY_LOCAL;
-	    d_local[i]->nproc = i;
-	    d_local[i]->alloc_unit = 16;
-	    sprintf(d_local[i]->title, "DX Local Arena Memory, Processor %d", i);
-	    
-	    init_dispinfo(d_local[i]);
-	    
-	    if (! init_memory_visual(d_local[i]))
-		return ERROR;
-	    
-	    d_local[i]->active = 1;
-	}
+	DXSetError(ERROR_DATA_INVALID, "local memory not supported");
+	return ERROR;
     }
-
-
+	
   done:
     if (d_small && d_small->refresh)
 	report_memory(d_small);
@@ -501,13 +453,9 @@ report_memory (struct dispinfo *d)
     /* arrange for the memory manager to call us back with each allocated 
      *  block.  the memsee() routines set the pixels as allocated.
      */
-    if (d->which == MEMORY_LOCAL) {
-	DXDebugLocalAlloc(d->nproc, MEMORY_ALLOCATED, memsee, (Pointer)d);
-    } else {
-	DXDebugAlloc(d->which, MEMORY_ALLOCATED, memsee, (Pointer)d);
-	if (d->smallsize > 0)
-	    DXDebugAlloc(d->which, MEMORY_ALLOCATED, memsee1, (Pointer)d);
-    }
+    DXDebugAlloc(d->which, MEMORY_ALLOCATED, memsee, (Pointer)d);
+    if (d->smallsize > 0)
+	DXDebugAlloc(d->which, MEMORY_ALLOCATED, memsee1, (Pointer)d);
 	
     /* and finally, see if there are any squares at the end of the window
      *  which are beyond the end of the arena and are only there because
@@ -558,11 +506,7 @@ query_memory (struct dispinfo *d)
 	d->query_start = qstart;
 	d->query_end = qend;
 
-	if (d->which == MEMORY_LOCAL)
-	    DXDebugLocalAlloc(d->nproc, MEMORY_ALLOCATED|MEMORY_FREE, 
-			      memquery, (Pointer)d);
-	else
-	    DXDebugAlloc(d->which, MEMORY_ALLOCATED|MEMORY_FREE, 
+	DXDebugAlloc(d->which, MEMORY_ALLOCATED|MEMORY_FREE, 
 			 memquery, (Pointer)d);
 	
     } else if (d->memory_pixel[pixel] == color_trace)
@@ -880,16 +824,19 @@ handler_script(int fd, struct dispinfo *d)
 error:
     xerror = 0;
     return ERROR;
+#endif
 }
 
 
 void _dxf_sigcatch()
 {
+#if 0
     if (d_small)
 	report_memory(d_small);
     
     if (d_large)
 	report_memory(d_large);
+#endif
     
 
 #if !defined(intelnt)

@@ -2,7 +2,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/DrivenNode.java,v 1.3 1999/07/09 19:30:00 daniel Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/DrivenNode.java,v 1.3 1999/07/09 19:30:00 daniel Exp $
  */
 
 package dx.net;

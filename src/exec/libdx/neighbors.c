@@ -142,7 +142,7 @@ _dxf_TetraNeighbors(Field f)
 	continue;
     DXDebug("N", "ntetra %d goal %d goal2 %d nhash %d",
 	  ntetra, goal, goal2, nhash);
-    hash = (struct hash *) DXAllocateLocalZero(nhash * sizeof(struct hash));
+    hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
     if (!hash) {
 	DXResetError();
 	hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
@@ -153,7 +153,7 @@ _dxf_TetraNeighbors(Field f)
 	for (nhash=1; nhash<goal; nhash*=2)
 	    continue;
 	DXDebug("N", "new goal %d nhash %d", goal, nhash);
-	hash = (struct hash *) DXAllocateLocalZero(nhash * sizeof(struct hash));
+	hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
 	if (!hash) {
 	    DXResetError();
 	    hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
@@ -300,7 +300,7 @@ TriNeighbors(Field f)
     /* NB - nhash should be power of 2 */
     for (nhash=1; nhash<4*ntriangles; nhash*=2)
 	continue;
-    hash = (struct hash *) DXAllocateLocalZero(nhash * sizeof(struct hash));
+    hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
     if (!hash) {
 	DXResetError();
 	hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
@@ -425,7 +425,7 @@ QuadNeighbors(Field f)
     /* NB - nhash should be power of 2 */
     for (nhash=1; nhash<4*nquads; nhash*=2)
 	continue;
-    hash = (struct hash *) DXAllocateLocalZero(nhash * sizeof(struct hash));
+    hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
     if (!hash) {
 	DXResetError();
 	hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
@@ -573,7 +573,7 @@ _dxf_CubeNeighbors(Field f)
 			continue;
 		DXDebug("N", "ncubes %d goal %d goal2 %d nhash %d",
 			ncubes, goal, goal2, nhash);
-		hash = (struct hash *) DXAllocateLocalZero(nhash * sizeof(struct hash));
+		hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
 		if (!hash) {
 			DXResetError();
 			hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
@@ -584,7 +584,7 @@ _dxf_CubeNeighbors(Field f)
 				continue;
 			DXDebug("N", "new goal %d nhash %d", goal, nhash);
 			DXResetError();
-			hash = (struct hash *) DXAllocateLocalZero(nhash * sizeof(struct hash));
+			hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
 			if (!hash) {
 				DXResetError();
 				hash = (struct hash *) DXAllocateZero(nhash * sizeof(struct hash));
@@ -688,7 +688,7 @@ error:
 		DXSetAttribute((Object)a, DEP, O_CONNECTIONS);
 		DXSetAttribute((Object)a, DER, O_CONNECTIONS);
 	
-		hash = (struct hasharray *) DXAllocateLocalZero(npos * sizeof(struct hasharray));
+		hash = (struct hasharray *) DXAllocateZero(npos * sizeof(struct hasharray));
 		if (!hash) {
 			DXResetError();
 			hash = (struct hasharray *) DXAllocateZero(npos * sizeof(struct hasharray));

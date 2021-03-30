@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 //
-// $Header: /src/master/dx/src/exec/libdx/cubesRRClass.X,v 1.3 2003/07/11 05:50:41 davidt Exp $
+// $Header: /cvsroot/opendx2/dx/src/exec/libdx/cubesRRClass.X,v 1.3 2003/07/11 05:50:41 davidt Exp $
 //
 
 
@@ -15,7 +15,7 @@ typedef struct cubesrrinterpolator	*CubesRRInterpolator;
 
 INCLUDE 		fieldinterpClass.X
 SUBCLASS    	CubesRRInterpolator OF FieldInterpolator
-IMPLEMENTS  	PrimitiveInterpolate Delete Copy LocalizeInterpolator
+IMPLEMENTS  PrimitiveInterpolate Delete Copy 
 
 CubesRRInterpolator _dxfNewCubesRRInterpolator(Field,
 					enum interp_init, double, Matrix *);

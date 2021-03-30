@@ -123,7 +123,6 @@ _dxfProductArray_GetArrayData(ProductArray a)
     int i, j, k, l, nterms, ndim, nl, nr, rank;
     Array *terms;
     float *result = NULL, *res, *right, *rt, *left, *lt;
-    int freelocal = 0;
 
     /* DXlock array */
     EXPAND_LOCK(a);
@@ -155,14 +154,12 @@ _dxfProductArray_GetArrayData(ProductArray a)
     } else for (i=1; i<nterms; i++) {
 
 	/* right operand is next term */
-	right = (float *) DXGetArrayDataLocal(terms[i]);
+	right = (float *) DXGetArrayData(terms[i]);
 	if (!right) {
-	    freelocal = 0;
 	    right = (float *) DXGetArrayData(terms[i]);
 	    if (!right)
 		goto error;
-	} else
-	    freelocal = 1;
+	} 
 	    
 	nr = terms[i]->items;
 	/*ASSERT(terms[i]->shape[0]==ndim);*/
@@ -223,8 +220,6 @@ _dxfProductArray_GetArrayData(ProductArray a)
 	    DXFree((Pointer)left);
 	left = result;
 	nl *= nr;
-	if (freelocal)
-	    DXFreeArrayDataLocal(terms[i], (Pointer)right);
     }
 
     ASSERT(nl==a->array.items);
@@ -233,8 +228,6 @@ _dxfProductArray_GetArrayData(ProductArray a)
     EXPAND_RETURN(a, result);
 
 error:
-    if (freelocal)
-	DXFreeArrayDataLocal(terms[i], (Pointer)right);    /* and fall thru */
     EXPAND_ERROR(a);
 }
 

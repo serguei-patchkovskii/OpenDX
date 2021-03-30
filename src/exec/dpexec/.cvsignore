@@ -1,0 +1,12 @@
+!
+CVS
+Makefile
+Makefile.in
+yuiif.c
+yuiif.h
+compile.h
+local.mk
+*.lo
+.libs
+libDPEXEC.la
+libDPEXECclm.la

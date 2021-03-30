@@ -141,7 +141,7 @@ static double determinant(double *a, int rank)
     /* make space for the minor of the matrix (the matrix with the
      *  i-th row and column removed).
      */
-    minor = (double *)DXAllocateLocal(sizeof(double) * (rank-1) * (rank-1));
+    minor = (double *)DXAllocate(sizeof(double) * (rank-1) * (rank-1));
     if (!minor)
 	return 0.0;
 
@@ -482,7 +482,7 @@ type ## _det( type *a, int rank)			    \
     double *d, *dp;					    \
     double det;						    \
 							    \
-    d = (double *)DXAllocateLocal(sizeof(double) * rank * rank);   \
+    d = (double *)DXAllocate(sizeof(double) * rank * rank);   \
     if (!d)						    \
 	return 0.0;					    \
 							    \
@@ -731,7 +731,7 @@ Error DXStatistics (Object o, char *compname,
 	}
 	
 #define STATLEN 12  /* strlen(" statistics"); */
-	statname = (char *)DXAllocateLocal (strlen(compname) + STATLEN);
+	statname = (char *)DXAllocate (strlen(compname) + STATLEN);
 	if (!statname)
 	    goto error;
 	strcpy (statname, compname);
@@ -1944,7 +1944,7 @@ static Error HasInvalid(Field f, char *component, ICH *ih)
     
 #define INVLEN 10     /* strlen("invalid "); */    
     
-    if (!(invalid = (char *)DXAllocateLocal(strlen(dep) + INVLEN)))
+    if (!(invalid = (char *)DXAllocate(strlen(dep) + INVLEN)))
 	return ERROR;
 
     strcpy(invalid, "invalid ");
@@ -1979,7 +1979,7 @@ static Error InvalidName(Field f, char *component, char **invalid)
     
 #define INVLEN 10     /* strlen("invalid "); */    
     
-    if (!(*invalid = (char *)DXAllocateLocal(strlen(dep) + INVLEN)))
+    if (!(*invalid = (char *)DXAllocate(strlen(dep) + INVLEN)))
 	return ERROR;
     
     strcpy(*invalid, "invalid ");

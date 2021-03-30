@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/showposition.c,v 1.6 2000/08/24 20:04:49 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/showposition.c,v 1.6 2000/08/24 20:04:49 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -22,7 +22,7 @@
 #define  DEFAULT_COLOR  DXRGB(1.0,1.0,1.0)
 
 
-#define  NEWBIT(n)      ((Pointer)DXAllocateLocalZero((((n)+31)/32)*4))
+#define  NEWBIT(n)      ((Pointer)DXAllocateZero((((n)+31)/32)*4))
 #define  SETBIT(a,i,v)  (((unsigned int*)(a))[((i)/32)]|=((v)<<((i)&31)))
 #define  GETBIT(a,i)    (1&(((unsigned int*)(a))[((i)/32)]>>((i)&31)))
 

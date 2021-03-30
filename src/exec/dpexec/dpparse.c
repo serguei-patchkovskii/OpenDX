@@ -843,7 +843,7 @@ node *_dxf_ExPCreateConst (Type type, Category category, int cnt, Pointer p)
 
     if (size > LOCAL_DATA)
     {
-	data = DXAllocateLocal (size);
+	data = DXAllocate (size);
 	if (data == NULL)
 	    _dxf_ExDie ("can't create constant");
 	n->v.constant.nalloc = size;
@@ -940,7 +940,7 @@ node *_dxf_ExPExtendConst (node *n)
     rank = n->v.constant.rank;
     if (rank == n->v.constant.salloc)
     {
-	shape = (int *) DXAllocateLocal ((rank << 1) * sizeof (int));
+	shape = (int *) DXAllocate ((rank << 1) * sizeof (int));
 	if (shape == NULL)
 	    _dxf_ExDie ("can't extend constant");
 	MEMCPY (shape, n->v.constant.shape, rank * sizeof (int));
@@ -1060,7 +1060,7 @@ node *_dxf_ExAppendConst (node *list, node *elem)
     if (size + used > have)
     {
 	n = (size + used) << 1;
-	ld = (char *)DXAllocateLocal (n);
+	ld = (char *)DXAllocate (n);
 	if (ld == NULL)
 	{
 	    _dxd_exParseMesg = "can't append constant";

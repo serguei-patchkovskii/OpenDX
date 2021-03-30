@@ -105,7 +105,7 @@ Array MakeSequence(Array start, Array end, int *n, Array delta, char *method)
     if (!method)
 	return MakeLinearList(start, end, n, delta);
 
-    lmethod = DXAllocateLocalZero(strlen(method)+1);
+    lmethod = DXAllocateZero(strlen(method)+1);
     if (!lmethod)
 	return NULL;
 

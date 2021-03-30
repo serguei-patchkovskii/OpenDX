@@ -57,6 +57,9 @@ _dxf_initmessages(void)
 {
     char *file, *s, name[100];
     int fd, mno, size;
+#if 1
+    Pointer foo, bar;
+#endif
 
     if (state)
 	return OK;
@@ -65,10 +68,23 @@ _dxf_initmessages(void)
     atexit(DXqflush);
 #endif
 
+#if 1
+    {
+        foo = DXAllocate(1064);
+    }
+#endif
+
     /* initialize state vector */
     state = (struct state *) DXAllocateZero(sizeof(struct state));
     if (!state)
 	return ERROR;
+#if 2
+    {
+        bar = DXAllocate(1064);
+	DXFree(foo);
+    }
+#endif
+
     state->error_exit = 1;
     state->trace = 1;
     state->translate = 1;

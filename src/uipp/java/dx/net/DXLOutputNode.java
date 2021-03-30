@@ -2,7 +2,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/DXLOutputNode.java,v 1.3 1999/07/09 19:30:00 daniel Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/DXLOutputNode.java,v 1.3 1999/07/09 19:30:00 daniel Exp $
  */
 
 // Received $lnk:0:  0:  LINK:  DXLOutput VALUE DXLOutput_1 [2 2]

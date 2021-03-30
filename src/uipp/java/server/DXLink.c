@@ -8,7 +8,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/server/DXLink.c,v 1.11 2006/07/21 17:56:29 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/server/DXLink.c,v 1.11 2006/07/21 17:56:29 davidt Exp $
  */
 #if defined(hp700) 
 #define _UINT64_T

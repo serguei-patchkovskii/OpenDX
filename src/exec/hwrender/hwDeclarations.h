@@ -12,7 +12,7 @@
 #ifndef	tdmDeclarations_h
 #define	tdmDeclarations_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwDeclarations.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwDeclarations.h,v $
   Author: Mark Hood
 
   This file contains ANSI prototypes for globally scoped TDM routines.

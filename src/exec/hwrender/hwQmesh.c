@@ -5,7 +5,7 @@
 /* This code licensed under the                                        */
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
-/* $Source: /src/master/dx/src/exec/hwrender/hwQmesh.c,v $
+/* $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwQmesh.c,v $
  */
 
 #include <dxconfig.h>

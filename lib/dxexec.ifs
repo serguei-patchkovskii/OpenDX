@@ -459,6 +459,7 @@ __dxfPopInteractorCamera
 __dxfPopMatrix
 __dxfPopViewMatrix
 __dxfPopViewport
+__dxfPostArray
 __dxfProcessEvents
 __dxfPushInteractorCamera
 __dxfPushMatrix

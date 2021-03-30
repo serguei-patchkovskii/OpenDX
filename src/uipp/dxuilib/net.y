@@ -16,7 +16,7 @@
 /*****************************************************************************/
 
 /*
- * $Header: /src/master/dx/src/uipp/dxuilib/net.y,v 1.1 2002/06/13 20:56:27 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/dxuilib/net.y,v 1.1 2002/06/13 20:56:27 gda Exp $
  */
 
 #include "Parse.h"

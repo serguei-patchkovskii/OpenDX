@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 //
-// $Header: /src/master/dx/src/exec/libdx/trisRI2DClass.X,v 1.3 2003/07/11 05:50:48 davidt Exp $
+// $Header: /cvsroot/opendx2/dx/src/exec/libdx/trisRI2DClass.X,v 1.3 2003/07/11 05:50:48 davidt Exp $
 //
 
 
@@ -15,7 +15,7 @@ typedef struct trisri2dinterpolator *TrisRI2DInterpolator;
 
 INCLUDE      fieldinterpClass.X
 SUBCLASS    TrisRI2DInterpolator OF FieldInterpolator
-IMPLEMENTS  PrimitiveInterpolate Delete Copy LocalizeInterpolator
+IMPLEMENTS  PrimitiveInterpolate Delete Copy 
 
 #include "binSort.h"
 				

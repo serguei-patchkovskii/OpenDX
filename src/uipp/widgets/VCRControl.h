@@ -28,7 +28,7 @@ typedef struct {
     Boolean on;
     char    which;
     int     detent;
-    short     value;
+    int     value;
 } VCRCallbackStruct;
 
 extern Widget XmCreateVCRControl(Widget parent, String name, 

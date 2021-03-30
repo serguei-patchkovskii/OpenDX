@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /* 
- * $Header: /src/master/dx/src/exec/hwrender/hwDraw.c,v 1.12 2006/01/03 17:02:26 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/hwrender/hwDraw.c,v 1.12 2006/01/03 17:02:26 davidt Exp $
  */
 
 #include <dxconfig.h>

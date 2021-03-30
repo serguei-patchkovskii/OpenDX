@@ -415,7 +415,7 @@ _dxfPostToPositions(Field field, char **comp)
 	    goto error;
     }
 
-    knts = (byte *)DXAllocateLocal(nPositions * sizeof(byte));
+    knts = (byte *)DXAllocate(nPositions * sizeof(byte));
     if (! knts)
     {
 	DXResetError();
@@ -521,7 +521,7 @@ _dxfPostToPositions(Field field, char **comp)
 	    /*
 	     * Now create a local array buffer
 	     */
-	    accumulator = (byte *)DXAllocateLocal(nPositions*vPerI*sizeof(float));
+	    accumulator = (byte *)DXAllocate(nPositions*vPerI*sizeof(float));
 	    if (! accumulator)
 	    {
 		DXResetError();
@@ -786,7 +786,7 @@ _dxfPostToConnections(Field field, char **comp)
 	    goto error;
     }
 
-    knts = (byte *)DXAllocateLocal(nConnections * sizeof(byte));
+    knts = (byte *)DXAllocate(nConnections * sizeof(byte));
     if (! knts)
     {
 	DXResetError();
@@ -892,7 +892,7 @@ _dxfPostToConnections(Field field, char **comp)
 	    /*
 	     * Now create a local array buffer
 	     */
-	    accumulator = (byte *)DXAllocateLocal(nConnections*vPerI*sizeof(float));
+	    accumulator = (byte *)DXAllocate(nConnections*vPerI*sizeof(float));
 	    if (! accumulator)
 	    {
 		DXResetError();

@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwPortHandle.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwPortHandle.c,v $
 
 \*---------------------------------------------------------------------------*/
 #include <stdio.h>

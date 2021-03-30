@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 package dx.runtime;
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/ScalarInteractor.java,v 1.1.1.1 1999/03/24 15:17:32 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/ScalarInteractor.java,v 1.1.1.1 1999/03/24 15:17:32 gda Exp $
  */
 import java.awt.*;
 

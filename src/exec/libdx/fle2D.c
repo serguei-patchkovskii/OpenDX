@@ -590,24 +590,12 @@ _dxf_CopyFle2DInterpolator(Fle2DInterpolator new,
 	new->mmfArray  = (Array)DXReference((Object)old->mmfArray);
 	new->mmlArray  = (Array)DXReference((Object)old->mmlArray);
 
-	if (new->fieldInterpolator.localized)
-	{
-	    new->faces        = (int    *)DXGetArrayDataLocal(new->fArray);
-	    new->loops        = (int    *)DXGetArrayDataLocal(new->lArray);
-	    new->edges        = (int    *)DXGetArrayDataLocal(new->eArray);
-	    new->positions    = (float  *)DXGetArrayDataLocal(new->pArray);
-	    new->minmax_faces = (MinMax *)DXGetArrayDataLocal(new->mmfArray);
-	    new->minmax_loops = (MinMax *)DXGetArrayDataLocal(new->mmlArray);
-	}
-	else
-	{
-	    new->faces        = (int    *)DXGetArrayData(new->fArray);
-	    new->loops        = (int    *)DXGetArrayData(new->lArray);
-	    new->edges        = (int    *)DXGetArrayData(new->eArray);
-	    new->positions    = (float  *)DXGetArrayData(new->pArray);
-	    new->minmax_faces = (MinMax *)DXGetArrayData(new->mmfArray);
-	    new->minmax_loops = (MinMax *)DXGetArrayData(new->mmlArray);
-	}
+	new->faces        = (int    *)DXGetArrayData(new->fArray);
+	new->loops        = (int    *)DXGetArrayData(new->lArray);
+	new->edges        = (int    *)DXGetArrayData(new->eArray);
+	new->positions    = (float  *)DXGetArrayData(new->pArray);
+	new->minmax_faces = (MinMax *)DXGetArrayData(new->mmfArray);
+	new->minmax_loops = (MinMax *)DXGetArrayData(new->mmlArray);
 
 	new->dHandle = DXCreateArrayHandle(new->dArray);
 	if (! new->dHandle)
@@ -626,28 +614,4 @@ _dxf_CopyFle2DInterpolator(Fle2DInterpolator new,
 	return NULL;
 
     return new;
-}
-
-Interpolator
-_dxfFle2DInterpolator_LocalizeInterpolator(Fle2DInterpolator fle)
-{
-    if (fle->fieldInterpolator.localized)
-	return (Interpolator)fle;
-
-    fle->fieldInterpolator.localized = 1;
-
-    if (fle->fieldInterpolator.initialized)
-    {
-        fle->faces        = (int    *)DXGetArrayDataLocal(fle->fArray);
-        fle->loops        = (int    *)DXGetArrayDataLocal(fle->lArray);
-        fle->edges        = (int    *)DXGetArrayDataLocal(fle->eArray);
-        fle->positions    = (float  *)DXGetArrayDataLocal(fle->pArray);
-        fle->minmax_faces = (MinMax *)DXGetArrayDataLocal(fle->mmfArray);
-        fle->minmax_faces = (MinMax *)DXGetArrayDataLocal(fle->mmlArray);
-    }
-
-    if (DXGetError())
-        return NULL;
-    else
-        return (Interpolator)fle;
 }

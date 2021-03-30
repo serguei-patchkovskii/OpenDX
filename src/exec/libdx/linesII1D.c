@@ -575,17 +575,6 @@ linear_coords (float pt, float p0, float p1, LinearCoord *b, float fuzz)
     return code;
 }
 
-
-Interpolator
-_dxfLinesII1DInterpolator_LocalizeInterpolator(LinesII1DInterpolator li)
-{
-    if (li->fieldInterpolator.localized)
-	return (Interpolator)li;
-
-    li->fieldInterpolator.localized = 1;
-    return (Interpolator)li;
-}
-
 Object
 _dxfLinesII1DInterpolator_Copy(LinesII1DInterpolator old, enum _dxd_copy copy)
 {

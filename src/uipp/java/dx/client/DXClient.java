@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/client/DXClient.java,v 1.4 2005/10/27 19:43:05 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/client/DXClient.java,v 1.4 2005/10/27 19:43:05 davidt Exp $
  */
 
 /*

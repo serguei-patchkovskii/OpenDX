@@ -12,7 +12,7 @@
 #ifndef tdmPortLayer_h
 #define tdmPortLayer_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwPortLayer.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwPortLayer.h,v $
   Author: Mark Hood
 
   This file contains ANSI prototypes for the tdm porting layer routines.
@@ -108,8 +108,8 @@ typedef int Error ;
 #ifndef tdmFree
 #define tdmFree free
 #endif
-#ifndef tdmAllocateLocal
-#define tdmAllocateLocal malloc
+#ifndef tdmAllocate
+#define tdmAllocate malloc
 #endif
 
 #define XmVersion 1001

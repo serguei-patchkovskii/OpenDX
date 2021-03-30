@@ -172,7 +172,7 @@ partition(Field f, int *n, int size, Object *o, int delete)
     if (!points)
 	return ERROR;
 
-    pbuf = DXAllocateLocal(DXGetItemSize(pA));
+    pbuf = DXAllocate(DXGetItemSize(pA));
     if (! pbuf)
 	goto error;
     
@@ -230,7 +230,7 @@ partition(Field f, int *n, int size, Object *o, int delete)
     /*
      * count pts on either side, record local point id
      */
-    ptinfo = (struct ptinfo *)DXAllocateLocal(npoints*sizeof(struct ptinfo));
+    ptinfo = (struct ptinfo *)DXAllocate(npoints*sizeof(struct ptinfo));
     if (!ptinfo) 
 	goto error;
 
@@ -267,8 +267,8 @@ partition(Field f, int *n, int size, Object *o, int delete)
 	 * on the side that we just put the element on.
 	 */
 
-	c_part  = (byte *)DXAllocateLocal(nconnections*sizeof(byte));
-	c_index = (int  *)DXAllocateLocal(nconnections*sizeof(int));
+	c_part  = (byte *)DXAllocate(nconnections*sizeof(byte));
+	c_index = (int  *)DXAllocate(nconnections*sizeof(int));
 	if (! c_part || ! c_index)
 	    goto error;
 
@@ -276,7 +276,7 @@ partition(Field f, int *n, int size, Object *o, int delete)
 	if (! connections)
 	    goto error;
     
-	cbuf = (int *)DXAllocateLocal(DXGetItemSize(cA));
+	cbuf = (int *)DXAllocate(DXGetItemSize(cA));
 	if (! cbuf)
 	    goto error;
 
@@ -446,7 +446,7 @@ partition(Field f, int *n, int size, Object *o, int delete)
 	    {
 		int *src = (int *)DXGetConstantArrayData(a);
 		
-		abuf = (int *)DXAllocateLocal(DXGetItemSize(a));
+		abuf = (int *)DXAllocate(DXGetItemSize(a));
 		if (! abuf)
 		    goto error;
 
@@ -473,7 +473,7 @@ partition(Field f, int *n, int size, Object *o, int delete)
 	    {
 		int *src = (int *)DXGetConstantArrayData(a);
 		
-		abuf = (int *)DXAllocateLocal(DXGetItemSize(a));
+		abuf = (int *)DXAllocate(DXGetItemSize(a));
 		if (! abuf)
 		    goto error;
 
@@ -507,7 +507,7 @@ partition(Field f, int *n, int size, Object *o, int delete)
 	    if (! comp)
 		goto error;
 
-	    abuf = (int *)DXAllocateLocal(DXGetItemSize(a));
+	    abuf = (int *)DXAllocate(DXGetItemSize(a));
 	    if (! abuf)
 		goto error;
 
@@ -601,8 +601,8 @@ partition(Field f, int *n, int size, Object *o, int delete)
 	     */
 	    if (ref != REF_NONE)
 	    {
-		ipsrc = (int *)DXAllocateLocal(itemSize);
-		insrc = (int *)DXAllocateLocal(itemSize);
+		ipsrc = (int *)DXAllocate(itemSize);
+		insrc = (int *)DXAllocate(itemSize);
 		if (! ipsrc || ! insrc)
 		    goto error;
 	    }

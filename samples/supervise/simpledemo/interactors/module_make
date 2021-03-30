@@ -1,0 +1,27 @@
+BASE = /usr/local/dx
+
+include /usr/local/dx/lib_/arch.mak
+
+# include ../../.mak
+
+EXP      = $(BASE)/lib_/dxexec.exp
+CFLAGS = -g -D -I$(BASE)/include \
+	$(DXCFLAGS)
+
+CC = $(DXCC)
+
+.c.o: ; $(CC) -c $*.c $(DXABI) $(DX_RTL_CFLAGS) $(CFLAGS)
+
+loadable: interactors
+
+interactors: interactors.o
+	-rm interactors
+	$(MAKE) -f module_make usual_interactors || $(MAKE) -f module_make aix_interactors
+	
+usual_interactors:
+	$(CCLD) $(DXABI) $(DX_RTL_LDFLAGS) -e DXEntry \
+		-o interactors interactors.o -lm
+
+aix_interactors:
+	$(CC) -o interactors interactors.o -e DXEntry -bI:$(EXP) -lm
+

@@ -541,8 +541,8 @@ DXTube(Object input, double diameter, int ngon)
     }
 
     /* change this to change the shape */
-    cs = (float *) DXAllocateLocal(2*ngon*sizeof(float));
-    sn = (float *) DXAllocateLocal(2*ngon*sizeof(float));
+    cs = (float *) DXAllocate(2*ngon*sizeof(float));
+    sn = (float *) DXAllocate(2*ngon*sizeof(float));
     if (!cs || !sn)
 	goto error;
     for (i=0; i<2*ngon; i++) {

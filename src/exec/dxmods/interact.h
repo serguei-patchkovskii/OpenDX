@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/interact.h,v 1.8 2006/06/13 15:08:35 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/interact.h,v 1.8 2006/06/13 15:08:35 davidt Exp $
  */
 
 #include <dxconfig.h>

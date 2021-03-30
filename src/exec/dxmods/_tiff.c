@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_tiff.c,v 1.13 2006/01/04 22:00:51 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_tiff.c,v 1.13 2006/01/04 22:00:51 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -468,7 +468,7 @@ _dxf_write_tiff(RWImageArgs *iargs)
     /*
      * DXAllocate some space to save strip offsets and sizes. 
      */
-    strip_offsets = (uint32*)DXAllocateLocal(2 * strips * sizeof(uint32));
+    strip_offsets = (uint32*)DXAllocate(2 * strips * sizeof(uint32));
     if (!strip_offsets)
 	goto error;
     strip_byte_counts = &strip_offsets[strips];
@@ -820,14 +820,14 @@ put_tiff_pixels(int fd,
 
     offset = lseek(fd, 0, L_INCR);
 
-    rgb = (unsigned char*)DXAllocateLocal(pixels_per_strip*3);
+    rgb = (unsigned char*)DXAllocate(pixels_per_strip*3);
     if (!rgb)
 	goto error;
 
 #ifdef HAVE_LZW_COMPRESS
     if (compress == TIFF_LZW_COMPRESS)
     {
-	comp_rgb = (unsigned char*)DXAllocateLocal(pixels_per_strip*3);
+	comp_rgb = (unsigned char*)DXAllocate(pixels_per_strip*3);
 	if (!comp_rgb)
 	    goto error;
     }

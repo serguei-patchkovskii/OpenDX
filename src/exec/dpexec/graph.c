@@ -240,45 +240,30 @@ gvar *_dxf_ExCreateGvar (_gvtype type)
 }
 
 /*
- * procId == 0		OK to delete, created somewhere, all global
- * procId != pin proc	OK to delete, created somewhere and must
- *				be all global since can't guarantee where
- *				it will be run.
- * procId == exJID		OK to delete, created here
- * 1 processor		OK to delete, created here
+ * procId == -1			OK to delete, created somewhere, all global
+ * procId != pin proc		OK to delete, created somewhere and must
+ *					be all global since can't guarantee where
+ *					it will be run.
+ * procId == DXProcessorId()	OK to delete, created here
+ * 1 processor			OK to delete, created here
  */
 
 static void
 DeleteGvarObj(gvar *var)
 {
-    int		procId;
     Object	obj = var->obj;
 
     if (obj != NULL)
     {
-	procId = var->procId;
-	if (var->type != GV_CACHE	||
-	    procId == 0			||
-	    procId != EX_PIN_PROC	||
-	    procId == exJID		||
+	if (var->type != GV_CACHE		||
+	    var->procId == -1			||
+	    var->procId != EX_PIN_PROC		||
+	    var->procId == DXProcessorId()	||
 	    DXProcessors (0) == 1)
 	    DXDelete (obj);
 	else
 	{
-#if 0
-    /*
-     * $$$$$ THIS IS A TEMPORARY SOLUTION BELOW, THE CORRECT IS DESCRIBED
-     * $$$$$ What we really need is to augment the ExReclaimDisable function
-     * $$$$$ so that it loops on a DXtry_lock, which if it doesn't get causes
-     * $$$$$ it to look for high priority jobs destined for its JID since
-     * $$$$$ they may be deletes issued from within some other invocation
-     * $$$$$ of the memory reclaimer that MUST run on that processor
-     * $$$$$ before the world, e.g. the running reclaimer, can really 
-     * $$$$$ continue.
-     */
-	    _dxf_ExRunOn (procId, DXDelete, (Pointer) obj, 0);
-#endif
-	    _dxf_ExRQEnqueue (DXDelete, (Pointer) obj, 1, 0, procId, TRUE);
+	    _dxf_ExRQEnqueue (DXDelete, (Pointer) obj, 1, 0, var->procId, TRUE);
 	}
     }
 }
@@ -316,7 +301,7 @@ _dxf_ExUndefineGvar (gvar *gv)
     gv->reccrc = 0;
     gv->cost = 0;
     gv->disable_cache = 0;
-    gv->procId = 0;
+    gv->procId = -1;
 }
 
 /*
@@ -445,7 +430,7 @@ static Program *
 AllocateProgramLocal(void)
 {
     Program *p = NULL;
-    p = (Program*)DXAllocateLocalZero (sizeof (Program));
+    p = (Program*)DXAllocateZero (sizeof (Program));
     if (p == NULL)
 	return (NULL);
 
@@ -642,7 +627,7 @@ if (pv->refs > 0 && pv->refs > pv->gv->object.refs)
 int
 _dxf_ExGraphCompact (void)
 {
-    if (exJID == 1 && _dxd_exGraphCache != NULL)
+    if (DXProcessorId() == 0 && _dxd_exGraphCache != NULL)
     {
 	if (_dxf_ExDictionaryPurge(_dxd_exGraphCache))
 	    return (_dxf_ExDictionaryCompact(_dxd_exGraphCache));
@@ -775,7 +760,7 @@ static void ExGraphTraverse (Program *p, node *n, int top, EXDictionary dict)
 				    break;
 				len += strlen (DXGetString (string));
 			    }
-			    buffer = (char *) DXAllocateLocal (len + 1);
+			    buffer = (char *) DXAllocate (len + 1);
 			    if (buffer == NULL)
 			    {
 				DXWarning ("#4740");
@@ -941,7 +926,7 @@ static void ExGraphExpression (Program *p, node *n, int top, list_int *out, EXDi
      */
 
     size  = (cnt + 4) * sizeof (node);
-    nodes = (node *) DXAllocateLocal (size);
+    nodes = (node *) DXAllocate (size);
     if (nodes == NULL)
 	goto error;
     memset (nodes, 0, size);
@@ -953,7 +938,7 @@ static void ExGraphExpression (Program *p, node *n, int top, list_int *out, EXDi
      */
 
     size  = cnt * 16;
-    opstr = (char *) DXAllocateLocal (size);
+    opstr = (char *) DXAllocate (size);
     if (opstr == NULL)
 	goto error;
     memset (opstr, 0, size);
@@ -1193,6 +1178,10 @@ ExGraphAssignment (Program *p, node *n, int top, EXDictionary dict)
  * of indices into the programs "vars" list that are the functions
  * output.  "top" is used when recursing.
  */
+
+static int gc_knt, gc_target = 99999999;
+void gc_error(){}
+
 static void
 ExGraphCall (Program *p, node *n, int top, list_int *out, EXDictionary dict, int *flags)
 {
@@ -1253,7 +1242,7 @@ ExGraphCall (Program *p, node *n, int top, list_int *out, EXDictionary dict, int
     if (function == NULL)
     {
         char *modname;
-        modname = DXAllocateLocal(strlen(name) + 1);
+        modname = DXAllocate(strlen(name) + 1);
         strcpy(modname, name);
         DXAddModule(modname, m__badfunc, 0,
             21, "input1", "input2", "input3", "input4", "input5", "input6",
@@ -1297,8 +1286,14 @@ ExGraphCall (Program *p, node *n, int top, list_int *out, EXDictionary dict, int
     posthidden = localFunct.posthidden;
 
     fnode.nout = localFunct.nout;
-    inArgs = (int*) DXAllocateLocal (nin * sizeof (int));
-    inAttrs = (node **) DXAllocateLocal (nin * sizeof (node*));
+
+    gc_knt ++;
+    int my_gc_knt = gc_knt;
+    if (gc_knt >= gc_target)
+        gc_error();
+
+    inArgs = (int*) DXAllocate (nin * sizeof (int));
+    inAttrs = (node **) DXAllocate (nin * sizeof (node*));
 
     for (i = 0; i < nin; ++i) {
         inArgs[i]  = -1;
@@ -1659,9 +1654,9 @@ ExGraphCall (Program *p, node *n, int top, list_int *out, EXDictionary dict, int
 	 * Start by Create a mapping array... mapping [i] is valid 
 	 * iff resolved[i] is TRUE.  p->vars[mapping[subPindex]]
 	 */
-	mapping  = (int*)DXAllocateLocal     (SIZE_LIST(subP->vars) * 
+	mapping  = (int*)DXAllocate     (SIZE_LIST(subP->vars) * 
 					      sizeof(int));
-	resolved = (int*)DXAllocateLocalZero (SIZE_LIST(subP->vars) * 
+	resolved = (int*)DXAllocateZero (SIZE_LIST(subP->vars) * 
 					      sizeof(int));
         numresolved = 0;
 	if (mapping == NULL || resolved == NULL)
@@ -2639,9 +2634,9 @@ Error _dxf_ModNameTablesInit()
   return OK;
 }
 
-static uint32 _dxf_ExGraphInsertAndLookupName( Program *p, char name[] )
+static EXCRC _dxf_ExGraphInsertAndLookupName( Program *p, char name[] )
 {
-  uint32 i;
+  EXCRC i;
   char  *new;
   struct mod_name_info search, *found, info;
 
@@ -2664,7 +2659,7 @@ static uint32 _dxf_ExGraphInsertAndLookupName( Program *p, char name[] )
   if ( !new ) {
     _dxf_ExDie("_dxf_ExGraphInsertAndLookupName:  DXAllocate failed");
     DXunlock (mod_name_tables_lock, 0);
-    return (uint32) -1;
+    return (EXCRC) -1;
   }
   strcpy (new, name);
 
@@ -2679,7 +2674,7 @@ static uint32 _dxf_ExGraphInsertAndLookupName( Program *p, char name[] )
   if ( !DXInsertHashElement( mod_name_hash, (Pointer)&info) ) {
     _dxf_ExDie("_dxf_ExGraphInsertAndLookupName:  DXInsertHashElement failed");
     DXunlock (mod_name_tables_lock, 0);
-    return (uint32) -1;
+    return (EXCRC) -1;
   }
 
   DXunlock (mod_name_tables_lock, 0);
@@ -2955,7 +2950,7 @@ static void _dxf_ExPathPrint( Program *p, gfunc *fnode, char *header )
 
 static void _dxf_ExPathSet( Program *p, char fname[], int instance, gfunc *fnode )
 {
-  uint32   fname_key;
+  EXCRC   fname_key;
   ModPath *path = &fnode->mod_path;
 
   /*  Note, we store paths in reverse order in mod_path,  */
@@ -2977,7 +2972,7 @@ static void _dxf_ExPathSet( Program *p, char fname[], int instance, gfunc *fnode
 static void _dxf_ExPathPrepend( Program *p, char fname[], int instance,
                                 gfunc *fnode )
 {
-  uint32   fname_key;
+  EXCRC   fname_key;
   ModPath *path = &fnode->mod_path;
 
   /*  Note, we store paths in reverse order in mod_path,  */
@@ -3004,7 +2999,7 @@ static void _dxf_ExPathPrepend( Program *p, char fname[], int instance,
 static void _dxf_ExPathAppend( Program *p, char fname[], int instance,
                                gfunc *fnode )
 {
-  uint32   fname_key;
+  EXCRC   fname_key;
   ModPath *path = &fnode->mod_path;
 
   /*  Note, we store paths in reverse order in mod_path,  */

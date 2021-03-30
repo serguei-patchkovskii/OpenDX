@@ -1,0 +1,108 @@
+<html><head>
+<title>Open Visualization Data Explorer: Topo</title>
+</head>
+<body bgcolor="white">
+<p>
+This visual program shows some ways to 
+visualize topographic data. 
+It imports a data set which describes the elevation of a
+region of Colorado and a satellite photograph of the same region.
+<p>
+<blockquote>
+<center>
+<b>Grey Scale Image / Elevation Data</b>
+<br>
+<img src="Topo.gif">
+</center>
+</blockquote>
+<p>
+The elevation data are assigned colors by height.  (Red and blue
+correspond to peaks and valleys.)  The visualization task is to
+create a realistic view of the surface by combining the photograph
+with the elevation data.  
+
+<p>
+<table border = 2>
+<tr bgcolor="black">
+<td>
+<applet
+	code="imageWindow.class" width = 394 height = 317
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/Topo2.0.0.gif">
+	<param name=IMAGE_NODE value="Image_2">
+</applet>
+</td>
+<td>
+<applet
+	code="imageWindow.class" width = 394 height = 317
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/Topo4.0.0.gif">
+	<param name=IMAGE_NODE value="Image_4">
+</applet>
+</td>
+</tr>
+</table>
+<p>
+<center>
+<table border = 0>
+<tr>
+<td>
+<h3>...about the visualization</h3>
+The image on left shows the satellite image combined with the elevation
+data.  The image on the right is rubbersheeted elevation data.  The 2 images
+share a common viewpoint.  If you rotate the image on the left, you'll see
+the one on the right from the same camera position.
+<h3>...about the visual program</h3>
+Reorient is used to ensure that the image color data is 
+assigned to the elevation data in the correct order, as 
+the original data sets, while on the same grid, do not 
+have the data in the same order. The "how" parameter of 
+Reorient was set so that the two small images have the 
+same orientation; the grey image is the photograph, while 
+the colored image is the elevation data.
+<p>
+If the image and elevation data had not been on the same 
+grid, then instead of Replace we could have used Map to 
+map the elevation data onto the image field.
+<p>
+You may specify a reduction factor.  This value is used
+as input the Reduce tool which reduces the resolution of 
+the data for better performance.  When you're satisfied
+with the camera position, you might select a reduction
+factor of 0.
+</td>
+<td>
+<applet
+	code="Topo.class" width = 300 height = 250
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="Topo">
+	<param name=NETNAME value="Topo.net">
+	<param name=DXUIVERS value="4.1.1">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+</applet>
+</td>
+</tr>
+</table>
+<p>
+
+<hr> <b> &#91 
+<a href="Status.html" TARGET=_parent>Java Explorer</a> |
+<a href="http://www.ibm.com/" TARGET=_parent>IBM home page</a> |
+<a href="http://www.ibm.com/Orders/" TARGET=_parent>Order</a> |
+<a href="http://www.ibm.com/Search/" TARGET=_parent>Search</a> |
+<a href="http://www.ibm.com/Assist/" TARGET=_parent>Contact IBM</a> |
+<a href="http://www.ibm.com/Finding/" TARGET=_parent>Help</a> |
+<a href="http://www.ibm.com/copyright.html" TARGET=_parent>(C)</a> |
+<a href="http://www.ibm.com/trademarks.html" TARGET=_parent>(TM)</a> &#93 </b>
+
+</body>
+</html>

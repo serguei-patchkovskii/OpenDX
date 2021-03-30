@@ -1327,7 +1327,7 @@ name(							\
     int items = pt->metaType.items;			\
     int *allValid;					\
 							\
-    allValid = (int*)DXAllocateLocal(sizeof(int) * numInputs); \
+    allValid = (int*)DXAllocate(sizeof(int) * numInputs); \
     if (allValid == NULL)				\
 	return ERROR;					\
     for (arg = 0; arg < numInputs; ++arg) {		\

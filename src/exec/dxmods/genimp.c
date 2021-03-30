@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/genimp.c,v 1.5 2000/08/24 20:08:37 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/genimp.c,v 1.5 2000/08/24 20:08:37 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -323,7 +323,7 @@ import_Group(FILE **datafp)
 
   /*size = _dxfnumGridPoints();*/ 
 
-  if (!(XF = (void**)DXAllocateLocalZero(_dxd_gi_series*_dxd_gi_numflds*sizeof(void*))))
+  if (!(XF = (void**)DXAllocateZero(_dxd_gi_series*_dxd_gi_numflds*sizeof(void*))))
       goto error;
 
   for (d = i = 0; i < _dxd_gi_series; i++)
@@ -339,7 +339,7 @@ import_Group(FILE **datafp)
 	      if (_dxd_gi_whichflds[j] == ON)
 		{
 	          size = _dxfnumGridPoints(j);
-		  if (!(XF[d] = (void*)DXAllocateLocalZero(size *
+		  if (!(XF[d] = (void*)DXAllocateZero(size *
 				_dxd_gi_var[j]->datadim * _dxd_gi_var[j]->databytes)))
 		      goto error;
 		}
@@ -398,7 +398,7 @@ import_Group(FILE **datafp)
    * create a series for each imported field. 
    */
   if (imported_members > 1) {
-	ser = (Series*)DXAllocateLocalZero(_dxd_gi_numflds * sizeof(Series));
+	ser = (Series*)DXAllocateZero(_dxd_gi_numflds * sizeof(Series));
 	if (!ser)
 	    goto error;
   }

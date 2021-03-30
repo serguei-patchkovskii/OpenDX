@@ -156,10 +156,13 @@ void _dxf_ExSetGVarCost(gvar *gv, double cost)
 
 #define	N_PER_ITER	512
 
-extern void  DXInitMaxFreedBlock(); /* from libdx/memory.c */
-extern ulong DXMaxFreedBlock();     /* from libdx/memory.c */
-
 static int nDeleted;
+
+extern void _dxf_init_freed_size();
+extern ulong _dxf_get_freed_size();
+extern EXObj _dxf_ExGetDictObject(EXDictionary d, Pointer key);
+extern ulong DXAvailableMemory();
+extern Error _dxf_ExCacheFlush (int all);
 
 static int
 __ExReclaimMemory (ulong nbytes)
@@ -169,26 +172,49 @@ __ExReclaimMemory (ulong nbytes)
     int		skipped;
     char	*key;
     CacheTagList pkg;
-    uint32	 *ctp;
+    EXCRC	 *ctp;
+
+#define GDA 1
+#if GDA
+    char name[256];
+    sprintf(name, "/tmp/reclaim.%d", getpid());
+    FILE *f = fopen(name, "wa");
+#endif
 
     _dxf_ExDictionaryBeginIterateSorted(_dxd_exCacheDict, 0);
 
     pkg.numtags = 0;
     ctp = pkg.ct;
 
+    fprintf(f, "__ExReclaimMemory----------------\n");
     while (NULL !=
 	(obj = _dxf_ExDictionaryIterateSorted(_dxd_exCacheDict, &key)))
     {
 	gv = (gvar *)obj;
 
 	if (gv->type == GV_UNRESOLVED || gv->cost == CACHE_PERMANENT)
+	{
+#if GDA
+	    fprintf(f, "%s 0x%016lx retained (%s)\n",
+	    	key, _dxf_ExGetDictObject(_dxd_exCacheDict, key),
+		gv->type == GV_UNRESOLVED ? "GV_UNRESOLVED" : "CACHE_PERMANENT");
+#endif
 	    continue;
+	}
+#if GDA
+	else
+	{
+	    fprintf(f, "%s 0x%016lx DELETED\n", 
+	    	key, _dxf_ExGetDictObject(_dxd_exCacheDict, key));
+	}
+#endif
 	
 	ExDebug ("2", "Free %s from cache", key);
 
         if(key[0] == 'X') {
             *ctp = strtoul(key+1, NULL, 16);
-	    if (_dxf_ExDictionaryDelete (_dxd_exCacheDict, key) == OK)
+	    // GDA added NoLock
+	    if (_dxf_ExDictionaryDeleteNoLock (_dxd_exCacheDict, key) == OK)
 	    {
                 pkg.numtags++;
                 ctp++;
@@ -203,15 +229,20 @@ __ExReclaimMemory (ulong nbytes)
             }
         }
         else 
-	    _dxf_ExDictionaryDelete(_dxd_exCacheDict, key);
+	    // GDA added NoLock
+	    _dxf_ExDictionaryDeleteNoLock(_dxd_exCacheDict, key);
 	
 	nDeleted ++;
 	    
-	if (nbytes <= DXMaxFreedBlock())
+	if (nbytes <= _dxf_get_freed_size())
 	    break;
     }
 
     skipped = (obj) ? 1 : 0;
+
+#if GDA
+    fclose(f);
+#endif
 
     if(pkg.numtags > 0)
         _dxf_ExDistributeMsg(DM_EVICTCACHELIST, (Pointer)&pkg, 
@@ -225,9 +256,8 @@ __ExReclaimMemory (ulong nbytes)
 int _dxf_ExReclaimMemory (ulong nbytes)
 {
     int	status;
-    int	found;
 
-    /*
+    /* GDA IS THIS TRUE?
      * Sorry, the cache has to stay consistent for a while.  Can't eject
      * anything at the present time.
      * Note, that if _dxf_ExReclaimDisable returns TRUE, then someone else has
@@ -260,12 +290,12 @@ int _dxf_ExReclaimMemory (ulong nbytes)
     nDeleted = 0;
 
     /* 
-     * Now we run over the cache dictionary trying to delete something
-     * that gives us a block big enough.
+     * Now we run over the cache dictionary trying to delete enough
+     * memory
      */
-    DXInitMaxFreedBlock();
+    _dxf_init_freed_size();
 
-    DXDebug ("M", " initial max free blocksize %lu bytes", DXMaxFreedBlock());
+    // DXDebug ("M", " initial max free blocksize %lu bytes", DXMaxFreedBlock());
 
     /* 
      * EXPERIMENT!!  try reclaiming just a bit more than we need, and
@@ -279,50 +309,39 @@ int _dxf_ExReclaimMemory (ulong nbytes)
      * ask for too much.  if this fails, see if we got at least
      * as much as we really need.
      */
-    found = __ExReclaimMemory((ulong)(nbytes*factor));
-    if (found)
-	goto done;
- 
-    DXDebug ("M", " after deleting %d items max blocksize now %lu", 
-	     nDeleted, DXMaxFreedBlock());
-    DXDebug ("M", " could not get %lu bytes (%g times %lu needed)", 
-	     (ulong)(nbytes*factor), factor, nbytes);
-
-    /*
-     * the first request looked at all objects which were valid to
-     * discard.  there's no point in traversing the same list again.
-     * just look at the largest remaining block and see if it's big enough.
-     */
-    found = nbytes <= DXMaxFreedBlock();
-    if (found)
-	goto done;
-
-    DXDebug ("M", " going to try to compact dictionary"); 
-    
-    /*
-     * If we still failed, clean up the dictionary and try again
-     */
-
-
-    if (_dxf_ExDictionaryCompact(_dxd_exCacheDict) ||
-	_dxf_ExGraphCompact() ||
-	_dxf_EXO_compact())
+#if 0
+    __ExReclaimMemory((ulong)(nbytes*factor));
+    if (nbytes > DXAvailableMemory())
     {
-       found = nbytes <= DXMaxFreedBlock();
-       if (! found)
-	   found = __ExReclaimMemory(nbytes);
+	DXDebug ("M", " could not get %lu bytes (%g times %lu needed)", 
+		 (ulong)(nbytes*factor), factor, nbytes);
+	DXDebug ("M", " going to try to compact dictionary"); 
+    
+	/*
+	 * If we still failed, clean up the dictionary and try again
+	 */
+	_dxf_ExDictionaryCompact(_dxd_exCacheDict);
+	_dxf_ExGraphCompact();
+	_dxf_EXO_compact();
+	__ExReclaimMemory(nbytes);
     }
+#endif
+
+#if 1
+    /*
+     * Last-ditch effort - flush the cache!
+     */
+    if (nbytes > DXAvailableMemory())
+	_dxf_ExCacheFlush (0);
+#endif
 
   done:
 	       
-    DXDebug ("M", "deleted %d items, max blocksize now %lu, found=%d", 
-	     nDeleted, DXMaxFreedBlock(), found);
-
     reclaiming_mem = 0;
 
     _dxf_ExReclaimEnable ();
 
     set_status (status);
 
-    return found;
+    return nbytes < DXAvailableMemory();
 }

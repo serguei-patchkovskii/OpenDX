@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_divcurl.c,v 1.6 2006/01/04 22:00:50 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_divcurl.c,v 1.6 2006/01/04 22:00:50 davidt Exp $
  */
 
 
@@ -768,7 +768,7 @@ _dxfDivCurlIrregular(Field field)
 	goto error;
 
     dA = (Array)DXGetComponentValue(field, "data");
-    data = DXGetArrayDataLocal(dA);
+    data = DXGetArrayData(dA);
 
     DXGetArrayInfo(dA, NULL, &dataType, NULL, NULL, NULL);
 
@@ -804,7 +804,7 @@ _dxfDivCurlIrregular(Field field)
      * Allocation a counts array, recalling the number of element
      * samples that have been accumulated for each position.
      */
-    counts = (byte *)DXAllocateLocalZero(nPoints);
+    counts = (byte *)DXAllocateZero(nPoints);
     if (! counts)
     {
        DXResetError();
@@ -821,7 +821,7 @@ _dxfDivCurlIrregular(Field field)
     curlA = (Array)DXGetComponentValue(field, "curl");
     if (curlA)
     {
-	curls = (float *)DXAllocateLocalZero(nPoints * pDim * sizeof(float));
+	curls = (float *)DXAllocateZero(nPoints * pDim * sizeof(float));
 	if (! curls)
 	{
 	    DXResetError();
@@ -840,7 +840,7 @@ _dxfDivCurlIrregular(Field field)
     divA = (Array)DXGetComponentValue(field, "div");
     if (divA)
     {
-	divs = (float *)DXAllocateLocalZero(nPoints * sizeof(float));
+	divs = (float *)DXAllocateZero(nPoints * sizeof(float));
 	if (! divs)
 	{
 	   DXResetError();
@@ -939,9 +939,6 @@ _dxfDivCurlIrregular(Field field)
     DXFreeArrayHandle(pH);
     DXFreeArrayHandle(cH);
 
-    if (dA && data)
-	DXFreeArrayDataLocal(dA, (Pointer)data);
-
 done:
     return OK;
 
@@ -954,15 +951,6 @@ error:
     DXFreeArrayHandle(pH);
     DXFreeArrayHandle(cH);
 
-    if (dA && data)
-	DXFreeArrayDataLocal(dA, (Pointer)data);
-
-    if (divA && divsInLocal)
-	DXFreeArrayDataLocal(divA, (Pointer)divs);
-    
-    if (curlA && curlsInLocal)
-	DXFreeArrayDataLocal(curlA, (Pointer)curls);
-    
     return ERROR;
 }
 

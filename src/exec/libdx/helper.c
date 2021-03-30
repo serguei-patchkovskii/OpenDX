@@ -246,7 +246,7 @@ DXEndField(Field f)
     Array a, ap, ac;
     Object o;
     char *name;
-    static struct {
+    struct {
 	char **component;			/* the component */
 	char **attribute;			/* its attribute */
 	Object *value;				/* the attribute's value */

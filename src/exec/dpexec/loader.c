@@ -885,7 +885,7 @@ Error _dxf_fileSearch(char *inname, char **outname, char *extension,
 	 * want to search the current dir w/o ./ in front of the
 	 * filename.
 	 */
-	*outname = (char *)DXAllocateLocalZero(strlen(inname)+3);
+	*outname = (char *)DXAllocateZero(strlen(inname)+3);
 	if (!*outname) 
 	    goto error;
 
@@ -922,7 +922,7 @@ Error _dxf_fileSearch(char *inname, char **outname, char *extension,
     if (extension) {
 	/* space for basename, extension and ./ in front if found.
 	 */
-	*outname = (char *)DXAllocateLocalZero(strlen(inname) +
+	*outname = (char *)DXAllocateZero(strlen(inname) +
 					       strlen(extension) + 4);
 	if (!*outname) 
 	    goto error;

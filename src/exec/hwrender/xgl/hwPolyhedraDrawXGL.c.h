@@ -13,7 +13,7 @@
 
 
 /*
- * $Source: /src/master/dx/src/exec/hwrender/xgl/hwPolyhedraDrawXGL.c.h,v $
+ * $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwPolyhedraDrawXGL.c.h,v $
  * $Log: hwPolyhedraDrawXGL.c.h,v $
  * Revision 1.3  1999/05/10 15:45:40  gda
  * Copyright message

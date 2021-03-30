@@ -80,8 +80,6 @@ Object DXTransform(Object o, Matrix *tp, Camera c);
 #define TypeCheck		DXTypeCheck
 #define GetArrayData		DXGetArrayData
 #define GetItemSize		DXGetItemSize
-#define GetArrayDataLocal	DXGetArrayDataLocal
-#define FreeArrayDataLocal	DXFreeArrayDataLocal
 #define AddArrayData		DXAddArrayData
 #define AllocateArray		DXAllocateArray
 #define Trim			DXTrim

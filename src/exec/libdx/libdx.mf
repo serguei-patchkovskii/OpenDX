@@ -1,0 +1,79 @@
+SUFFIXES = .X .Z .h .m .c .o .s .i
+
+$(InputName).c: $(InputName).X libdx.mf class class.awk
+	./class -c $*.X > $*.c
+	./class -h $*.X > $*.h
+
+.X.h:
+	rm -f $*.h
+	./class -h $*.X >$*.h
+
+.X.c:
+	rm -f $*.c
+	./class -c $*.X > $*.c
+
+.X.o:
+	rm -f $*.c
+	./class -c $*.X >$*.c
+	$(COMPILE) -c $*.c
+
+.c.i:
+	$(CC) $(CFLAGS) -P $*.c
+
+buffer.c: buffer.Z
+	sed -e "s/[ 	][ 	]*\$$/ $$/" buffer.Z > __buffer.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CFLAGS) -E __buffer.c \
+	| tr -s '$$\012' '\012\012' \
+	| sed -e "/^#/d"  \
+	| sed -e "s/^pragma/#pragma/"  > buffer.c
+	rm -f __buffer.c
+
+shade.c: shade.Z
+	sed -e "s/[ 	][ 	]*\$$/ $$/" shade.Z > __shade_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CFLAGS) -E __shade_.c \
+	| tr -s '$$\012' '\012\012' \
+	| sed -e "/^#/d"  \
+	| sed -e "s/DEFINE2/#define/"  \
+	| sed -e "s/[^#]pragma/#pragma/"  > shade.c
+
+triangle.c: triangle.Z
+	sed -e "s/[ 	][ 	]*\$$/ $$/" triangle.Z > __triangle.c
+	$(CPP) -E -DPASS1 __triangle.c \
+		| sed -e "/^#/d" \
+		| sed -e "s/INCLUDE1/#include/" \
+		| tr -s '$$\012' '\012\012' > triangle1.c
+	$(CPP) -E -DPASS2 -I. triangle1.c \
+		| sed -e "/^#/d" \
+		| sed -e "s/INCLUDE2/#include/" \
+		| tr -s '$$\012' '\012\012' > triangle2.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CFLAGS) -E -DPASS3 triangle2.c \
+		| tr -s '$$\012' '\012\012' \
+		| sed -e "/^#/d" \
+		| sed -e "s/DEFINE3/#define/" \
+		| sed -e "s/[^#]pragma/#pragma/" > triangle.c
+	rm triangle1.c triangle2.c __triangle.c
+
+quad.c: quad.Z
+	sed -e "s/[ 	][ 	]*\$$/ $$/" quad.Z > __quad.c
+	$(CPP) -E -DPASS1 __quad.c \
+		| sed -e "/^#/d" \
+		| sed -e "s/INCLUDE1/#include/" \
+		| tr -s '$$\012' '\012\012' > quad1.c
+	$(CPP) -E -DPASS2 -I. quad1.c \
+		| sed -e "/^#/d" \
+		| sed -e "s/INCLUDE2/#include/" \
+		| tr -s '$$\012' '\012\012' > quad2.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CFLAGS) -E -DPASS3 quad2.c \
+		| tr -s '$$\012' '\012\012' \
+		| sed -e "/^#/d" \
+		| sed -e "s/DEFINE3/#define/" \
+		| sed -e "s/[^#]pragma/#pragma/" > quad.c
+	rm quad1.c quad2.c __quad.c
+
+plane.c: plane.Z
+	cp plane.Z plane1.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CFLAGS) -E plane1.c \
+	        | tr -s '$$\012' '\012\012' \
+	        | sed -e "/^#/d" \
+	        | sed -e "s/[^#]pragma/#pragma/" > plane.c
+	rm plane1.c

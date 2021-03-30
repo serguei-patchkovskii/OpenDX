@@ -2,7 +2,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/DXApplication.java,v 1.9 2005/12/26 21:33:43 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/DXApplication.java,v 1.10 2006/09/12 15:43:42 davidt Exp $
  */
 
 // Notes:
@@ -47,6 +47,7 @@ import java.util.*;
 import java.awt.event.*;
 import java.lang.reflect.*;
 import layout.TableLayout;
+import javax.swing.*;
 
 public abstract class DXApplication extends DXClient
     implements KeyListener, ActionListener, ItemListener {
@@ -232,8 +233,10 @@ public abstract class DXApplication extends DXClient
 			//System.out.println(d.height - (2 + st));
             //cardPanel.setBounds( 2, 2, tpw, d.height - ( 2 + st ) );
         }
-        if (this.executing != null) 
+        if (this.executing != null) {
         	this.executing.setVisible(false);
+		this.setCursorExecuting(false);
+	}
     }
 
     public void init() {
@@ -329,6 +332,7 @@ public abstract class DXApplication extends DXClient
 		this.executing.setLocation(d.height+5, 60);
 		this.add(this.executing);
 		this.executing.setVisible(true);
+		this.setCursorExecuting(true);
 
         //
         // Connect option
@@ -772,6 +776,7 @@ public void setJavaId ( int jid ) {}
         if ( this.execCtrl != null ) {
         	if(this.executing != null) {
         		this.executing.setVisible(false);
+			this.setCursorExecuting(false);
 			}	
         }
             if(this.execute_once != null)
@@ -795,12 +800,23 @@ public void setJavaId ( int jid ) {}
     protected abstract void readNetwork();
     protected abstract boolean isExecuting();
 
+    protected void setCursorExecuting(boolean ex){
+	Cursor c = ex ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : null;
+	Enumeration<Applet> aenum = this.getAppletContext().getApplets();
+	while(aenum.hasMoreElements()){
+		Applet a = aenum.nextElement();
+		if(a != null) // don't know why I sometimes get null, but anyway...
+			a.setCursor(c);
+	}
+    }
+
     protected void DXLExecuteOnce() {
        // if ( ( this.isExecuting() ) && ( this.executing != null ) ) {
 		if(this.executing != null) {
         		//this.executing.setEnabled(false);
         		this.executing.setVisible(true);
         		this.executing.repaint();
+			this.setCursorExecuting(true);
         		//this.executing.setEnabled(true);
         }
 
@@ -1299,6 +1315,7 @@ public void setJavaId ( int jid ) {}
     public synchronized void finishedExecuting() {
         if ( ( this.isExecuting() == false ) && ( this.executing != null ) ) {
         	this.executing.setVisible(false);
+		this.setCursorExecuting(false);
 
             //
             // Do another sequencer step?

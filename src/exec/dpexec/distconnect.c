@@ -327,7 +327,7 @@ static Error ConnectPMtoS(dpgraphstat *index)
             }
 
             len = strlen(index->prochostname) + 1;
-            spentry.peername = (char *)DXAllocateLocal(len);
+            spentry.peername = (char *)DXAllocate(len);
             if(!spentry.peername) 
                 _dxf_ExDie("Cannot allocate memory for peername");
 
@@ -503,7 +503,7 @@ Error _dxf_ExSlaveListen()
                             _dxd_exSwapMsg) < 0) 
         _dxf_ExDie("%s: bad packet data", _dxd_exHostName);
 
-    spentry.peername = (char *)DXAllocateLocal(len);
+    spentry.peername = (char *)DXAllocate(len);
     if(!spentry.peername) 
         _dxf_ExDie("%s: could not allocate memory", _dxd_exHostName);
     spentry.SwapMsg = FALSE;
@@ -594,7 +594,7 @@ Error _dxf_ExSlaveConnect()
                             _dxd_exSwapMsg) < 0) 
         _dxf_ExDie("%s: bad packet data", _dxd_exHostName);
 
-    spentry.peername = (char *)DXAllocateLocal(len);
+    spentry.peername = (char *)DXAllocate(len);
     if(!spentry.peername) 
         _dxf_ExDie("%s: couldn't allocate memory", _dxd_exHostName);
 

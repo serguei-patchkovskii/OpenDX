@@ -365,9 +365,3 @@ _dxfValidInterpolatorMap(Object map)
 	return ERROR;
     }
 }
-
-Interpolator
-DXLocalizeInterpolator(Interpolator o)
-{
-    return _dxfLocalizeInterpolator(o);
-}

@@ -56,134 +56,10 @@ static Error    ExDestroyTaskGroup      (EXTaskGroup tg);
 static Error    ExProcessTask           (EXTask t, int iteration);
 static Error    ExProcessTaskGroup      (int sync);
 
-/********************* START OF m_fork EMULATION **********************/
-
-#if 0
-
-#define	MFORK_ARGS	6
-
-typedef struct
-{
-    lock_type	mlock;			/* m_next lock	*/
-    int		mnext;
-    int		myid;
-    int		procs;
-    lock_type	dlock;			/* # done lock	*/
-    int		done;
-    PFE		func;
-    uint	args[MFORK_ARGS];
-} MFork;
-
-static MFork	*_mf_g	= NULL;
-static MFork	_mf_l;
-
-static Error
-_mfork_init ()
-{
-    _mf_g = (MFork *) DXAllocate (sizeof (MFork));
-    if (! _mf_g)
-	return (ERROR);
-
-    if (! DXcreate_lock (&(_mf_g->mlock), "m_next lock"))
-	return (ERROR);
-    if (! DXcreate_lock (&(_mf_g->dlock), "done lock"))
-	return (ERROR);
-
-    return (OK);
-}
-
-static int
-_mfork_worker (Pointer p, int n)
-{
-    _mf_l      = * (_mf_g);
-    _mf_l.myid = n;
-    (* _mf_l.func) (_mf_l.args[0], _mf_l.args[1], _mf_l.args[2],
-		    _mf_l.args[3], _mf_l.args[4], _mf_l.args[5]);
-
-    _mf_l.mnext = DXfetch_and_add (&(_mf_g->done), 1, &(_mf_g->dlock), _mf_l.myid);
-
-    return (OK);
-}
-
-void
-m_fork (PFE func, uint a0, uint a1, uint a2, uint a3, uint a4, uint a5)
-{
-    volatile int	*count;		/* task group counter		*/
-
-    _mf_l.mnext   = 0;
-    _mf_l.myid    = 0;
-    _mf_l.procs   = _mf_l.procs < 1 ? DXProcessors (0) : _mf_l.procs;
-    _mf_l.done    = 0;
-    _mf_l.func    = func;
-    _mf_l.args[0] = a0;
-    _mf_l.args[1] = a1;
-    _mf_l.args[2] = a2;
-    _mf_l.args[3] = a3;
-    _mf_l.args[4] = a4;
-    _mf_l.args[5] = a5;
-
-    * _mf_g = _mf_l;
-
-    _dxf_ExRQEnqueue (_mfork_worker, NULL, _mf_l.procs, (long) _mf_g, 0, FALSE);
-
-    count = &_mf_g->done;
-
-    /*
-     * Keep trying to get more mfork tasks until we don't get another
-     * at which point we just need to spin until all of the rest have
-     * finished.
-     */
-
-    while (*count != _mf_l.procs)
-    {
-	if (! _dxf_ExRQDequeue ((long) _mf_g))
-	    break;
-    }
-
-    while (*count != _mf_l.procs)
-	continue;
-}
-
-int
-m_next ()
-{
-    _mf_l.mnext = DXfetch_and_add (&(_mf_g->mnext), 1, &(_mf_g->mlock), _mf_l.myid);
-
-    return (_mf_l.mnext);
-}
-
-int
-m_set_procs (int n)
-{
-    int		p = DXProcessors (0);
-
-    _mf_l.procs = n > p ? p : n;
-    return (_mf_l.procs);
-}
-
-int
-m_get_numprocs ()
-{
-    if (_mf_l.procs < 1)
-	_mf_l.procs = DXProcessors (0);
-    return (_mf_l.procs);
-}
-
-int
-m_get_myid ()
-{
-    return (_mf_l.myid);
-}
-
-#endif
-
-/********************* END   OF m_fork EMULATION **********************/
-
-
 int
 DXProcessorId(void)
 {
-    return(_dxd_exMyPID);
+    return DXGetThreadPid();
 }
 
 #if 0
@@ -269,7 +145,11 @@ Error DXCreateTaskGroup ()
 	if (l != OK)
 	    goto error;
 
-	tg->procId = exJID;
+	l = DXcreate_wait (&tg->wait, "Tasks");
+	if (l != OK)
+	    goto error;
+
+	tg->procId = DXProcessorId();
 	tg->nalloc = EX_TASK_BLOCKS;
 	tg->tasks  = t;
 	tg->error  = ERROR_NONE;
@@ -334,7 +214,7 @@ Error DXAddLikeTasks (PFE func, Pointer arg, int size, double work, int repeat)
 	{
 	    tg = runningTG;
 	    locked = TRUE;
-	    DXlock (&tg->lock, exJID);
+	    DXlock (&tg->lock, DXProcessorId());
 	}
 	else
 	{
@@ -404,7 +284,7 @@ Error DXAddLikeTasks (PFE func, Pointer arg, int size, double work, int repeat)
     if (locked)
     {
 	tg->ntodo += repeat;
-	DXunlock (&tg->lock, exJID);
+	DXunlock (&tg->lock, DXProcessorId());
         /* copy global context data to ExTask structure */
 #if 0
         t->taskContext = _dxd_exContext;
@@ -425,7 +305,7 @@ Error DXAddLikeTasks (PFE func, Pointer arg, int size, double work, int repeat)
 
 error:
     if (locked && tg != NULL)
-	DXunlock (&tg->lock, exJID);
+	DXunlock (&tg->lock, DXProcessorId());
     return (ERROR);
 }
 
@@ -542,9 +422,6 @@ static Error ExProcessTask (EXTask t, int iteration)
     EXTaskGroup		tg;
     Pointer		arg;		/* task argument pointer	*/
     ErrorCode		ecode;		/* error code			*/
-#if 0
-    int			ntodo;		/* number left in group		*/
-#endif
     char		*emsg;
     Error		returnVal;
     int			status;
@@ -561,10 +438,7 @@ static Error ExProcessTask (EXTask t, int iteration)
     arg = (t->nocopy || t->arg) ? t->arg : (Pointer) t->data;
 
     DXResetError ();
-#if 0
-    savedContext = _dxd_exContext; /* save current context */
-    _dxd_exContext = t->taskContext;  /* move task context to global context */
-#endif
+
     _dxfCopyContext(&savedContext, _dxd_exContext);
     _dxfCopyContext(_dxd_exContext, &(t->taskContext));
     status = get_status ();
@@ -626,43 +500,17 @@ copymessage:
     }
 
 countdown:
-
-
-#if 0
-before the changes made to fix bugs found when debugging
-SMP linux -- gda
-
-
-    DXlock (&tg->lock, exJID);
-    ntodo = --(tg->ntodo);
-    if (ecode != ERROR_NONE && tg->error == ERROR_NONE)
-    {
-	tg->error = ecode;
-	tg->emsg  = emsg;
-	emsg      = NULL;
-    }
-    DXunlock (&tg->lock, exJID);
-
-    DXFree ((Pointer) emsg);
-
-    /* If this tg was run asyncronously and needs to be destroyed, schedule
-     * the destruction on the creating processor.
-     */
-    if ((ntodo == 0) && (! tg->sync))
-	_dxf_ExRQEnqueue (ExDestroyTaskGroup, (Pointer) tg, 1, 0, tg->procId, FALSE);
-
-#else
-
     /*
      * Decrement the task group task counter.  Was this the last task?
      */
-    DXlock (&tg->lock, exJID);
+    DXlock (&tg->lock, DXProcessorId());
     tg->ntodo --;
     lastTask = (tg->ntodo == 0);
-    DXunlock (&tg->lock, exJID);
 
     if (tg->sync == 0)
     {
+	DXunlock (&tg->lock, DXProcessorId());
+
         /*
          * Its an asynchronous task group.
          * Forget about errors... no-one is waiting for them.
@@ -674,7 +522,10 @@ SMP linux -- gda
          * task group to be deleted.
          */
         if (lastTask)
-            _dxf_ExRQEnqueue (ExDestroyTaskGroup, (Pointer)tg, 1, 0, tg->procId, FALSE);
+	{   // GDA
+            // _dxf_ExRQEnqueue (ExDestroyTaskGroup, (Pointer)tg, 1, 0, tg->procId, FALSE);
+	    ExDestroyTaskGroup(tg);
+ 	}
     }
     else
     {
@@ -691,13 +542,13 @@ SMP linux -- gda
             tg->emsg  = emsg;
             emsg      = NULL;
         }
+	DXsignal(&tg->wait);
+	DXunlock(&tg->lock, DXProcessorId());
     }
 
-
-#endif
-    
     if (t->exdelete)
 	DXFree ((Pointer) t);
+
     runningTG = oldTG;
     return (ecode == ERROR_NONE ? OK : ERROR);
 }
@@ -741,8 +592,6 @@ static Error ExProcessTaskGroup (int sync)
     WorkIndex 		*ilist	= _ilist;
     ErrorCode		ecode;
     char		*emsg;
-    EXTask		myTask	= NULL;
-    int			myIter	= 0;
     
     if (EMPTY)
 	return (OK);
@@ -784,7 +633,7 @@ static Error ExProcessTaskGroup (int sync)
      */
     if (todo > NUM_TASKS_ALLOCED)
     {
-	ilist = (WorkIndex *) DXAllocateLocal (todo * sizeof (WorkIndex));
+	ilist = (WorkIndex *) DXAllocate (todo * sizeof (WorkIndex));
 	if (ilist == NULL)
 	    goto error;
     }
@@ -807,44 +656,27 @@ static Error ExProcessTaskGroup (int sync)
      */
     if (todo > NUM_TASKS_ALLOCED) 
     {
-	funcs   = (PFI     *) DXAllocateLocal (todo * sizeof (PFI    ));
-	args    = (Pointer *) DXAllocateLocal (todo * sizeof (Pointer));
-	repeats = (int     *) DXAllocateLocal (todo * sizeof (int    ));
+	funcs   = (PFI     *) DXAllocate (todo * sizeof (PFI    ));
+	args    = (Pointer *) DXAllocate (todo * sizeof (Pointer));
+	repeats = (int     *) DXAllocate (todo * sizeof (int    ));
 	if (funcs == NULL || args == NULL || repeats == NULL)
 	    goto error;
     }
 
-    /* Save a task for the executer to execute */
-    i = 0;
-    if (sync)
+    totalTodo = 0;
+    for (i = 0; i < todo; i++)
     {
-	myTask = ilist[i].task;
-	myIter = ilist[i].task->repeat - 1;
-	ilist[i].task->repeat--;
-	if (ilist[i].task->repeat == 0) 
-	{
-	    i = 1;
-	}
-    }
-	
-    totalTodo = 1;
-    for (j = 0; i < todo; j++, i++)
-    {
-	funcs[j] = ExProcessTask;
-	args[j] = (Pointer) ilist[i].task;
-	totalTodo += (repeats[j] = ilist[i].task->repeat);
-    }
-    tg->ntodo = totalTodo;
-    if (ilist[0].task->repeat == 0)
-    {
-	--todo;
+	funcs[i] = ExProcessTask;
+	args[i] = (Pointer) ilist[i].task;
+	totalTodo += (repeats[i] = ilist[i].task->repeat);
     }
 
+    tg->ntodo = totalTodo;
 
 #ifdef TASK_TIME
     DXMarkTimeLocal ("queue all tasks");
 #endif
-    _dxf_ExRQEnqueueMany (todo, funcs, args, repeats, (long) tg, 0, FALSE);
+    _dxf_ExRQEnqueueMany (todo, funcs, args, repeats, (long) tg, -1, FALSE);
 #ifdef TASK_TIME
     DXMarkTimeLocal ("queued all tasks");
 #endif
@@ -866,57 +698,16 @@ static Error ExProcessTaskGroup (int sync)
     {
         int knt;
 
-	/*
-	 * This processor is now restricted to processing tasks in this
-	 * task group.  Once it can no longer get a job in this task group
-	 * from the run queue then just spin and wait for all of the outstanding
-	 * tasks in the group to complete.
-	 */
-
 #ifdef TASK_TIME
 	DXMarkTimeLocal ("tasks enqueued");
 #endif
-	/* Do the task that I saved above as myTask */
-	if (myTask != NULL)
-	    ExProcessTask (myTask, myIter);
 
-#if 0
-before the changes made to fix bugs found when debugging
-SMP linux -- gda
-
-	count = &tg->ntodo;
-	while (*count > 0)
-	{
-	    if (! _dxf_ExRQDequeue ((long) tg))
-		break;
-	}
-
-	DXMarkTimeLocal ("waiting");
-
-	set_status (PS_JOINWAIT);
-
-	/* Every 100 times of checking count, try to see if anyone added
-	 * on to the queue.
-	 */
-	while (*count > 0)
-	{
-	    _dxf_ExRQDequeue ((long)tg);
-	    for (i = 0; *count && i < 100; ++i)
-		;
-	}
-
-#else
-
-        do
-        {
-            DXlock(&tg->lock, 0);
-            knt = tg->ntodo;
-            DXunlock(&tg->lock, 0);
-
-            _dxf_ExRQDequeue ((long) tg);
-        } while(knt);
-
-#endif
+        while (_dxf_ExRQDequeue());
+	
+	DXlock(&tg->lock, DXProcessorId());
+	while (tg->ntodo)
+	    DXwait(&tg->wait, &tg->lock);
+	DXunlock(&tg->lock, DXProcessorId());
 
 	DXMarkTimeLocal ("joining");
 
@@ -973,7 +764,10 @@ void _dxf_ExPrintTaskGroup (EXTaskGroup tg)
 
 typedef struct
 {
-    lock_type	done;			/* set to true when job is done	*/
+    lock_type	lock;
+    wait_type	wait;
+    int		done;			/* set to true when job is done */
+
     PFE		func;			/* function to call on processor*/
     Pointer	arg;			/* argument block for the func	*/
     int		size;			/* size of allocated argument	*/
@@ -988,7 +782,10 @@ static Error ExRunOnWorker (EXROJob job, int n)
     (* job->func) (job->arg);
     job->code = DXGetError ();
     job->emsg = _dxf_ExCopyString (DXGetErrorMessage ());
-    DXunlock(&job->done, exJID);
+    DXlock(&job->lock, DXProcessorId());
+    job->done = 1;
+    DXsignal(&job->wait);
+    DXunlock(&job->lock, DXProcessorId());
     return (OK);
 }
 
@@ -1007,7 +804,7 @@ Error _dxf_ExRunOn (int JID, PFE func, Pointer arg, int size)
 #endif
 
     DXResetError ();
-    if (taskNprocs == 1 || JID == exJID)
+    if (taskNprocs == 1 || JID == DXProcessorId())
 	return ((* func) (arg));
     
     job = (EXROJob) DXAllocate (sizeof (_EXROJob));
@@ -1031,14 +828,21 @@ Error _dxf_ExRunOn (int JID, PFE func, Pointer arg, int size)
     if (JID > taskNprocs)
 	JID = taskNprocs;
 
-    DXcreate_lock(&job->done, "Job");
-    DXlock(&job->done, exJID);
+    DXcreate_lock(&job->lock, "Job");
+    DXcreate_wait(&job->wait, "Job");
+
+    DXlock(&job->lock, DXProcessorId());
+    job->done = 0;
 
     _dxf_ExRQEnqueue (ExRunOnWorker, (Pointer) job, 1, 0, JID, TRUE);
 
-    DXlock(&job->done, exJID);
-    DXunlock(&job->done, exJID);
-    DXdestroy_lock(&job->done);
+    while (job->done == 0)
+	DXwait(&job->wait, &job->lock);
+
+    DXunlock(&job->lock, DXProcessorId());
+
+    DXdestroy_lock(&job->lock);
+    DXdestroy_wait(&job->wait);
 
     ecode = job->code;
     if (ecode != ERROR_NONE)

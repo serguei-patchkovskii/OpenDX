@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/xgl/hwInteractorEchoXGL.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwInteractorEchoXGL.c,v $
 
   These are the XGL implementations of the TDM direct interactor echos,
   along with miscellaneous utility routines.  Each function needs to be

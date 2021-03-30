@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/maptoplane.c,v 1.7 2003/07/11 05:50:35 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/maptoplane.c,v 1.7 2003/07/11 05:50:35 davidt Exp $:
  */
 
 #include <dxconfig.h>

@@ -216,7 +216,7 @@ _dxfTriangulateField(Field field)
 
     ntri = _dxf_TriangleCount (f, nf, l, nl, e, ne);
     size = ntri * sizeof (Triangle);
-    tri = (Triangle *) DXAllocateLocal (size);
+    tri = (Triangle *) DXAllocate (size);
     if (tri == NULL)
 	goto cleanup;
 
@@ -425,7 +425,7 @@ _dxf__TriangulateFLEP (FLEP *in, Vector *normal, Triangle *tris, int *ntri,
 	lvalid = *valid;
 
     size  = lin.nloops * sizeof (Loop);
-    loops = (Loop *) DXAllocateLocal (size);
+    loops = (Loop *) DXAllocate (size);
     if (loops == NULL)
 	goto cleanup;
     
@@ -808,7 +808,7 @@ static Error TriangulateNestedLoops (int nloops, Loop *loops, float *vertices,
 	nvert += loops[i].nvert;
 
     size = nvert * sizeof (BVertex);
-    vbase = (BVertex *) DXAllocateLocal (size);
+    vbase = (BVertex *) DXAllocate (size);
     if (vbase == NULL)
 	goto error;
 
@@ -2096,7 +2096,7 @@ static Error TriangulateLoops (int nloops, Loop *loops, float *vertices,
     nvert += 2 * (nloops - 1);
 
     size = nvert * sizeof (BVertex);
-    vbase = (BVertex *) DXAllocateLocal (size);
+    vbase = (BVertex *) DXAllocate (size);
     if (vbase == NULL)
 	goto error;
     spares = vbase;

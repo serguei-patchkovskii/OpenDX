@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_connectgrids.h,v 1.3 2002/03/21 21:20:06 rhh Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_connectgrids.h,v 1.3 2002/03/21 21:20:06 rhh Exp $
  */
 
 #include <dxconfig.h>

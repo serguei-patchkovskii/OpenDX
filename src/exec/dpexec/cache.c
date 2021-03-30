@@ -27,6 +27,10 @@ EXDictionary _dxd_exCacheDict = (EXDictionary) NULL;
 static gvar *EmptyGvar;
 void _dxf_ExFlushPathTags();
 
+static EXCRC tag_target = (EXCRC)-1;
+static void found_tag() {}
+static void check_tag(EXCRC a) {if (a == tag_target) found_tag(); }
+
 static char *
 int32tohex (char *buf, int32 l)
 {
@@ -49,11 +53,26 @@ int32tohex (char *buf, int32 l)
 EXCRC _dxf_ExGenCacheTag(char *function, int key, int n, EXCRC *in)
 {
     EXCRC result;
+    static int k = -1;
+
+    k++;
 
     /* Build a cache string representing the key */
     result = _dxf_ExCRCString(EX_INITIAL_CRC, function);
     result = _dxf_ExCRCInt   (result,	 key);
-    result = _dxf_ExCRCIntV  (result, 	 (int32 *)in, n);
+    result = _dxf_ExCRCCRCV  (result, 	 in, n);
+
+#if 0
+    fprintf(stderr, "0x%016lx %s %d _dxf_ExGenCacheTag %d ", result, function, n, k);
+    {
+       int i;
+       for (i = 0; i < n; i++)
+           fprintf(stderr, " 0x%016lx", in[i]);
+    }
+    fprintf(stderr, "\n");
+#endif
+
+    check_tag(EXTAG(result));
 
     return (EXTAG(result));
 }
@@ -88,8 +107,12 @@ int _dxf_ExCacheInsert (gvar *obj)
     char	 stringKey[8+3];
     int		 ret;
 
+    check_tag(obj->reccrc);
+
+#if 0
     if ((obj->reccrc & 0x80000000) == 0)
 	_dxf_ExDie("Bad executive cache tag 0x%08x", obj->reccrc);
+#endif
 
     stringKey[0] = 'X';
     int32tohex(stringKey+1, obj->reccrc);
@@ -120,8 +143,10 @@ int _dxf_ExCacheInsertRemoteTag (int fd, int swap)
     if(_dxf_ExReceiveBuffer(fd, &ct, 1, TYPE_INT, swap) < 0) 
         DXUIMessage("ERROR", "bad remote cache tag");
 
+#if 0
     if ((ct & 0x80000000) == 0)
         _dxf_ExDie("Bad executive cache tag 0x%08x", ct);
+#endif
 
     stringKey[0] = 'X';
     int32tohex(stringKey+1, ct);
@@ -148,8 +173,12 @@ Error _dxf_ExCacheDelete (EXCRC key)
     char stringKey[8+3];
     int	ret;	
 
+    check_tag(key);
+
+#if 0
     if ((key & 0x80000000) == 0)
 	_dxf_ExDie("Bad executive cache tag 0x%08x", key);
+#endif
 
     stringKey[0] = 'X';
     int32tohex(stringKey+1, key);
@@ -174,8 +203,10 @@ int _dxf_ExCacheDeleteRemoteTag (int fd, int swap)
         return(ERROR);
     }
 
+#if 0
     if ((ct & 0x80000000) == 0)
         _dxf_ExDie("Bad executive cache tag 0x%08x", ct);
+#endif
 
     stringKey[0] = 'X';
     int32tohex(stringKey+1, ct);
@@ -218,8 +249,12 @@ gvar *_dxf_ExCacheSearch (EXCRC key)
     char	 stringKey[8+3];
     gvar	 *entry;
 
+    check_tag(key);
+
+#if 0
     if ((key & 0x80000000) == 0)
 	_dxf_ExDie("Bad executive cache tag 0x%08x", key);
+#endif
 
     stringKey[0] = 'X';
     int32tohex(stringKey+1, key);
@@ -299,6 +334,8 @@ DXCacheInsertObject(char *id, Object o, double cost)
  * away anything that is not marked permanent.
  */
 
+extern EXObj _dxf_ExGetDictObject(EXDictionary d, Pointer key);
+
 Error
 _dxf_ExCacheFlush (int all)
 {
@@ -306,6 +343,13 @@ _dxf_ExCacheFlush (int all)
     EXObj		curr;
     gvar		*gv;
     char		*key;
+
+#define GDA  1
+#if GDA
+    char name[256];
+    sprintf(name, "/tmp/cache.%d", getpid());
+    FILE *f = fopen(name, "wa");
+#endif
 
     if (! *_dxd_exTerminating)
         DXDebug ("1", "flushing cache");
@@ -316,6 +360,7 @@ _dxf_ExCacheFlush (int all)
 
     _dxf_ExReclaimDisable ();
 
+    fprintf(f, "_dxf_ExCacheFlush (%d) -------------------------\n", all);
     _dxf_ExDictionaryBeginIterate (_dxd_exCacheDict);
     while ((obj = _dxf_ExDictionaryIterate (_dxd_exCacheDict, &key)) != NULL)
     {
@@ -338,9 +383,20 @@ _dxf_ExCacheFlush (int all)
 	if (curr)
 	{
             DXDebug ("1", "removing cache entry '%s'", key);
+#if GDA
+	    fprintf(f, "%s 0x%016lx DELETED\n", key, _dxf_ExGetDictObject(_dxd_exCacheDict, key));
+#endif
 	    _dxf_ExDictionaryDeleteNoLock (_dxd_exCacheDict, key);
 	}
+#if GDA
+	else
+	    fprintf(f, "%s 0x%016lx KEPT\n", key, _dxf_ExGetDictObject(_dxd_exCacheDict, key));
+#endif
     }
+
+#if GDA
+    fclose(f);
+#endif
 
     _dxf_ExDictionaryEndIterate (_dxd_exCacheDict);
     _dxf_ExFlushPathTags();
@@ -395,7 +451,7 @@ Error DXSetCacheEntryV(Object out, double cost, char *function,
 	_dxf_ExDefineGvar(entry, out);
 	entry->cost   = cost;
 /* 	entry->reccrc = outTag; */
-	entry->procId = exJID;
+	entry->procId = DXProcessorId();
 	ExTimestamp(entry);
 	/* DXSetObjectTag(out, outTag); */
 	return (_dxf_ExDictionaryInsert (_dxd_exCacheDict, tag, (EXObj)entry));

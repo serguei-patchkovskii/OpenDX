@@ -81,8 +81,9 @@ extern long         _dxd_exMarkMask;
 /* Set in dxmain or callm_init for DXcallm */
 extern int          _dxd_exDebug;		/* debugging enabled */
 extern int          _dxd_exRemote;		/* connected remotely to UI */
+extern int          _dxd_exMyPID;             /* processor number of current processor */
+
 extern int          _dxd_exRemoteSlave;		/* running as a slave to another exec? */
-extern int          _dxd_exMyPID;		/* processor number of current processor */
 extern lictype      _dxd_exForcedLicense;
 
 /* really bad-- set in another file as well as dxmain.c */

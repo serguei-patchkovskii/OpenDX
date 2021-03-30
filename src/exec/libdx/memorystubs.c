@@ -19,14 +19,6 @@
 #include <unistd.h>
 #endif
 
-/* what to do with sh_realloc and sh_free?  maybe by using
- * the memory base numbers we can tell whether it's local or global
- * and do the right thing.  look at this for next release.
- */
-#ifndef ibmpvs
-#define sh_malloc malloc
-#endif
-
 Error DXsyncmem() { return OK; }
 int DXmemfork(int i) { 
 #if defined(HAVE_FORK)
@@ -45,20 +37,18 @@ Error DXmemsize(ulong size) { return OK; }
 Error DXSetMemorySize(ulong size, int ratio) { return OK; }
 
 /* we can make this work for the pvs - there are #defines for it */
-Error DXGetMemorySize(ulong *sm, ulong *lg, ulong *lo)
+Error DXGetMemorySize(ulong *sm, ulong *lg)
 {
     if (sm) *sm = 0;
     if (lg) *lg = 0;
-    if (lo) *lo = 0;
     return OK;
 }
 
 /* same here */
-Error DXGetMemoryBase(Pointer *sm, Pointer *lg, Pointer *lo)
+Error DXGetMemoryBase(Pointer *sm, Pointer *lg)
 {
     if (sm) *sm = 0;
     if (lg) *lg = 0;
-    if (lo) *lo = 0;
     return OK;
 }
 
@@ -67,12 +57,7 @@ Error DXTraceAlloc(int t) { return OK; }
 Error DXDebugAlloc(int arena, int blocktype, MemDebug m, Pointer p)
 { return OK; }
 
-Error DXDebugLocalAlloc(int which, int blocktype, MemDebug m, Pointer p)
-{ return OK; }
-
 void DXPrintAlloc(int how) { }
-
-void DXPrintLocalAlloc(int which, int how) { }
 
 void DXFindAlloc(Pointer f) { }
 
@@ -82,41 +67,10 @@ Scavenger DXRegisterScavenger(Scavenger s) { return s; }
 
 Error _dxfscavenge(unsigned int n) { return OK; }
 
-Scavenger DXRegisterScavengerLocal(Scavenger s) { return s; }
-
 int _dxflscavenge(unsigned int n) { return OK; }
 
-Pointer 
+Pointer
 DXAllocate(unsigned int n)
-{
-    Pointer p;
-    if (n==0)
-	n++;
-    p = (Pointer)sh_malloc(n);
-    if (!p)
-	DXSetError(ERROR_NO_MEMORY, "#13000");
-    return p;
-}
-
-Pointer
-DXAllocateZero(unsigned int n)
-{
-    Pointer p;
-    if (n==0)
-	n++;
-    p = (Pointer)sh_malloc(n);
-    if (!p)
-	DXSetError(ERROR_NO_MEMORY, "#13000");
-    memset(p, '\0', n);
-    return p;
-}
-
-Pointer DXAllocateLocalOnly(unsigned int n) { return NULL; }
-
-Pointer DXAllocateLocalOnlyZero(unsigned int n) { return NULL; }
-
-Pointer
-DXAllocateLocal(unsigned int n)
 {
     Pointer p;
     if (n==0)
@@ -128,7 +82,7 @@ DXAllocateLocal(unsigned int n)
 }
 
 Pointer
-DXAllocateLocalZero(unsigned int n)
+DXAllocateZero(unsigned int n)
 {
     Pointer p;
     if (n==0)

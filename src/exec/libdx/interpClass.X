@@ -12,7 +12,6 @@ INCLUDE  objectClass.X
 
 SUBCLASS    Interpolator    OF Object
 DEFINES     Error    Interpolate(Interpolator, int *, float **, Pointer *, Interpolator *, int)
-DEFINES	    Interpolator   LocalizeInterpolator(Interpolator);
 IMPLEMENTS  Delete GetType
 
 /*

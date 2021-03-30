@@ -13,7 +13,7 @@
 #endif
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/opengl/hwInteractorEchoOGL.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/opengl/hwInteractorEchoOGL.c,v $
 
   These are the Open GL implementations of the direct interactor echos,
   along with miscellaneous utility routines.  Each function needs to be

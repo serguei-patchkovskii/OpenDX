@@ -55,17 +55,17 @@ static XtResource resources[] =
             XmRCallback, NULL
         },
         {
-            XmNstart, XmCStart, XmRShort, sizeof(short),
+            XmNstart, XmCStart, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.start_value),
             XmRImmediate, (XtPointer) 0
         },
         {
-            XmNnext, XmCNext, XmRShort, sizeof(short),
+            XmNnext, XmCNext, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.next_value),
             XmRImmediate, (XtPointer) 0
         },
         {
-            XmNcurrent, XmCCurrent, XmRShort, sizeof(short),
+            XmNcurrent, XmCCurrent, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.current_value),
             XmRImmediate, (XtPointer) 0
         },
@@ -75,22 +75,22 @@ static XtResource resources[] =
             XmRImmediate, (XtPointer) True
         },
         {
-            XmNstop, XmCStop, XmRShort, sizeof(short),
+            XmNstop, XmCStop, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.stop_value),
             XmRImmediate, (XtPointer) 0
         },
         {
-            XmNminimum, XmCMinimum, XmRShort, sizeof(short),
+            XmNminimum, XmCMinimum, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.min_value),
             XmRImmediate, (XtPointer) 1
         },
         {
-            XmNmaximum, XmCMaximum, XmRShort, sizeof(short),
+            XmNmaximum, XmCMaximum, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.max_value),
             XmRImmediate, (XtPointer) 10
         },
         {
-            XmNincrement, XmCIncrement, XmRShort, sizeof(short),
+            XmNincrement, XmCIncrement, XmRInt, sizeof(int),
             XtOffset(XmVCRControlWidget, vcr_control.frame_increment),
             XmRImmediate, (XtPointer) 1
         },
@@ -777,7 +777,7 @@ static void CreateVCRCounter( XmVCRControlWidget vcr )
     if (vcr->vcr_control.current_visible) {
         sprintf(string, "%5d", vcr->vcr_control.current_value);
     } else {
-        sprintf(string, "     ");
+        sprintf(string, "    ");
     }
     text = XmStringCreate(string, XmSTRING_DEFAULT_CHARSET);
     XtSetArg(wargs[0], XmNlabelString, text);

@@ -8,14 +8,7 @@
 
 #include <dxconfig.h>
 #include <dx/dx.h>
-
-#if defined(DDX)
-#if defined(DXD_EXEC_WAIT_PROCESS)
-#undef DXD_EXEC_WAIT_PROCESS
-#endif
-#define DXD_EXEC_WAIT_PROCESS   0
-#define DXD_MASTER_IS_P0	1
-#endif
+#include <pthread.h>
 
 #if defined(HAVE_WINIOCTL_H)
 #include <winioctl.h>
@@ -81,16 +74,6 @@
 #include <sys/resource.h>
 #endif
 
-#if DXD_HAS_LIBIOP
-
-#ifndef WSTOPSIG
-#define WSTOPSIG(status)	((status).w_stopsig)
-#define WTERMSIG(status)	((status).w_termsig)
-#define WEXITSTATUS(status)	((status).w_retcode)
-#endif
-
-#endif
-
 #if defined(HAVE_SYS_SELECT_H)
 #include <sys/select.h>
 #endif
@@ -100,10 +83,6 @@
 #endif
 #if defined(HAVE_SYS_SYSTEMCFG_H)
 # include <sys/systemcfg.h>
-#endif
-
-#if DXD_HAS_LIBIOP
-#include <sys/svs.h>
 #endif
 
 /* On solaris exit seems to not work properly mp, the parent hangs around and never exits. */
@@ -173,8 +152,9 @@ extern void  _dxf_user_modules(); /* from libdx/ */
 extern void  _dxf_private_modules(); /* from libdx/ */
 extern Error user_cleanup(); /* from libdx/userinit.c */
 
+extern _dxf_set_max_memory_size(int);
+
 extern void _dxfcleanup_mem(); /* from libdx/mem.c */
-extern int _dxf_GetPhysicalProcs(); /* from libdx/memory.c */
 extern Error ExHostToFQDN( const char host[], char fqdn[MAXHOSTNAMELEN] );
 /* from remote.c */
 extern Error user_slave_cleanup(); /* from userinit.c */
@@ -191,37 +171,31 @@ static int	exParent = FALSE;
 static int      exParent_RQread_fd;
 static int      exParent_RQwrite_fd;
 static int	exChParent_RQread_fd;
-
-static double	read_i_threshhold = READ_I_THRESHHOLD;
-/*static double	read_s_threshhold = READ_S_THRESHHOLD;*/
+static int 	exProcID;
 
 static int maxMemory	= 0;	/* in MB -- 0 implies library default */
 
 static int nprocs;
-static int nphysprocs;
 
 static int processor_status_on	= FALSE;
 
 PATHTAG            _dxd_pathtags = {0, 0, NULL};
 DPGRAPHSTAT        _dxd_dpgraphstat = {0, 0, NULL};
 DPHOSTS            *_dxd_dphosts = NULL;
-#if defined(DXD_USE_MUTEX_LOCKS) && DXD_USE_MUTEX_LOCKS==1
-lock_type          _dxd_dphostslock;
-#else
-lock_type          _dxd_dphostslock = 0;
-#endif
-PGASSIGN           _dxd_pgassign = {0, 0, NULL};
-;
-SLAVEPEERS         _dxd_slavepeers = {0, 0, NULL};
-;
 
-int _dxd_exCacheOn 		  = TRUE;		/* use cache */
+lock_type          _dxd_dphostslock;
+
+PGASSIGN           _dxd_pgassign = {0, 0, NULL};
+
+SLAVEPEERS         _dxd_slavepeers = {0, 0, NULL};
+
+int _dxd_exCacheOn 		  = TRUE;  /* use cache */
 int _dxd_exIntraGraphSerialize    = TRUE;
 int _dxd_exDebug		  = FALSE;
-int _dxd_exGoneMP		  = FALSE;   /* set true after forking */
+int _dxd_exGoneMP		  = FALSE; /* set true after forking */
 int _dxd_exRemote		  = FALSE;
 int _dxd_exRemoteSlave            = FALSE;
-int _dxd_exRunningSingleProcess   = TRUE;    /* set with nphysprocs/nprocs */
+int _dxd_exRunningSingleProcess   = TRUE;  /* set with nprocs */
 int _dxd_exShowTiming		  = FALSE;
 int _dxd_exShowTrace		  = FALSE;
 int _dxd_exShowBells		  = FALSE;
@@ -237,24 +211,22 @@ static int logerr                 = 0;
 int _dxd_exDebugConnect           = FALSE;
 int _dxd_exRemoteUIMsg		  = FALSE;
 
-char *_dxd_exHostName = NULL;
-int  _dxd_exPPID = 0;		 /* parent's process id */
-int *_dxd_exTerminating = NULL;	 /* flag set when dx is exiting */
-int _dxd_exSelectReturnedInput = FALSE;  /* flag set when select returned from yyin */
-Context *_dxd_exContext = NULL;         /* structure for context information */
-int  _dxd_exMyPID = 0;		 /* pid of the process */
-int  _dxd_exMasterfd = -1;       /* slave to master file descriptor */
-int  _dxd_exSlaveId = 0;             /* slave number */
-int  _dxd_exSwapMsg = 0;             /* do we need to swap msg from peer? */
-/* startup of slave as finished, send msgs OK */
-int  *_dxd_exNSlaves = NULL;		 /* number of distributed slaves */
-int  *_dxd_extoplevelloop = NULL;	 /* looping at top level of graph */
+char    *_dxd_exHostName = NULL;
+int      _dxd_exPPID = 0;		 	/* parent's process id */
+int     *_dxd_exTerminating = NULL;	 	/* flag set when dx is exiting */
+int      _dxd_exSelectReturnedInput = FALSE;  	/* flag set when select returned from yyin */
+Context *_dxd_exContext = NULL;         	/* structure for context information */
+int      _dxd_exMasterfd = -1;       		/* slave to master file descriptor */
+int      _dxd_exSlaveId = 0;           		/* slave number */
+int      _dxd_exSwapMsg = 0;           		/* do we need to swap msg from peer? */
+int     *_dxd_exNSlaves = NULL;			/* number of distributed slaves */
+int     *_dxd_extoplevelloop = NULL;		/* looping at top level of graph */
 
-int            _dxd_exErrorPrintLevel = 3;
+int      _dxd_exErrorPrintLevel = 3;
 
-int _dxd_exEnableDebug	        = 0;
-long _dxd_exMarkMask		= 0;	      /* DXMarkTime enable mask	*/
-static int MarkModules		= FALSE;
+int      _dxd_exEnableDebug	        = 0;
+long      _dxd_exMarkMask		= 0;	      /* DXMarkTime enable mask	*/
+static int mm		= FALSE;
 
 int _dxd_exParseAhead	        = TRUE;
 int _dxd_exSParseAhead = 0;
@@ -282,29 +254,20 @@ void ExQuit(void);
 void _dxf_ExPromptSet(char *var, char *val);
 
 static int	ExCheckGraphQueue	(int);
-static int	ExCheckRunqueue		(int graphId);
+static int	ExCheckRunqueue		();
 static void	ExCheckTerminate	(void);
-static void	ExChildProcess		(void);
+static void	*ExChildProcess		(void *);
 static void	ExCleanup		(void);
 static void	ExConnectInput		(void);
 static void ExCopyright 		(int);
-static int	ExFindPID		(int pid);
-static void	ExForkChildren		(void);
 static void	ExInitialize		(void);
 static void	ExInitFailed		(char *message);
-static void	ExMainLoop		(void);
-static void	ExMainLoopMaster	(void);
-static void	ExMainLoopSlave		(void);
 static void	ExParallelMaster	(void);
 static void	ExProcessArgs		(int argc, char **argv);
 static void	ExSettings		(void);
 static void	ExUsage			(char *name);
 static void	ExVersion		(void);
 static int  ExFromMasterInputHndlr  (int fd, Pointer p);
-
-#if !defined(intelnt) && !defined(WIN32)
-extern int   DXForkChild(int);
-#endif
 
 #if DXD_EXEC_WAIT_PROCESS
 static void	ExParentProcess		(void);
@@ -319,46 +282,26 @@ static void	ExSigPipe(int);
 #if HAVE_SIGDANGER
 static void	ExSigDanger		(int);
 #endif
-#if DXD_EXEC_WAIT_PROCESS
-static void	ExKillChildren(void);
-#endif
 
 EXDictionary	_dxd_exGlobalDict = NULL;
 
-static struct child
-{
-    int pid;
-    int RQwrite_fd;
-}
-*children;
-
-lock_type *childtbl_lock = NULL;
-
 static volatile int *exReady;
+
+static pthread_t       *thread_ids = NULL;
+static pthread_mutex_t master_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t  master_wait = PTHREAD_COND_INITIALIZER;
+
+static void	ExMainLoop();
+static void	ExMainLoopMaster();
+static void	ExMainLoopSlave();
+
+extern void DXInitThreadData();
 
 int DXmain (int argc, char **argv, char **envp)
 {
     int		save_errorlevel=0;
-#if HAVE_SYS_CORE_H
-
-    struct rlimit	rl;
-#endif
 
     exenvp = envp;
-
-#if HAVE_SYS_CORE_H
-
-    getrlimit (RLIMIT_CORE, &rl);
-    rl.rlim_cur = 0;
-    setrlimit (RLIMIT_CORE, &rl);
-#endif
-
-	nphysprocs = _dxf_GetPhysicalProcs();
-
-	if(nphysprocs > 3)
-        nprocs = (int)(nphysprocs / 2);
-    else
-        nprocs = (nphysprocs > 1) ? 2 : 1;
 
 #if HAVE_SIGDANGER
     signal (SIGDANGER, ExSigDanger);
@@ -372,10 +315,13 @@ int DXmain (int argc, char **argv, char **envp)
     signal(SIGQUIT, ExSigQuit);
 #endif
 
+    nprocs = 1;
     ExProcessArgs (argc, argv);
 
+    _dxf_set_max_memory_size(maxMemory);
+
     /* boolean: if UP machine, or user asked for -p1 on MP machine */
-    _dxd_exRunningSingleProcess = (nphysprocs == 1 || nprocs == 1);
+    _dxd_exRunningSingleProcess = (nprocs == 1);
 
     /* if running single-process, we don't need the overhead of locking */
     DXenable_locks( !_dxd_exRunningSingleProcess );
@@ -419,101 +365,49 @@ int DXmain (int argc, char **argv, char **envp)
     if(logerr > 0)
         _dxf_ExLogError(logerr);
 
-    ExForkChildren ();			/* create subprocesses */
 
-#if DXD_EXEC_WAIT_PROCESS
-    /*
-     * This is the parent waiter process.  It waits for children to die
-     * and either kills the others off if there was an error, or exits
-     * gracefully.
-     */
-    if ((nprocs > 1 && _dxd_exPPID == getpid ()) || _dxd_exMyPID == -1)
-        ExParentProcess ();
+    if (getenv("DX_DEBUG"))
+    {
+	int i = 1;
+ 	fprintf(stderr, "%d\n", getpid());
+	while(i)
+	    sleep(1);
+    }
 
-    if (nprocs == 1 || _dxd_exPPID != getpid ())
-        ExChildProcess ();
-#else
+    DXInitThreadData();
 
-    ExChildProcess ();
-#endif
+    if (nprocs > 1)
+    {
+  	ulong i;
 
+	// pthread_mutex_lock(&master_lock);
+
+	thread_ids = DXAllocate(nprocs*sizeof(pthread_t));
+	for (i = 0; i < nprocs; i++)
+	    pthread_create(thread_ids+i, NULL, ExChildProcess, (void *)i);
+
+	for (i = 0; i < nprocs; i++)
+	    pthread_join(thread_ids[i], NULL);
+
+    }
+    else
+	ExChildProcess((void *)0);
 
     return (0);
 }
-
 
 char **_dxf_ExEnvp (void)
 {
     return (exenvp);
 }
 
-#if DXD_EXEC_WAIT_PROCESS
-static void ExParentProcess ()
+static void *ExChildProcess(void *d)
 {
-    int 		pid;
-    int			wstatus;
-    int			fpid;
+    struct dxthread_data *my_data = DXAllocate(sizeof(struct dxthread_data));
+    my_data->pid = (ulong)d;
 
-    exParent = TRUE;
-    *exReady = TRUE;
+    DXSetThreadData(my_data);
 
-    /*
-     * Stop here to add child processes for debugging!
-     */
-
-wait_on_child:
-    /* wait for a child to die */
-    while ((pid  = wait (&wstatus)) < 0)
-        if (errno != EINTR)
-            break;
-
-#ifdef DXD_LICENSED_VERSION
-    /* Getting a license causes one or two more children to be created.
-     * on an MP system we will get two licenses and have 2 dxshadows running 
-     * for nodelock licenses dxshadow exits immediately. This caused the 
-     * exec to think a child had terminated. We need to see if this child
-     * was a dxshadow process and if it was a nodelock license then it's
-     * OK and we should go back to waiting on our children. In the case that
-     * dxshadow died for a concurrent license we will print out an error
-     * message and terminate. */
-    fpid = _dxfCheckLicenseChild(pid);
-    if(fpid == 0) /* we had a node locked license, continue to wait on child */
-        goto wait_on_child;
-    if(fpid == -1)
-#endif
-
-        fpid = ExFindPID (pid);
-    /* process not in child table so use pid in error messages */
-    if(fpid < 0)
-        fpid = pid;
-
-    /* child died, now figure out why */
-    if (WIFSTOPPED (wstatus)) {
-        printf ("child process %d (%d) stopped; stop signal = %d\n",
-                fpid, pid, WSTOPSIG (wstatus));
-    } else if (WIFSIGNALED (wstatus)) {
-        if (WTERMSIG (wstatus) != 9)
-            printf ("child process %d (%d) killed by signal = %d\n",
-                    fpid, pid, WTERMSIG (wstatus));
-    } else if (WIFEXITED (wstatus)) {
-        printf ("child process %d (%d) exited, status = %d\n",
-                fpid, pid, WEXITSTATUS (wstatus));
-    } else {
-        printf ("child process %d (%d) broke wait\n", fpid, pid);
-    }
-
-    ExCleanup ();
-
-    printf ("\nparent exiting\n");
-    fflush (stdout);
-
-    exit (0);
-}
-#endif
-
-
-static void ExChildProcess ()
-{
     /*
      * Wait for all the children to appear and the parent to signal OK to
      * start processing.
@@ -522,19 +416,16 @@ static void ExChildProcess ()
 
     /* don't send out worker messages for slaves */
     if(!_dxd_exRemoteSlave)
-        DXMessage ("#1060", getpid ());
+        DXMessage ("#1060");
 
-    while ((nprocs > 1) && (! *exReady))
-        ;
-
-    ExMainLoop ();
+    ExMainLoop();
 }
 
 
 
 static void ExMainLoop ()
 {
-    if (_dxd_exMyPID == 0 || nprocs == 1)
+    if (DXGetThreadPid() == 0 || nprocs == 1)
         ExMainLoopMaster ();
     else
         ExMainLoopSlave ();
@@ -543,26 +434,8 @@ static void ExMainLoop ()
 
 static void ExMainLoopSlave ()
 {
-    int			ret = TRUE;
-    int 		RQ_fd;
-    char		c;
-
     set_status (PS_EXECUTIVE);
-
-    RQ_fd = exParent_RQread_fd;
-
-    while (! *_dxd_exTerminating) {
-        ret = _dxf_ExRQPending () && ExCheckRunqueue (0);
-        if(! ret) {
-            if (_dxd_exMyPID == 1) {
-                if(_dxf_ExIsExecuting())
-                    _dxf_ExCheckRIH ();
-                else
-                    _dxf_ExCheckRIHBlock (-1);
-            } else
-                read(RQ_fd, &c, 1);
-        }
-    }
+    _dxf_ExRQHandler();
     user_slave_cleanup();
 }
 
@@ -592,7 +465,7 @@ static void ExMainLoopSlave ()
 #define NAPDEAD		(30 * 60 * CLK_TCK)
 #endif
 
-static void ExMainLoopMaster ()
+static void ExMainLoopMaster()
 {
 #if defined(DX_NATIVE_WINDOWS)
     MSG msg;
@@ -607,12 +480,6 @@ static void ExMainLoopMaster ()
     _dxf_ExInitRemote ();
     _dxf_ExFunctionDone ();
     CHECK_INIT (_dxf_ExParseInit (_pIstr, _pIfd), "reading .dxrc init file");
-
-#if sgi
-
-    if (nprocs > 1)
-        sleep (1);
-#endif
 
     set_status (PS_EXECUTIVE);
 
@@ -629,7 +496,7 @@ static void ExMainLoopMaster ()
         for (;;) {
 loop_slave_continue:
             ExCheckTerminate ();
-            if (_dxf_ExRQPending () && ExCheckRunqueue (0)) {
+            if (_dxf_ExRQPending () && ExCheckRunqueue()) {
                 /* always check rih so socket doesn't get blocked */
                 _dxf_ExCheckRIH ();
                 goto loop_slave_continue;
@@ -659,20 +526,20 @@ loop_slave_continue:
         ExMarkTimeLocal (4, "main:top");
         DXqflush ();
 
-        IFINSTRUMENT (++exInstrument[_dxd_exMyPID].numMasterTry);
+        IFINSTRUMENT (++exInstrument[DXGetThreadPid()].numMasterTry);
 
         /*
          * have we achieved termination condition
          */
         ExCheckTerminate ();
 
-        if (nprocs > 1)
+        if (1 || nprocs > 1)
             ExParallelMaster ();
         else
         {
             _dxf_ExCheckRIH ();
             ExMarkTimeLocal (4, "main:chrq");
-            if (_dxf_ExRQPending () && ExCheckRunqueue (0)) {
+            if (_dxf_ExRQPending () && ExCheckRunqueue()) {
                 if (_dxd_exParseAhead)
                     ExCheckInput ();
                 continue;
@@ -707,32 +574,9 @@ loop_slave_continue:
             if (_dxf_ExCheckVCR (_dxd_exGlobalDict, FALSE))
                 continue;
 
-#if defined(intelnt) || defined(WIN32)
-            SleepEx(100, TRUE);
-#endif
-#if defined(DX_NATIVE_WINDOWS)
-
-            while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
-            }
-#endif
-#if defined(DDX)
-            {
-                extern Error SlaveBcastLoop(int, Pointer);
-                extern int GetMPINodeId();
-                if (GetMPINodeId() == 0)
-                    _dxf_ExCheckRIHBlock (SFILEfileno (yyin));
-                else {
-                    SlaveBcastLoop(0, NULL);
-                    _dxf_ExCheckRIH ();
-                }
-            }
-#else
 #ifndef DXD_NOBLOCK_SELECT
             ExMarkTimeLocal (4, "main:chRIH");
             _dxf_ExCheckRIHBlock (SFILEfileno (yyin));
-#endif
 #endif
 
         }
@@ -743,27 +587,6 @@ loop_slave_continue:
 
     _dxf_CleanupPendingCmdList();
 }
-
-#if DXD_EXEC_WAIT_PROCESS
-/*
- * Let all of the remaining children know they are to die.
- */
-static void ExKillChildren ()
-{
-    int		i;
-
-    if (! (_dxd_exMyPID == 0 && nprocs == 1))
-        for (i = 0; i < nprocs && i < nphysprocs; i++)
-            kill (children[i].pid, SIGKILL);
-
-#if DXD_PROCESSOR_STATUS
-
-    if (_dxd_exStatusPID)
-        kill (_dxd_exStatusPID, SIGKILL);
-#endif
-}
-#endif
-
 
 #define EMESS "Error during Initialization\n"
 
@@ -889,23 +712,12 @@ static void ExProcessArgs (int argc, char **argv)
                          optarg);
                 ExUsage (argv[0]);
             }
-#ifndef ENABLE_LARGE_ARENAS
+	    if (sizeof(void *) == 4)
             {
                 int mlim = (0x7fffffff >> 20);	/* divide by 1 meg */
                 if (maxMemory > mlim)
                     maxMemory = mlim;
             }
-#endif
-
-            /*
-             * NOTE:  If we don't call DXmemsize then the memory allocator
-             * will default to something appropriate for the machine that we
-             * are currently running on.
-             */
-
-            if (maxMemory > 0)
-                while (DXmemsize (MEGA ((ulong)maxMemory)) != OK)
-                    maxMemory--;
             break;
 
 #if DXD_PROCESSOR_STATUS
@@ -917,7 +729,6 @@ static void ExProcessArgs (int argc, char **argv)
 
         case 'R':
             _dxd_exRshInput = TRUE;
-            /*read_s_threshhold = READ_I_THRESHHOLD;*/
             break;
         case 'S':
             _dxd_exIntraGraphSerialize = FALSE;
@@ -944,14 +755,11 @@ static void ExProcessArgs (int argc, char **argv)
         case 'h':
             ExUsage (argv[0]);
             break;
-        case 'i':
-            read_i_threshhold = atof (optarg);
-            break;
         case 'l':
             logcache = TRUE;
             break;
         case 'm':
-            MarkModules = TRUE;
+            mm = TRUE;
             break;
         case 'p':
             if (optarg == NULL      ||
@@ -1035,8 +843,6 @@ static void ExUsage (char *name)
     fprintf (stdout, "  -E    set error print level        (default = %d)\n",
              _dxd_exErrorPrintLevel);
     fprintf (stdout, "  -F    load a module definition file\n");
-    fprintf (stdout, "  -i    set read delay threshhold    (default = %g)\n",
-             read_i_threshhold);
     fprintf (stdout, "  -l    toggle logging to dx.log     (default = %s)\n",
              logcache ? "on" : "off");
     fprintf (stdout, "  -L    force a license type (runtime or develop)\n");
@@ -1152,7 +958,6 @@ static void ExInitialize ()
 {
     int			i;
     int			n;
-    int			nasked;
     char		*mm;
 
     _dxd_exPPID = getpid ();
@@ -1164,23 +969,6 @@ static void ExInitialize ()
      * Set up the library
      */
 
-    /* save this until we initialize the library.  then we can use
-     * the message code to warn the user if they asked for more procs
-     * than are available
-     */
-    nasked = nprocs;
-
-#if DXD_IS_MP
-
-    if (nprocs <= 0 || nprocs > nphysprocs) {
-        nprocs = nphysprocs;
-    }
-#else
-    if (nprocs > 1) {
-        nprocs = 1;
-    }
-#endif
-
 #if DXD_LICENSED_VERSION
 
     if(nprocs > 1) {
@@ -1191,8 +979,6 @@ static void ExInitialize ()
     }
 
 #endif /* DXD_LICENSED_VERSION */
-
-
 
     DXProcessors (nprocs);		/* set number of processors before */
     /* initializing the library        */
@@ -1216,20 +1002,6 @@ static void ExInitialize ()
         ExInitFailed ("ExHostToFQDN failed");
 
     /* now that lib is initialized, we can use DXMessage() if needed */
-#if DXD_IS_MP
-
-    if (nasked <= 0 || nasked > nphysprocs) {
-        if(!_dxd_exRemoteSlave)
-            DXUIMessage ("WARNING MSGERRUP",
-                         "requested %d, using %d processors",
-                         nasked, nphysprocs);
-    }
-#else
-    if (nasked > 1) {
-        if(!_dxd_exRemoteSlave)
-            DXMessage ("#1080");
-    }
-#endif
 
     fflush  (stdout);
 
@@ -1240,7 +1012,7 @@ static void ExInitialize ()
         DXTraceTime (TRUE);
     DXRegisterScavenger (_dxf_ExReclaimMemory);
 
-    if (MarkModules)
+    if (mm)
         _dxd_exMarkMask = 0x20;
     else {
         if ((mm = (char *) getenv ("EXMARKMASK")) != NULL)
@@ -1258,13 +1030,6 @@ static void ExInitialize ()
     if ((exReady = (volatile int *) DXAllocate (sizeof (volatile int))) == NULL)
         ExInitFailed ("can't allocate memory");
     *exReady = FALSE;
-
-    if ((children = (struct child *)
-                    DXAllocate (sizeof (struct child) * DXProcessors (0) + 1)) == NULL)
-        ExInitFailed ("can't DXAllocate");
-    if ((childtbl_lock = (lock_type *)DXAllocate(sizeof(lock_type))) == NULL)
-        ExInitFailed ("can't DXAllocate");
-    DXcreate_lock(childtbl_lock, "lock for child table");
 
     if ((_dxd_exTerminating = (int *) DXAllocate (sizeof(int))) == NULL)
         ExInitFailed ("can't allocate memory");
@@ -1309,8 +1074,7 @@ static void ExInitialize ()
     /* get root dictId before fork */
     _dxd_exGlobalDict = _dxf_ExDictionaryCreate (2048, TRUE, FALSE);
 
-    _dxd_dphosts =
-        (DPHOSTS *)DXAllocate(sizeof(LIST(dphosts)));
+    _dxd_dphosts = (DPHOSTS *)DXAllocate(sizeof(LIST(dphosts)));
     if(_dxd_dphosts == NULL)
         ExInitFailed ("can't allocate memory for distributed table");
     INIT_LIST(*_dxd_dphosts);
@@ -1400,8 +1164,9 @@ static void ExCheckTerminate ()
     /*
      * signal childen to loop so they will see the terminate flag
      */
-    for (i = 1; i < nprocs; i++)
-        write(children[i].RQwrite_fd, "a", 1);
+    // fprintf(stderr, "signal childen to loop so they will see the terminate flag\n");
+
+    _dxf_ExRQKillSlaves();
 
     _dxf_ExCacheFlush (TRUE);
     _dxf_ExDictionaryPurge (_dxd_exGlobalDict);
@@ -1435,12 +1200,6 @@ void ExQuit()
      * signal childen to loop so they will see
      * the terminate flag (if they are still there)
      */
-#if HAVE_SIGQUIT
-
-    for (i = 1; i < nprocs; i++)
-        kill(children[i].pid, SIGQUIT);
-#endif
-
     _dxf_ExCacheFlush (TRUE);
     _dxf_ExDictionaryPurge (_dxd_exGlobalDict);
 
@@ -1474,7 +1233,7 @@ static void ExCleanup ()
 
     user_cleanup();
 
-    if (MarkModules)
+    if (mm)
         DXPrintTimes ();
     ExDebug ("*1", "in ExCleanup");
 
@@ -1486,7 +1245,7 @@ static void ExCleanup ()
     /* for MP machines it is possible that someone will be running only 1 */
     /* processor but will have the status window turned on. The status    */
     /* windowing creates a new process so we have to clean that up right. */
-    ok = ((exParent && _dxd_exMyPID==-1) || (nprocs == 1 && _dxd_exMyPID == 0 && ! processor_status_on));
+    ok = ((exParent && DXGetThreadPid()) || (nprocs == 1 && DXGetThreadPid() == 0 && ! processor_status_on));
 
     if (! ok)
         exit (0);
@@ -1542,228 +1301,12 @@ static void ExCleanup ()
      * away
      */
 
-#if DXD_EXEC_WAIT_PROCESS
-
-    ExKillChildren ();
-#endif
-
     if (logcache)
         _dxf_ExLogClose ();
 
     return;
 }
 
-/*
- * Fork off the child processes which will migrate to different physical
- * processors to give us our multi-processor support.
- */
-static void ExForkChildren ()
-{
-    int		pid;
-    int		i;
-
-#ifdef INSTRUMENT
-
-    ExAllocateInstrument (nprocs);
-#endif
-
-    children[0].pid = getpid ();
-
-    /*
-     * Don't fork if we are running uni-processor and were not creating
-     * any other processes by creating a status window.
-     */
-
-    if (nprocs == 1 && ! processor_status_on) {
-        _dxd_exMyPID = ExFindPID (children[0].pid);
-        if(_dxd_exMyPID < 0)
-            _dxf_ExDie("Fork Children unable to get child id %d",
-                       children[0].pid);
-
-        return;
-    }
-
-#if !defined(intelnt) && !defined(WIN32)
-
-    /* set this before we fork and create separate data spaces. */
-    _dxd_exGoneMP = TRUE;
-
-#if DXD_HAS_LIBIOP
-
-    {
-        int         *GI = NULL;
-        lock_type   *LI = NULL;
-        GI = (int *)DXAllocate(sizeof(int));
-        LI = (lock_type *)DXAllocate(sizeof(lock_type));
-        if(GI == NULL || LI == NULL)
-            _dxf_ExDie("pfork setup failed");
-        *GI = 0;
-        if(!DXcreate_lock(LI, "pfork"))
-            _dxf_ExDie("pfork create lock failed");
-
-        /* fork all processes at once */
-        pid = pfork (nprocs - 1);
-
-        /* this code is forked and is run on all processes. *GI holds an */
-        /* index into array of process ids. Lock and then increment      */
-        /* counter before filling in that array entry for each processor */
-        DXlock(LI, 0);
-        i = *GI;
-        *GI += 1;
-        DXunlock(LI, 0);
-        children[i].pid = getpid ();
-    }
-#else
-    /* fork off processes for each of the processors */
-#if DXD_EXEC_WAIT_PROCESS
-    for (i = 0; i < nprocs; i++)
-#else
-
-    for (i = 1; i < nprocs; i++)
-#endif
-
-    {
-        int p;
-
-#if DXD_EXEC_WAIT_PROCESS && !defined(DXD_MASTER_IS_P0)
-
-        if (i == nprocs-1)
-            p = 0;
-        else
-            p = i + 1;
-#else
-
-    p = i;
-#endif
-
-        /* flush all output files prior to forking */
-        fflush (stdout);
-        fflush (stderr);
-
-        pid = DXForkChild(p);
-
-        if (pid == 0)
-        {
-            break;
-        }
-
-        if (pid == -1)
-            perror ("main: fork failed");
-    }
-#endif
-
-#if DXD_EXEC_WAIT_PROCESS
-    /* don't pin parent process */
-    if (_dxd_exPPID != getpid ()) {
-#endif
-        DXlock(childtbl_lock, 0);
-        _dxd_exMyPID = ExFindPID (getpid ());
-        DXunlock(childtbl_lock, 0);
-
-        if(_dxd_exMyPID < 0)
-            _dxf_ExDie("Fork Children unable to get child id %d",
-                       getpid());
-
-#if DXD_EXEC_WAIT_PROCESS
-        /* The original process (the master) is also the "exParent", and
-         * can allow the other processes to start now
-         */
-        if (_dxd_exMyPID == 0) {
-            *exReady = TRUE;
-            exParent = TRUE;
-        }
-#else
-        *exReady = TRUE;
-#endif
-
-#if DXD_HAS_SYSMP
-
-        if (nprocs > 1 && nphysprocs == nprocs) {
-            i = sysmp (MP_MUSTRUN, _dxd_exMyPID % nphysprocs);
-            if (i < 0) {
-                char buffer[256];
-
-                sprintf(buffer, "%d:  MP_MUSTRUN failed", _dxd_exMyPID);
-                perror(buffer);
-            }
-        }
-#endif
-#if DXD_EXEC_WAIT_PROCESS
-
-    } else
-        _dxd_exMyPID = -1;
-#endif
-#endif
-}
-
-/* return the number of physical processors on the system.
- *  this is different from the number of processes the user
- *  asked us to use with -pN
- */
-int _dxfPhysicalProcs()
-{
-    return nphysprocs;
-}
-
-void _dxf_lock_childpidtbl()
-{
-    DXlock(childtbl_lock, 0);
-}
-
-static int ExReadCharFromRQ_fd (int fd, Pointer p)
-{
-    int ret;
-    char c;
-
-#if DEBUGMP
-
-    if(_dxd_exMyPID == 0)
-        DXMessage("starting read from rq %d", fd);
-#endif
-
-    ret = read(fd, &c, 1);
-    if(ret != 1) {
-        /*
-               DXMessage("Error reading from request queue pipe: %d %d", errno, fd);
-        */
-        DXRegisterInputHandler(NULL, fd, NULL);
-    }
-
-#if DEBUGMP
-    if(_dxd_exMyPID == 0)
-        DXMessage("-----------finished read from rq");
-#endif
-
-    return 0;
-}
-
-void _dxf_update_childpid(int i, int pid, int writefd)
-{
-    /* table should already be locked before this call */
-
-#if DEBUGMP
-    DXMessage("child %d, writefd %d", i, writefd);
-#endif
-
-    children[i].pid = pid;
-    children[i].RQwrite_fd = writefd;
-    DXunlock(childtbl_lock, 0);
-}
-
-void _dxf_set_RQ_ReadFromChild1(int readfd)
-{
-    exChParent_RQread_fd = readfd;
-}
-
-/*
- * Set up fd that slaves block on waiting for the master to
- * put work in the run queue
- */
-void _dxf_set_RQ_reader(int fd)
-{
-    exParent_RQread_fd = fd;
-    DXRegisterInputHandler(ExReadCharFromRQ_fd, fd, NULL);
-}
 
 /*
  * On slave #1 set up fd for writing to the master
@@ -1794,73 +1337,23 @@ Error _dxf_parent_RQ_message()
 /* otherwise notify all children and the first to get the job wins.     */
 Error _dxf_child_RQ_message(int *jobid)
 {
-    int i;
-    int procid;
-    int ret;
-
 #if !defined(HAVE__ERRNO)
-
     errno = 0;
 #endif
 
-    procid = *jobid - 1;
-
-    if(procid == 0) {
-        if(_dxd_exMyPID != 0)
+    if(*jobid == 1) {
+        if(DXGetThreadPid() != 0)
             DXWarning("Ignoring rq message to parent");
         return ERROR;
     }
 
-    if(procid > 0) {
-#if DEBUGMP
-        DXMessage("send job request to %d, %d", procid, children[procid].RQwrite_fd);
-#endif
+    pthread_mutex_lock(&master_lock);
+    exProcID = *jobid - 1;
+    pthread_cond_broadcast(&master_wait);
+    pthread_mutex_unlock(&master_lock);
 
-        ret = write(children[procid].RQwrite_fd, "a", 1);
-        if(ret != 1)
-            _dxf_ExDie("Write Erroring notifying child of job request, write returns %d, error number %d", ret, errno);
-#if DEBUGMP
-
-        else
-            DXMessage("successful write to %d", children[procid].RQwrite_fd);
-#endif
-
-    } else { /* if procid == -1 then send message to all children */
-        for (i = 1; i < nprocs; i++) {
-#if DEBUGMP
-            DXMessage("send job request to %d, %d", i, children[i].RQwrite_fd);
-#endif
-
-            ret = write(children[i].RQwrite_fd, "a", 1);
-            if(ret != 1)
-                _dxf_ExDie("Write Erroring notifying child of job request, write returns %d, error number %d", ret, errno);
-#if DEBUGMP
-
-            else
-                DXMessage("successful write to %d", children[i].RQwrite_fd);
-#endif
-
-        }
-    }
     return ERROR;
 }
-
-/*
- * Processors are identified by their index into the table of child
- * processes.
- */
-static int ExFindPID (int pid)
-{
-    int i;
-
-    for (i = 0; i < nprocs; i++)
-        if (pid == children[i].pid)
-            return (i);
-
-    DXWarning ("#4510", pid);
-    return (-1);
-}
-
 
 static int OKToRead (SFILE *fp)
 {
@@ -1986,7 +1479,7 @@ static int ExFromMasterInputHndlr (int fd, Pointer p)
             *_dxd_exKillGraph = TRUE;
         }
         ExCheckGraphQueue(graphId);
-        ExCheckRunqueue(0);
+        ExCheckRunqueue();
         _dxf_ResumePeers();
         break;
     case DM_SLISTEN:
@@ -2197,7 +1690,7 @@ int ExCheckInput ()
 /*
  * See if there are any tasks ready to be executed.
  */
-static int ExCheckRunqueue (int graphId)
+static int ExCheckRunqueue ()
 {
     return (_dxf_ExRQDequeue (0));
 }
@@ -2311,11 +1804,6 @@ static int ExInputAvailable (SFILE *fp)
     }\
 }
 
-static void ExRegisterRQ_fds()
-{
-    DXRegisterInputHandler(ExReadCharFromRQ_fd, exChParent_RQread_fd, NULL);
-}
-
 static void ExParallelMaster ()
 {
     Program		*graph;
@@ -2334,8 +1822,6 @@ static void ExParallelMaster ()
 
     _dxd_exParseTree = NULL;
 
-    ExRegisterRQ_fds();
-
     for (;;) {
         if (++tries > limit) {
             /*
@@ -2343,12 +1829,30 @@ static void ExParallelMaster ()
              * yet then prompt him.
              */
 
+#if 0
+	    {
+		char	*prompt;
+		if (! prompted &&
+			!SFILECharReady(yyin) &&
+			(_dxd_exRshInput || _dxd_exIsatty) &&
+			_dxf_ExGQAllDone ())
+		{
+		    prompt = _dxf_ExPromptGet (PROMPT_ID_PROMPT);
+		    printf (prompt ? prompt : EX_PROMPT);
+		    fflush (stdout);
+		    prompted = TRUE;
+		}
+	    }
+#else
             ISSUE_PROMPT ();
+#endif
+            
             _dxf_ExCheckRIH();
 
             while (reading && ! *_dxd_exTerminating &&
                     (ExInputAvailable (yyin) || _dxd_exSelectReturnedInput)
                     && _dxd_exParseAhead) {
+
                 limit = -EX_INCREMENT;
 
                 _dxd_exSelectReturnedInput = FALSE;
@@ -2494,13 +1998,9 @@ static void ExSigPipe(int signo)
      * If I am a slave, send a quit signal to the master.
      * Otherwise, just quit.
      */
-    if (_dxd_exMyPID < 0 || DXProcessorId() != 0) {
+    if (DXGetThreadPid() < 0 || DXProcessorId() != 0) {
 #if 0
         fprintf(stderr, "ExSigPipe: slave received %d\n", signo);
-#endif
-#if HAVE_SIGQUIT
-
-        kill(children[0].pid, SIGQUIT);
 #endif
 
     } else {
@@ -2551,123 +2051,4 @@ int DXWinFork()
 }
 
 #endif
-
-#if !defined(intelnt) && !defined(WIN32)
-
-int DXForkChild(int i)
-{
-    int pid, master2slave[2], slave2master[2];
-
-    _dxf_lock_childpidtbl();
-
-    /*
-     * The slaves always need to hear from the master
-     */
-    if (pipe(master2slave))
-      return ERROR;
-
-    /*
-     * The master only needs to hear from slave[1]
-     */
-    if (i == 1)
-      if (pipe(slave2master))
-          return ERROR;
-
-    pid = fork();
-
-    /*
-     * The right thing to do depends on whether we're the parent 
-     * or child process.  The parent is always the master, and the
-     * child is always a slave.
-     */
-    if (pid)
-    {
-        /*
-         * The master writes to master2slave[1].
-         */
-        close(master2slave[0]);
-        _dxf_update_childpid(i, pid, master2slave[1]);
-
-        /*
-         * The master only needs to hear from slave[1]
-         */
-        if (i == 1)
-        {
-            close(slave2master[1]);
-            _dxf_set_RQ_ReadFromChild1(slave2master[0]);
-        }
-    }
-    else
-    {
-        /*
-         * The child is a slave.  It needs to listen to the
-         * master. Note that the slave2master pipe is only
-         * required for node 1, and that the master (if we
-	 * forked it at all) should not watch an master2slave
-         */
-        close(master2slave[1]);
-
-	if (i != 0)
-	    _dxf_set_RQ_reader(master2slave[0]);
-  
-        if (i == 1)
-        {
-              close(slave2master[0]);
-            _dxf_set_RQ_writer(slave2master[1]);
-        }
-    }
-
-    return  pid;
-}
-#endif
-
-#if defined(DXD_WIN_SMP)  && defined(THIS_IS_COMMENTED)
-static int MyChildProc()
-{
-    int i;
-    static int iCount = 0;
-    static __declspec(thread)  int tls_td;
-
-    iCount++;
-
-    tls_td = GetCurrentThreadId();
-
-    _dxf_lock_childpidtbl();
-    _dxf_update_childpid(iCount, tls_td, -1);
-
-    i = tls_td;
-    _dxd_exMyPID = ExFindPID (DXGetPid ());
-    i = _dxd_exMyPID;
-
-    printf("In New child Thread   %d \n",tls_td);
-
-    ExChildProcess();
-
-    /*
-    _dxf_ExInitTaskPerProc();
-    ExMainLoopSlave ();
-    */
-
-    printf("End Thread   %d \n",tls_td);
-    return 1;
-}
-
-int DXWinFork()
-{
-    int i;
-
-    i = _beginthread(MyChildProc, 0, NULL);
-    return i;
-}
-
-DXGetPid()
-{
-    int i;
-    i = GetCurrentThreadId();
-    return i;
-}
-
-
-#endif
-
 

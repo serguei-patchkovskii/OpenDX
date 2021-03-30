@@ -71,7 +71,7 @@ static Pointer
 AllocateBest(int n)
 {
     Pointer p;
-    if ((p=DXAllocateLocal(n)))
+    if ((p=DXAllocate(n)))
         return p;
     DXResetError();
     return DXAllocate(n);

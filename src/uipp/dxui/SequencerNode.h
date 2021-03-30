@@ -9,10 +9,8 @@
 #include <dxconfig.h>
 #include "../base/defines.h"
 
-
 #ifndef _SequencerNode_h
 #define _SequencerNode_h
-
 
 #include "ShadowedOutputNode.h"
 
@@ -56,15 +54,9 @@ class SequencerNode : public ShadowedOutputNode
     int		    startValue;	    	// Start frame
     int		    stopValue;		// Stop frame
 
-    //short           minimum;        /* minimum frame                */
-    //short           maximum;        /* maximum frame                */
-    //short           start;          /* start frame                  */
-    //short           stop;           /* stop frame                   */
-    //short           increment;      /* frame increment              */
-
-    short           current;        /* current frame                */
-    short           next;           /* current frame                */
-    short           previous;       /* previous frame               */
+    int           current;        /* current frame                */
+    int           next;           /* current frame                */
+    int           previous;       /* previous frame               */
 
     boolean	    ignoreFirstFrameMsg;
     boolean         transmitted;    /* frame values transmitted?    */

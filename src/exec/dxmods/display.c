@@ -246,6 +246,7 @@ m_Display(Object *in, Object *out)
         /*
          * stash the camera and object in cache
          */
+#if 0
         cacheTag = (char *)DXAllocate(strlen("CACHED_OBJECT_")
                                       + strlen(where) + 32);
 
@@ -256,6 +257,7 @@ m_Display(Object *in, Object *out)
         DXSetCacheEntry(in[1], CACHE_PERMANENT, cacheTag, 0, 0);
 
         DXFree((Pointer)cacheTag);
+#endif
 
         if (!object)
             DXErrorGoto(ERROR_MISSING_DATA, "#13650");

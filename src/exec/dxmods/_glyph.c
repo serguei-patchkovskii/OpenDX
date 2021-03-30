@@ -295,7 +295,7 @@ Error _dxfTextField(Pointer p)
    /* prepare to access the positions */
    if (!(handle = DXCreateArrayHandle(positions)))
        goto error;
-   scratch = DXAllocateLocal(posshape[0]*sizeof(float));
+   scratch = DXAllocate(posshape[0]*sizeof(float));
    if (!scratch)
        goto error;
 
@@ -1228,7 +1228,7 @@ Error
  
 
            DXGetArrayInfo(sA, NULL, &type, &category, &rank, shape);
-           origin   = DXAllocateLocal(itemSize);
+           origin   = DXAllocate(itemSize);
            if (origin == NULL)
            {
                DXFree(origin);
@@ -1595,7 +1595,7 @@ Error
   /* prepare to access the positions component */
   if (!(handle = DXCreateArrayHandle(positions_array)))
      goto error;
-  scratch = DXAllocateLocal(pos_incr*sizeof(float));
+  scratch = DXAllocate(pos_incr*sizeof(float));
   if (!scratch)
      goto error;
 
@@ -1636,7 +1636,7 @@ Error
       goto error;
     
     if (!strcmp(connectiontype,"triangles")) {
-      newconns = (Triangle *)DXAllocateLocal((numconns)*(3*sizeof(int)));
+      newconns = (Triangle *)DXAllocate((numconns)*(3*sizeof(int)));
       if (!newconns) {
         goto error;
       }
@@ -1651,25 +1651,25 @@ Error
 		       &overridelines, &hasnormals, connectiontype))
 	  goto error;
 	newoverridepoints = 
-	  (float *)DXAllocateLocal((numoverridepoints)*(out_pos_dim*sizeof(float)));
+	  (float *)DXAllocate((numoverridepoints)*(out_pos_dim*sizeof(float)));
 	if (!(newoverridepoints))
 	  goto error;
 	if (hasnormals) {
 	  newoverridenormals = 
-	    (Point *)DXAllocateLocal((numoverridepoints)*(3*sizeof(float)));
+	    (Point *)DXAllocate((numoverridepoints)*(3*sizeof(float)));
 	  if (!(newoverridenormals)) {
 	    goto error;
 	  }
 	}
 	newoverrideconns = 
-	  (Triangle *)DXAllocateLocal((numoverrideconns)*(3*sizeof(int)));
+	  (Triangle *)DXAllocate((numoverrideconns)*(3*sizeof(int)));
         if (!(newoverrideconns)) {
           goto error;
         }
       }
     }
     else {
-      newlines = (Line *)DXAllocateLocal((numconns)*(2*sizeof(int)));
+      newlines = (Line *)DXAllocate((numconns)*(2*sizeof(int)));
       if (!newlines) {
         goto error;
       }
@@ -1681,29 +1681,29 @@ Error
 		       &overridelines, &hasnormals, connectiontype))
 	  goto error;
 	newoverridepoints = 
-	  (float *)DXAllocateLocal((numoverridepoints)*(out_pos_dim*sizeof(float)));
+	  (float *)DXAllocate((numoverridepoints)*(out_pos_dim*sizeof(float)));
 	if (!(newoverridepoints))
 	  goto error;
 	if (hasnormals) {
 	  newoverridenormals = 
-	    (Point *)DXAllocateLocal((numoverridepoints)*(3*sizeof(float)));
+	    (Point *)DXAllocate((numoverridepoints)*(3*sizeof(float)));
 	  if (!(newoverridenormals)) {
 	    goto error;
 	  }
 	}
 	newoverridelines = 
-	  (Line *)DXAllocateLocal((numoverrideconns)*(2*sizeof(int)));
+	  (Line *)DXAllocate((numoverrideconns)*(2*sizeof(int)));
         if (!(newoverridelines)) {
           goto error;
         }
       }
     }
     
-    newpoints = (float *)DXAllocateLocal((numpoints)*(3*sizeof(float)));
+    newpoints = (float *)DXAllocate((numpoints)*(3*sizeof(float)));
     if (!newpoints)
       goto error;
     if (hasnormals) {
-      newnormals = (Point *)DXAllocateLocal((numpoints)*(3*sizeof(float)));
+      newnormals = (Point *)DXAllocate((numpoints)*(3*sizeof(float)));
       if (!newnormals) {
 	goto error;
       }
@@ -1718,24 +1718,24 @@ Error
     if (!GetGlyphs(type_string, &numpoints, &numconns, &points, 
                    &conns, &normals, &lines, &hasnormals, connectiontype))
       goto error;
-    newpoints = (float *)DXAllocateLocal((numpoints)*(out_pos_dim*sizeof(float)));
+    newpoints = (float *)DXAllocate((numpoints)*(out_pos_dim*sizeof(float)));
     if (!(newpoints))
       goto error;
     if (hasnormals) {
-      newnormals = (Point *)DXAllocateLocal((numpoints)*(3*sizeof(float)));
+      newnormals = (Point *)DXAllocate((numpoints)*(3*sizeof(float)));
       if (!(newnormals)) {
         goto error; 
       }
     }
     if (!strcmp(connectiontype,"triangles")) {
       newconns = 
-        (Triangle *)DXAllocateLocal((numconns)*(3*sizeof(int)));
+        (Triangle *)DXAllocate((numconns)*(3*sizeof(int)));
       if (!(newconns)) {
         goto error;
       }
     }
     else {
-      newlines = (Line *)DXAllocateLocal((numconns)*(2*sizeof(int)));
+      newlines = (Line *)DXAllocate((numconns)*(2*sizeof(int)));
       if (!(newlines)) {
         goto error;
       }
@@ -1747,26 +1747,26 @@ Error
                      &overridelines, &hasnormals, connectiontype))
         goto error;
       newoverridepoints = 
-	(float *)DXAllocateLocal((numoverridepoints)*(out_pos_dim*sizeof(float)));
+	(float *)DXAllocate((numoverridepoints)*(out_pos_dim*sizeof(float)));
       if (!(newoverridepoints))
         goto error;
       if (hasnormals) {
         newoverridenormals = 
-  	  (Point *)DXAllocateLocal((numoverridepoints)*(3*sizeof(float)));
+  	  (Point *)DXAllocate((numoverridepoints)*(3*sizeof(float)));
         if (!(newoverridenormals)) {
 	  goto error;
         }
       }
       if (!strcmp(connectiontype,"triangles")) {
         newoverrideconns = 
-          (Triangle *)DXAllocateLocal((numoverrideconns)*(3*sizeof(int)));
+          (Triangle *)DXAllocate((numoverrideconns)*(3*sizeof(int)));
         if (!(newoverrideconns)) {
           goto error;
         }
       }
       else {
         newoverridelines = 
-	  (Line *)DXAllocateLocal((numoverrideconns)*(2*sizeof(int)));
+	  (Line *)DXAllocate((numoverrideconns)*(2*sizeof(int)));
         if (!(newoverridelines)) {
           goto error;
         }
@@ -1775,7 +1775,7 @@ Error
   }
 
 
-  map = (int *)DXAllocateLocalZero(num_pos*sizeof(int));
+  map = (int *)DXAllocateZero(num_pos*sizeof(int));
   if ((pos_type != TYPE_FLOAT)||(pos_category != CATEGORY_REAL)||
       (pos_rank != 1)) {
     DXSetError(ERROR_DATA_INVALID,
@@ -3768,12 +3768,12 @@ Error
     /* need to xform the positions and normals (if present) using whatever
        xform we've got */ 
     *returnpoints = 
-        (Point *)DXAllocateLocal((*numpoints)*3*sizeof(float));
+        (Point *)DXAllocate((*numpoints)*3*sizeof(float));
     if (!(*returnpoints))
       return ERROR;
     if (!strcmp(attr,"triangles")) {
       strcpy(conntype,"triangles");
-      *returnconns = (Triangle *)DXAllocateLocal((*numconn)*3*sizeof(int));
+      *returnconns = (Triangle *)DXAllocate((*numconn)*3*sizeof(int));
       if (!(*returnconns)) {
 	DXFree((Pointer)*returnpoints);
 	return ERROR;
@@ -3782,7 +3782,7 @@ Error
     }
     else {
       strcpy(conntype,"lines");
-      *returnlines = (Line *)DXAllocateLocal((*numconn)*2*sizeof(int));
+      *returnlines = (Line *)DXAllocate((*numconn)*2*sizeof(int));
       if (!(*returnlines)) {
 	DXFree((Pointer)*returnpoints);
 	return ERROR;
@@ -3790,7 +3790,7 @@ Error
       line_ptr = (Line *)DXGetArrayData(connections);
     }
     if (*hasnormals) {
-      *returnnormals = (Point *)DXAllocateLocal((*numpoints)*3*sizeof(float));
+      *returnnormals = (Point *)DXAllocate((*numpoints)*3*sizeof(float));
       if (!(*returnnormals)) {
         DXFree((Pointer)*returnpoints);
         DXFree((Pointer)*returnconns);
@@ -4903,7 +4903,7 @@ static Error IndexGlyphField(Field field, Object glyphs, float scale)
   /* prepare to access the positions component */
   if (!(handle = DXCreateArrayHandle(positions)))
     goto error;
-  scratch = DXAllocateLocal(posshape[0]*sizeof(float));
+  scratch = DXAllocate(posshape[0]*sizeof(float));
   if (!scratch)
     goto error;
 
@@ -4917,7 +4917,7 @@ static Error IndexGlyphField(Field field, Object glyphs, float scale)
 
 
   numprev = 0;
-  map = (int *)DXAllocateLocalZero(numdata*sizeof(int));
+  map = (int *)DXAllocateZero(numdata*sizeof(int));
   for (i=0; i<numdata; i++) {
     if (DXIsElementValidSequential(invalidhandle, i)) {
     switch (datatype) {

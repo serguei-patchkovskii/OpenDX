@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/showconnect.c,v 1.8 2005/10/19 21:23:23 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/showconnect.c,v 1.8 2005/10/19 21:23:23 davidt Exp $
  */
 
 #include <dxconfig.h>

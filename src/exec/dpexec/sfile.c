@@ -265,10 +265,23 @@ _SFILE_load(SFILE *sf)
 
     if (ssf->count < 0)
 	return -1;
+#if 1
+     else
+     {
+        int k = ssf->count;
+	int fptr = k == 0 && ssf->type == SFILE_FPTR;
+	int e = k == 0 && ssf->type == SFILE_FPTR && feof(ssf->file);
+	if (e)
+	    return 0;
+	else
+	    return 1;
+     }
+#else
      else if (ssf->count == 0 && ssf->type == SFILE_FPTR && feof(ssf->file))
 	 return 0;
      else
 	 return 1;
+#endif
 }
 
 int 

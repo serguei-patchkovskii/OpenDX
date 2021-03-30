@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwNavigateInteractor.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwNavigateInteractor.c,v $
   Author: Mark Hood
 
   The navigation interactor is a means for moving in 3D space.  The user is

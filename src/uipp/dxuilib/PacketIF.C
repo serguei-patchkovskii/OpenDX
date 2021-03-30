@@ -1153,7 +1153,11 @@ PacketIF::packetReceive(boolean readSocket)
 	buffer[0] = NUL(char);
 	buflen = 0;
 	if (readSocket) {
-		buflen = read(this->socket, buffer, 4096);
+		do
+		{
+		    errno = 0;
+		    buflen = read(this->socket, buffer, 4096);
+		} while (errno == EAGAIN);
 		if (buflen <= 0)
 		{
 			this->error = TRUE;

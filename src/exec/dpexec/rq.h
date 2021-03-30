@@ -28,7 +28,13 @@ void		_dxf_ExRQEnqueueMany	(int n, PFI func[], Pointer arg[], int repeat[],
 				 long gid, 	/* Group ID (used)	*/
 				 int JID, 	/* JOB (pinned proc) or 0 */
 				 int highpri);	/* run this NOW		*/
-int    _dxf_ExRQDequeue	(long gid);	/* Group ID (or 0)	*/
+
+// int    _dxf_ExRQDequeue	(long gid);	/* Group ID (or 0)	*/
+int    _dxf_ExRQDequeue();
+
+int    _dxf_ExRQHandler();
+void _dxf_ExRQKillSlaves();
+
 int    _dxf_ExRQPending(void);
 Error  _dxf_ExRQInit (void);
 

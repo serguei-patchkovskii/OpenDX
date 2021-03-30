@@ -497,7 +497,7 @@ static int UpdateWorkers(char *host, char *user, char *options, int add)
                                   DXReAllocate(index->options, optlen);
                         }
                         else
-                            index->options = DXAllocateLocal(optlen);
+                            index->options = DXAllocate(optlen);
                         if(!index->options) {
                             index->error = TRUE;
                             DXSetError(ERROR_NO_MEMORY,
@@ -529,7 +529,7 @@ static int UpdateWorkers(char *host, char *user, char *options, int add)
                                                            optlen);
                         }
                         else
-                            index->options = DXAllocateLocal(optlen);
+                            index->options = DXAllocate(optlen);
                         if(!index->options) {
                             index->error = TRUE;
                             DXSetError(ERROR_NO_MEMORY, 
@@ -566,7 +566,7 @@ static int UpdateWorkers(char *host, char *user, char *options, int add)
         dpentry.prochostname = host;
 	dpentry.procusername = user;
         if(optlen > 0) {
-            dpentry.options = (char *) DXAllocateLocal (optlen);
+            dpentry.options = (char *) DXAllocate (optlen);
             if(!dpentry.options) {
                 dpentry.error = TRUE;
                 DXSetError(ERROR_NO_MEMORY,
@@ -792,7 +792,7 @@ static int Describe (char *c, Object *in)
 	    ;
 	_dxf_ExDictionaryEndIterate (_dxd_exMacroDict);
 
-	funcs = (node **) DXAllocateLocal (n * sizeof (node *));
+	funcs = (node **) DXAllocate (n * sizeof (node *));
 
 	DXBeginLongMessage ();
 	_dxf_ExDictionaryBeginIterate (_dxd_exMacroDict);
@@ -1070,7 +1070,7 @@ static int GroupAttach(char *c, Object *in)
             return(ERROR);
         }
         while(*str) {
-	    hostname = (char *)DXAllocateLocal(hostlen + 1);
+	    hostname = (char *)DXAllocate(hostlen + 1);
 	    if(hostname == NULL)
 		DXSetError(ERROR_NO_MEMORY,
 			   "Cannot allocate memory for host table entry");
@@ -1078,7 +1078,7 @@ static int GroupAttach(char *c, Object *in)
 	    hostname[hostlen] = '\0';
 
             if ( userstr ) {
-                username = (char *)DXAllocateLocal(userlen + 1);
+                username = (char *)DXAllocate(userlen + 1);
                 if(username == NULL)
                     DXSetError(ERROR_NO_MEMORY,
                                "Cannot allocate memory for user table entry");
@@ -1092,7 +1092,7 @@ static int GroupAttach(char *c, Object *in)
                   *delimiter != ' ' && *delimiter != ':') 
                 delimiter++;
             grouplen = delimiter - str;
-            pgassign.pgname = (char *)DXAllocateLocal(grouplen + 1);
+            pgassign.pgname = (char *)DXAllocate(grouplen + 1);
             if(pgassign.pgname == NULL)
                 DXSetError(ERROR_NO_MEMORY,
                        "Cannot allocate memory for group table entry");
@@ -1336,7 +1336,7 @@ static int Pfsmgr (char *c, Object *in)
     }
 
     len = strlen (c) + 1;
-    b = buf = (char *) DXAllocateLocal (len);
+    b = buf = (char *) DXAllocate (len);
     if (buf == NULL)
 	goto cleanup;
     memcpy (buf, c, len);

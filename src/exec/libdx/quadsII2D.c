@@ -275,10 +275,7 @@ _dxfInitialize(QuadsII2DInterpolator qi)
 	
 	DXReference((Object)qi->nArray);
 
-	if (qi->fieldInterpolator.localized)
-	    qi->neighbors = (int *)DXGetArrayDataLocal(qi->nArray);
-	else
-	    qi->neighbors = (int *)DXGetArrayData(qi->nArray);
+	qi->neighbors = (int *)DXGetArrayData(qi->nArray);
 
 	if (! qi->neighbors)
 	    return ERROR;
@@ -556,12 +553,6 @@ _dxfQuadsII2DInterpolator_PrimitiveInterpolate(QuadsII2DInterpolator qi,
 static int
 _dxfCleanup(QuadsII2DInterpolator qi)
 {								
-    if (qi->fieldInterpolator.localized)
-    {
-	if (qi->neighbors)
-	    DXFreeArrayDataLocal(qi->nArray, (Pointer)qi->neighbors);
-    }
-
     if (qi->pHandle)
     {
 	DXFreeArrayHandle(qi->pHandle);
@@ -965,16 +956,8 @@ _dxf_CopyQuadsII2DInterpolator(QuadsII2DInterpolator new,
 	if (! new->pHandle || ! new->qHandle || ! new->dHandle)
 	    return NULL;
 
-	if (new->fieldInterpolator.localized)
-	{
-	    if (new->nArray)
-		new->neighbors= (int *)DXGetArrayDataLocal(new->nArray);
-	}
-	else
-	{
-	    if (new->nArray)
-		new->neighbors= (int *)DXGetArrayData(new->nArray);
-	}
+	if (new->nArray)
+	    new->neighbors= (int *)DXGetArrayData(new->nArray);
 
 	if (old->gridFlag)
 	{
@@ -999,36 +982,4 @@ _dxf_CopyQuadsII2DInterpolator(QuadsII2DInterpolator new,
 	return NULL;
 
     return new;
-}
-
-Interpolator
-_dxfQuadsII2DInterpolator_LocalizeInterpolator(QuadsII2DInterpolator qi)
-{
-    if (qi->fieldInterpolator.localized)
-	return (Interpolator)qi;
-
-    qi->fieldInterpolator.localized = 1;
-
-    if (qi->fieldInterpolator.initialized)
-    {
-	if (qi->nArray)
-	    qi->neighbors = (int *)DXGetArrayDataLocal(qi->nArray);
-	
-	qi->pHandle = DXCreateArrayHandle(qi->pArray);
-	if (! qi->pHandle)
-	    return NULL;
-	
-	qi->qHandle = DXCreateArrayHandle(qi->qArray);
-	if (! qi->qHandle)
-	    return NULL;
-	
-	qi->dHandle = DXCreateArrayHandle(qi->dArray);
-	if (! qi->dHandle)
-	    return NULL;
-    }
-
-    if (DXGetError())
-        return NULL;
-    else
-        return (Interpolator)qi;
 }

@@ -2227,7 +2227,7 @@ Array_Histogram1(struct histinfo *hp)
     }
     
     
-    hd = (float *)DXAllocateLocalZero(osbins * sizeof(float));
+    hd = (float *)DXAllocateZero(osbins * sizeof(float));
     if (!hd)
 	goto error;
 

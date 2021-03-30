@@ -53,6 +53,7 @@
 #include "graph.h"
 #include "exobject.h"
 #include "d.h"
+#include "crc.h"
 #include "sysvars.h"
 #include "cache.h"
 #include "distp.h"
@@ -93,7 +94,7 @@ static void ExCheckSendReq(SlavePeers *sp);
 static Error DistributeMsgAP(dmargs *argp);
 static void DistributeMsg(DistMsg type, Pointer data, int to);
 
-static LIST(uint32) SavedCacheTags;
+static LIST(EXCRC) SavedCacheTags;
 static int dontSendCacheTags = FALSE;
 static int nslaves_done;
 
@@ -254,12 +255,10 @@ Error _dxf_ExReceivePeerPacket(SlavePeers *sp)
 
 void _dxf_ExDistributeMsg(DistMsg type, Pointer data, int size, int to)
 {
-    int procId = 1;
-
     if(!_dxd_exRemoteSlave && *_dxd_exNSlaves <= 0)
         return;
 
-    if(exJID == procId)
+    if(DXProcessorId() == 0)
         DistributeMsg(type, data, to);
     else {
         dmargs *argp;
@@ -313,7 +312,7 @@ static void DistributeMsg(DistMsg type, Pointer data, int to)
 	    CacheTagList *ctpkg;
 	    ctpkg = (CacheTagList *)data;
 	    for (i = 0; i < ctpkg->numtags; ++i)
-		APPEND_LIST(uint32, SavedCacheTags, ctpkg->ct[i]);
+		APPEND_LIST(EXCRC, SavedCacheTags, ctpkg->ct[i]);
 	    return;
 	}
         if(dontSendCacheTags)
@@ -417,13 +416,13 @@ void _dxf_ExDistMsgfd(DistMsg type, Pointer data, int tofd)
           break;
       case DM_INSERTCACHE:
       case DM_EVICTCACHE:
-          _dxf_ExWriteSock(tofd, (uint32 *)data, sizeof(uint32));
+          _dxf_ExWriteSock(tofd, (EXCRC *)data, sizeof(EXCRC));
           break;
       case DM_EVICTCACHELIST:
           ctpkg = (CacheTagList *)data;
           _dxf_ExWriteSock(tofd, &(ctpkg->numtags), sizeof(int));
           _dxf_ExWriteSock(tofd, ctpkg->ct, ctpkg->numtags * 
-                                             sizeof(uint32));
+                                             sizeof(EXCRC));
           break;
       case DM_SLAVEID:
           dpslaveid = (dpslave_id *)data;
@@ -512,10 +511,10 @@ SendSavedCacheTags()
     CacheTagList ctpkg;  
     int i;
     int numsaved = SIZE_LIST(SavedCacheTags);
-    uint32 *sct;
+    EXCRC *sct;
 
     while(numsaved > 0) {
-        sct = (uint32 *)SavedCacheTags.vals;
+        sct = (EXCRC *)SavedCacheTags.vals;
         ctpkg.numtags = (numsaved > N_CACHETAGLIST_ITEMS) ?
 					N_CACHETAGLIST_ITEMS : numsaved;
         for(i = 0; i < ctpkg.numtags; i++) 

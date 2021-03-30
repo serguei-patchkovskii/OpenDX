@@ -181,11 +181,11 @@ struct node *ExReadNode(int fd)
                 if(regular) { 
                     if(n->v.constant.type == TYPE_FLOAT) {
                         n->v.constant.origin = 
-                           (float *)DXAllocateLocal(sizeof(float));
+                           (float *)DXAllocate(sizeof(float));
                         if(n->v.constant.origin == NULL)
                             _dxf_ExDie("Could not allocate memory for data");
                         n->v.constant.delta = 
-                           (float *)DXAllocateLocal(sizeof(float));
+                           (float *)DXAllocate(sizeof(float));
                         if(n->v.constant.delta == NULL)
                             _dxf_ExDie("Could not allocate memory for data");
                         readN(fd, n->v.constant.origin, 1, TYPE_FLOAT);
@@ -193,11 +193,11 @@ struct node *ExReadNode(int fd)
                     }	
                     if(n->v.constant.type == TYPE_INT) {
                         n->v.constant.origin = 
-                           (int *)DXAllocateLocal(sizeof(int));
+                           (int *)DXAllocate(sizeof(int));
                         if(n->v.constant.origin == NULL)
                             _dxf_ExDie("Could not allocate memory for data");
                         n->v.constant.delta = 
-                           (int *)DXAllocateLocal(sizeof(int));
+                           (int *)DXAllocate(sizeof(int));
                         if(n->v.constant.delta == NULL)
                             _dxf_ExDie("Could not allocate memory for data");
                         readN(fd, n->v.constant.origin, 1, TYPE_INT);
@@ -214,7 +214,7 @@ struct node *ExReadNode(int fd)
                         }
                         else {
                             n->v.constant.shape = 
-                                  (int *)DXAllocateLocal(
+                                  (int *)DXAllocate(
                                          n->v.constant.rank*sizeof(int));
                             if(n->v.constant.shape == NULL)
                                 _dxf_ExDie("Could not allocate memory");
@@ -227,7 +227,7 @@ struct node *ExReadNode(int fd)
 	    }
             if(!n->v.constant.origin) { /* not regular */
                 readN(fd, &len, 1, TYPE_INT);
-                n->v.constant.data = (Pointer *)DXAllocateLocal(len);
+                n->v.constant.data = (Pointer *)DXAllocate(len);
                 if(n->v.constant.data == NULL)
                     _dxf_ExDie("Could not allocate memory for data");
                 len /= DXTypeSize(n->v.constant.type);
@@ -238,7 +238,7 @@ struct node *ExReadNode(int fd)
             break;
         case NT_ID:
             readN(fd, &len, 1, TYPE_INT);
-            n->v.id.id = (char *)DXAllocateLocal(len);
+            n->v.id.id = (char *)DXAllocate(len);
             if(n->v.id.id == NULL)
                 _dxf_ExDie("Could not allocate memory for name");
             readN(fd, n->v.id.id, len, TYPE_UBYTE);
@@ -246,7 +246,7 @@ struct node *ExReadNode(int fd)
             break;
         case NT_EXID:
             readN(fd, &len, 1, TYPE_INT);
-            n->v.exid.id = (char *)DXAllocateLocal(len);
+            n->v.exid.id = (char *)DXAllocate(len);
             if(n->v.exid.id == NULL)
                 _dxf_ExDie("Could not allocate memory for name");
             readN(fd, n->v.exid.id, len, TYPE_UBYTE);
@@ -265,7 +265,7 @@ struct node *ExReadNode(int fd)
             /* I don't think this is used anymore */
             /* we'll have to worry about the type and size */
             /* of data on the other side */
-            n->v.packet.data = (Pointer *)DXAllocateLocal(n->v.packet.size);
+            n->v.packet.data = (Pointer *)DXAllocate(n->v.packet.size);
             if(n->v.packet.data == NULL)
                 _dxf_ExDie("Could not allocate memory for data");
             readN(fd, n->v.packet.data, n->v.packet.size, TYPE_UBYTE);
@@ -278,7 +278,7 @@ struct node *ExReadNode(int fd)
             readN(fd, &(n->v.data.len), 1, TYPE_INT);
             /* we'll have to worry about the type and size */
             /* of data on the other side */
-            n->v.data.data = (Pointer *)DXAllocateLocal(n->v.data.len);
+            n->v.data.data = (Pointer *)DXAllocate(n->v.data.len);
             if(n->v.data.data == NULL)
                 _dxf_ExDie("Could not allocate memory for data");
             readN(fd, n->v.data.data, n->v.data.len, TYPE_UBYTE);

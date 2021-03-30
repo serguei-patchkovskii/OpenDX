@@ -1238,6 +1238,11 @@ dnl don't require SHARED_LINK to be set going in, but if set, it overrides any s
                 DX_RTL_ALDFLAGS="--shared "
 		DX_RTL_DXENTRY="-eDXEntry"
         fi
+	if test $ARCH = "macos" ; then
+		DX_RTL_CFLAGS="-D_GNU_SOURCE -Dmacos -dynamic -fPIC"
+		DX_RTL_ALDFLAGS="-bundle -bundle_loader \$(BASE)/bin_macos/dxexec"
+		DX_RTL_DXENTRY="-Wl,-iDXEntry:_DXEntry"
+	fi
 ])
 
 #

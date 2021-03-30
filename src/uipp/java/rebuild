@@ -1,0 +1,6 @@
+#!/bin/sh
+make clean
+find . -name "*.class" -delete
+make
+sudo make install
+

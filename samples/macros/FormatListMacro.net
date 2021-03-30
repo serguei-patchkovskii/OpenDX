@@ -1,0 +1,91 @@
+//
+// time: Tue Apr  8 09:05:54 1997
+//
+// version: 3.1.1 (format), 3.1.4 (DX Beta)
+//
+//
+// Begin MDF
+// MODULE FormatList
+// CATEGORY Macros
+// DESCRIPTION new macro
+// INPUT list; object; (none); list of scalar values to be formated
+// INPUT format; string; "%f"; format string
+// OUTPUT formatted; value list or string list; formatted list of scalar values
+// End MDF
+// workspace: width = 312, height = 456
+// layout: snap = 0, width = 50, height = 50, align = NN
+//
+macro FormatList(
+ list
+,format = "%f"
+) -> (
+ formatted
+) {
+    // 
+    // node Input[40]: x = 103, y = 56, inputs = 0, label = Input
+    // parameter: position = 1, name = 'list', value = ' ', descriptive = 0, description = 'list of scalar values to be formated', required = 1, visible = 1
+    //
+FormatList_Input_40_out_1 = list;
+    // 
+    // node ForEachMember[1]: x = 69, y = 138, inputs = 1, label = ForEachMember
+    //
+FormatList_ForEachMember_1_out_1,
+FormatList_ForEachMember_1_out_2,
+FormatList_ForEachMember_1_out_3 = 
+    ForEachMember(
+    FormatList_Input_40_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node Input[41]: x = 204, y = 57, inputs = 0, label = Input
+    // parameter: position = 2, name = 'format', value = '"%f"', descriptive = 0, description = 'format string', required = 0, visible = 1
+    //
+FormatList_Input_41_out_1 = format;
+    // 
+    // node Format[1]: x = 133, y = 220, inputs = 3, label = Format
+    //
+FormatList_Format_1_out_1 = 
+    Format(
+    FormatList_Input_41_out_1,
+    FormatList_ForEachMember_1_out_1,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node GetLocal[1]: x = 245, y = 224, inputs = 3, label = GetLocal
+    //
+FormatList_GetLocal_1_out_1,
+FormatList_GetLocal_1_out_2 = 
+    GetLocal(
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node List[1]: x = 146, y = 294, inputs = 2, label = List
+    //
+FormatList_List_1_out_1 = 
+    List(
+    FormatList_GetLocal_1_out_1,
+    FormatList_Format_1_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node Output[12]: x = 134, y = 394, inputs = 1, label = Output
+    // parameter: position = 1, name = 'formatted', value = ' ', descriptive = 0, description = 'formatted list of scalar values', required = 0, visible = 1
+    //
+formatted = FormatList_List_1_out_1;
+    // 
+    // node SetLocal[1]: x = 235, y = 314, inputs = 3, label = SetLocal
+    //
+    SetLocal(
+    FormatList_List_1_out_1,
+    FormatList_GetLocal_1_out_2,
+    NULL
+    ) [instance: 1, cache: 1];
+// network: end of macro body
+}
+FormatList_Input_40_out_1 = NULL;
+FormatList_ForEachMember_1_out_1 = NULL;
+FormatList_Input_41_out_1 = NULL;
+FormatList_Format_1_out_1 = NULL;
+FormatList_GetLocal_1_out_1 = NULL;
+FormatList_GetLocal_1_out_2 = NULL;
+FormatList_List_1_out_1 = NULL;

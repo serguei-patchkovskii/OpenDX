@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/stream.h,v 1.7 2001/04/17 15:39:19 gda Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/stream.h,v 1.7 2001/04/17 15:39:19 gda Exp $:
  */
 
 #ifndef _STREAM_H_

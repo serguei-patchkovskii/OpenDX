@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_rubbersheet.c,v 1.5 2000/08/24 20:04:20 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_rubbersheet.c,v 1.5 2000/08/24 20:04:20 davidt Exp $:
  */
 #include <stdio.h>
 #include <math.h>
@@ -1414,7 +1414,7 @@ GetQuadNormals(ArrayHandle pHandle, ArrayHandle cHandle, int n, float **normals)
     int   j;
     float *ptr;
 
-    *normals = (float *)DXAllocateLocal(n * 3 * sizeof(float));
+    *normals = (float *)DXAllocate(n * 3 * sizeof(float));
     if (! *normals)
     {
 	DXResetError();
@@ -1472,7 +1472,7 @@ GetTriNormals(ArrayHandle pHandle, ArrayHandle cHandle, int n, float **normals)
     int   j;
     float *ptr;
 
-    *normals = (float *)DXAllocateLocal(n * 3 * sizeof(float));
+    *normals = (float *)DXAllocate(n * 3 * sizeof(float));
     if (! *normals)
     {
 	DXResetError();

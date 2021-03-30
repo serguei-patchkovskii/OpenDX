@@ -32,7 +32,7 @@ char *lstrsaven (char *old, int n)
 {
     char	*new;
 
-    new = DXAllocateLocal (n + 1);
+    new = DXAllocate (n + 1);
     if (new)
     {
 	memcpy (new, old, n);
@@ -64,7 +64,7 @@ char *lstrsave (char *old)
     int		n;
 
     n   = strlen (old);
-    new = DXAllocateLocal (n + 1);
+    new = DXAllocate (n + 1);
     if (new)
     {
 	memcpy (new, old, n);
@@ -146,7 +146,7 @@ char *_dxf_ExCopyStringLocal (char *old)
 
     size = strlen (old) + 1;
 
-    new = (char *) DXAllocateLocal (size);
+    new = (char *) DXAllocate (size);
     
     if (! new)
     {

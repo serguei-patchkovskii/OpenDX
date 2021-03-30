@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_helper_jea.c,v 1.8 2003/07/11 05:50:33 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_helper_jea.c,v 1.8 2003/07/11 05:50:33 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -640,7 +640,7 @@ Array _dxf_CopyArray_jea ( Array in, enum _dxd_copy copy )
     }
     else
     {
-        if ( ( ERROR == ( shape = (int *) DXAllocateLocal
+        if ( ( ERROR == ( shape = (int *) DXAllocate
                                               ( rank * sizeof(int) ) ) )
              ||
              !DXGetArrayInfo ( in, NULL, &type, &category, &rank, shape ) )

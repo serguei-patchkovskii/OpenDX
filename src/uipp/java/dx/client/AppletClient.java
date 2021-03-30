@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/client/AppletClient.java,v 1.3 2005/12/26 21:33:42 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/client/AppletClient.java,v 1.3 2005/12/26 21:33:42 davidt Exp $
  */
 
 /*

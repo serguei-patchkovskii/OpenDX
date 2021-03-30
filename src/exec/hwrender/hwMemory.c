@@ -12,7 +12,7 @@
 #ifndef hwMemory_h
 #define hwMemory_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwMemory.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwMemory.c,v $
   Author: Mark Hood
 
   This include file defines core data structures used by the direct
@@ -224,18 +224,18 @@ _tdmAllocateZero(unsigned int n, char * file, int LINE)
   }
 
 Pointer
-_tdmAllocateLocal(unsigned int n, char * file, int LINE)
+_tdmAllocate(unsigned int n, char * file, int LINE)
   { 
   Pointer r;
-  r = DXAllocateLocal(ALLOCSIZE(n));
+  r = DXAllocate(ALLOCSIZE(n));
   return _addAllocRecord(r,n,file,LINE);
   }
 
 Pointer
-_tdmAllocateLocalZero(unsigned int n, char * file, int LINE)
+_tdmAllocateZero(unsigned int n, char * file, int LINE)
   {
   Pointer r;
-  r = DXAllocateLocalZero(ALLOCSIZE(n));
+  r = DXAllocateZero(ALLOCSIZE(n));
   return _addAllocRecord(r,n,file,LINE);
   }
 

@@ -15,7 +15,7 @@
 #ifndef hwPolygonDrawSB_c_h
 #define hwPolygonDrawSB_c_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwPolygonDrawSB.c.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwPolygonDrawSB.c.h,v $
 
   This code implements unmeshed triangle and quad fields as Starbase
   polygons. 

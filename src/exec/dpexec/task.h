@@ -45,6 +45,7 @@ typedef struct _EXTask
 typedef struct _EXTaskGroup
 {
     lock_type           lock;
+    wait_type           wait;
     EXTaskGroup         link;                   /* stack linkage          */
     int                 gid;                    /* Group ID (ids this tg) */
     int                 procId;                 /* Creating process ID    */

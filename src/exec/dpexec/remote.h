@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/remote.h,v 1.3 2004/06/09 16:14:28 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/remote.h,v 1.3 2004/06/09 16:14:28 davidt Exp $
  */
 
 #ifndef _REMOTE_H

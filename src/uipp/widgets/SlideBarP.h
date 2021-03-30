@@ -191,7 +191,7 @@ typedef struct
     short	y;		/* True y coordinate			   */
     short	width;		/* Size of pixmap			   */
     short	height;
-    short	detent;		/* Index value used by application	   */
+    int	detent;		/* Index value used by application	   */
 } Marker;
 
 
@@ -206,8 +206,8 @@ typedef struct _XmSlideBarPart
     Pixel	value_mark_color;	/* Color of central marker	      */
     Pixel	limit_mark_color;	/* Color of edge marker		      */
     XtCallbackList value_callback;	/* Callback list for any change	      */
-    short	num_detents;		/* Number of detent stops on bar      */
-    short	min_detent;		/* Offset: detent to external value   */
+    int		num_detents;		/* Number of detent stops on bar      */
+    int		min_detent;		/* Offset: detent to external value   */
     short	x_margin;		/* Space on either side of bar	      */
     short	arrow_width;		/* Size of arrow marker		      */
     short	arrow_height;
@@ -218,7 +218,7 @@ typedef struct _XmSlideBarPart
     Boolean	init;			/* Set 'til drawing stuff initialized */
     XmSeparatorGadget	line;
     Marker*	grabbed;
-    short	max_detent;		/* num_detents - 1		      */
+    int  	max_detent;		/* num_detents - 1		      */
     short	y_margin;		/* Offset to top of tallest arrow     */
     short	width;			/* Length of slider bar		      */
     short	grab_x_offset;		/* Pointer grab to left edge offset   */

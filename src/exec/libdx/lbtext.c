@@ -75,7 +75,7 @@ DXGetFont( char *name, float *ascent, float *descent )
 
 #define XTRA 32  /* enough extra room for "../fonts/.. .dx" */
 
-    tbuf = ( char * ) DXAllocateLocalZero( strlen( dir ) + strlen( name ) + XTRA );
+    tbuf = ( char * ) DXAllocateZero( strlen( dir ) + strlen( name ) + XTRA );
 
     if ( !tbuf )
         goto error;
@@ -161,7 +161,7 @@ getname( char *dirlist, char *file, char *result )
      *  get enough space the first time so we can construct any variation
      *  without having to reallocate (xtra defined up above).
      */
-    dirbuf = ( char * ) DXAllocateLocalZero( strlen( dirlist ) + strlen( file ) + XTRA );
+    dirbuf = ( char * ) DXAllocateZero( strlen( dirlist ) + strlen( file ) + XTRA );
 
     if ( !dirbuf )
         return ERROR;

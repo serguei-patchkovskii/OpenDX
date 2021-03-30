@@ -363,7 +363,7 @@ open_netcdf_file(char *filename)
     ll = strlen(filename) + XTRA;
     if (datadir != NULL)
     	ll += strlen(datadir);
-    fname = (char *)DXAllocateLocalZero(ll);
+    fname = (char *)DXAllocateZero(ll);
     if (!fname)
 	goto error;
 
@@ -371,7 +371,7 @@ open_netcdf_file(char *filename)
     if((cdfhandle = ncopen(filename, NC_NOWRITE)) < 0) {
 	if (ncerr == 0 && !foundfile) {
 	    foundfile++;
-	    foundname = (char *)DXAllocateLocalZero(strlen(filename)+1);
+	    foundname = (char *)DXAllocateZero(strlen(filename)+1);
 	    if (!foundname)
 		goto error;
 	    strcpy(foundname, filename);
@@ -386,7 +386,7 @@ open_netcdf_file(char *filename)
 	}
 	if (ncerr == 0 && !foundfile) {
 	    foundfile++;
-	    foundname = (char *)DXAllocateLocalZero(strlen(fname)+1);
+	    foundname = (char *)DXAllocateZero(strlen(fname)+1);
 	    if (!foundname)
 		goto error;
 	    strcpy(foundname, fname);
@@ -408,7 +408,7 @@ open_netcdf_file(char *filename)
 	    }
 	    if (ncerr == 0 && !foundfile) {
 		foundfile++;
-		foundname = (char *)DXAllocateLocalZero(strlen(fname)+1);
+		foundname = (char *)DXAllocateZero(strlen(fname)+1);
 		if (!foundname)
 		    goto error;
 		strcpy(foundname, fname);
@@ -421,7 +421,7 @@ open_netcdf_file(char *filename)
 	    }
 	    if (ncerr == 0 && !foundfile) {
 		foundfile++;
-		foundname = (char *)DXAllocateLocalZero(strlen(fname)+1);
+		foundname = (char *)DXAllocateZero(strlen(fname)+1);
 		if (!foundname)
 		    goto error;
 		strcpy(foundname, fname);
@@ -487,7 +487,7 @@ _dxfstat_netcdf_file(char *filename)
     if (!datadir)
 	goto error;
 
-    fname = (char *)DXAllocateLocalZero((datadir ? strlen(datadir) : 0) +
+    fname = (char *)DXAllocateZero((datadir ? strlen(datadir) : 0) +
 					strlen(filename) + XTRA);
     if (!fname)
 	goto error;
@@ -564,7 +564,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 	for(lp = varlist; *lp; lp++)
 	    numspec++;
 	
-	if ((found = (int *)DXAllocateLocalZero(sizeof(int) * numspec)) == NULL)
+	if ((found = (int *)DXAllocateZero(sizeof(int) * numspec)) == NULL)
 	    return NULL;
     }
     
@@ -615,7 +615,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 
 	/* new series object 
 	 */
-	vp2 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+	vp2 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 	if(!vp2)
 	    goto error;
 	vp2->class = CLASS_SERIES;
@@ -735,7 +735,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 		}
 		
 		/* new series member */
-		vp1 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+		vp1 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 		if(!vp1)
 		    goto error;
 		vp1->class = CLASS_FIELD;
@@ -782,7 +782,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 	    vp = vp2;
 
 	else if(vp->class != CLASS_GROUP) {  /* new group needed */
-	    vp1 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+	    vp1 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 	    if(!vp1)
 		goto error;
 	    vp1->class = CLASS_GROUP;
@@ -844,7 +844,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 	    continue;
 
 	/* new field/implicit series */
-	vp2 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+	vp2 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 	if(!vp2)
 	    goto error;
 	
@@ -877,7 +877,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 	    vp = vp2;
 	
 	else if(vp->class != CLASS_GROUP) {  /* create new group */
-	    vp1 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+	    vp1 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 	    if(!vp1)
 		goto error;
 	    vp1->class = CLASS_GROUP;
@@ -938,7 +938,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 	     *  so there can't be composite fields.  also, we don't recognize
              *  series (although if recdim is used, we could, i suppose).
 	     */
-	    vp2 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+	    vp2 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 	    if(!vp2)
 		goto error;
 	    
@@ -959,7 +959,7 @@ query_var(int cdfhandle, char **varlist, int *starttime, int *endtime,
 		vp = vp2;
 	    
 	    else if(vp->class != CLASS_GROUP) {  /* create a group */
-		vp1 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+		vp1 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 		if(!vp1)
 		    goto error;
 		vp1->class = CLASS_GROUP;
@@ -1039,7 +1039,7 @@ match_vp(Varinfo vp, int varid, char **s, char *stringattr)
 	     */
 	    if(!vp1->child) {
 		/* test here: class should == FIELD */
-		vp2 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+		vp2 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 		if(!vp2)
 		    return NULL;
 		vp2->class = vp1->class;
@@ -1053,7 +1053,7 @@ match_vp(Varinfo vp, int varid, char **s, char *stringattr)
 	    }
 
 	    /* new node for this field */
-	    vp2 = (Varinfo)DXAllocateLocalZero(sizeof(struct varinfo));
+	    vp2 = (Varinfo)DXAllocateZero(sizeof(struct varinfo));
 	    if(!vp2)
 		return NULL;
 	    vp2->class = CLASS_FIELD;
@@ -1939,7 +1939,7 @@ static Object build_series(int hand, Varinfo vp)
 	} else {
 
 	    if(nterms > 1) {
-		t = (Object *)DXAllocateLocalZero(series * nterms * sizeof(Array));
+		t = (Object *)DXAllocateZero(series * nterms * sizeof(Array));
 		if(!t)
 		    goto error;
 		
@@ -2122,7 +2122,7 @@ static Object build_series(int hand, Varinfo vp)
 	} else {
 
 	    if(nterms > 1) {
-		t = (Object *)DXAllocateLocalZero(series * nterms * sizeof(Array));
+		t = (Object *)DXAllocateZero(series * nterms * sizeof(Array));
 		if(!t)
 		    goto error;
 		
@@ -2406,7 +2406,7 @@ static Error get_seriesvalue(Arrayinfo ap, float **valuelist)
     start = ap->vp->startframe ? *ap->vp->startframe : 0;
     delta = ap->vp->deltaframe ? *ap->vp->deltaframe : 1;
 
-    if(!(*valuelist = (float *)DXAllocateLocal(sizeof(float) * size)))
+    if(!(*valuelist = (float *)DXAllocate(sizeof(float) * size)))
        return ERROR;
 
     if(delta == 1) {

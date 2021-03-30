@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/CaptionLabels.java,v 1.1 1999/07/09 17:27:26 daniel Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/CaptionLabels.java,v 1.1 1999/07/09 17:27:26 daniel Exp $
  */
 
 //

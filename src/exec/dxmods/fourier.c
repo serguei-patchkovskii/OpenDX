@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/fourier.c,v 1.7 2006/01/03 17:02:22 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/fourier.c,v 1.7 2006/01/03 17:02:22 davidt Exp $
  */
 
 
@@ -64,7 +64,7 @@ typedef struct
 
 #define	ALLOCATE_LOCAL(_v,_t,_n)\
 {\
-    _v = (_t *) DXAllocateLocal (_n);\
+    _v = (_t *) DXAllocate (_n);\
     if (! _v)\
     {\
 	DXResetError ();\

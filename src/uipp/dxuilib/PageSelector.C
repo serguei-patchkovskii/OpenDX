@@ -207,7 +207,6 @@ void PageSelector::clear()
 
 void PageSelector::buildSelector()
 {
-
     ASSERT(this->parent);
     Widget form = XtVaCreateManagedWidget ("pageSelector",
 	xmFormWidgetClass,	this->parent,

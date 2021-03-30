@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 /*
- * $Header: /src/master/dx/src/uipp/java/imageWindow.java,v 1.3 2006/05/17 14:35:17 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/imageWindow.java,v 1.3 2006/05/17 14:35:17 davidt Exp $
  */
 
 

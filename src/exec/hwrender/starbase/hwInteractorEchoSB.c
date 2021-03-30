@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwInteractorEchoSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwInteractorEchoSB.c,v $
   Authors: Ellen Ball, Mark Hood
 
   These are the Starbase implementations of the TDM direct interactor echos,

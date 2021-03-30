@@ -12,7 +12,7 @@
 #ifndef HELPERCODE
 
 /*---------------------------------------------------------------------------*\
-$Header: /src/master/dx/src/exec/hwrender/opengl/hwPortUtilOGL.c,v 1.17 2006/06/26 21:27:23 davidt Exp $
+$Header: /cvsroot/opendx2/dx/src/exec/hwrender/opengl/hwPortUtilOGL.c,v 1.17 2006/06/26 21:27:23 davidt Exp $
 
 Author:  Ellen Ball
 

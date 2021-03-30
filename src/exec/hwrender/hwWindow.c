@@ -785,7 +785,7 @@ error:
 
 /*
 * Environment:		Risc System 6000
-* Current Source:	$Source: /src/master/dx/src/exec/hwrender/hwWindow.c,v $
+* Current Source:	$Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwWindow.c,v $
 * Author:		Tim Murphy
 *
 */
@@ -1841,7 +1841,7 @@ void *_dxfOutputRGB(WinP win, Field i)
         if (SW_BUF)
             tdmFree(SW_BUF) ;
         SW_BUF = (void *) NULL;
-        SW_BUF = (void *) tdmAllocateLocal(n);
+        SW_BUF = (void *) tdmAllocate(n);
         if (!SW_BUF) {
             SW_BUF_SIZE = 0;
             EXIT(("malloc failed"));
@@ -2266,7 +2266,7 @@ _dxfSetCurrentView(WinP win, float *to, float *from, float *up, float fov, float
 /*
  *===================================================================
  *                END OF FILE 
- *                $Source: /src/master/dx/src/exec/hwrender/hwWindow.c,v $
+ *                $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwWindow.c,v $
  *===================================================================
  */
 #undef tdmWindow_c

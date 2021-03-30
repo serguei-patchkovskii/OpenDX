@@ -319,15 +319,3 @@ _dxf_CopyGroupInterpolator(GroupInterpolator new, GroupInterpolator old,
     return new;
 }
 
-Interpolator
-_dxfGroupInterpolator_LocalizeInterpolator(GroupInterpolator gi)
-{
-    int			i;
-    Interpolator	*childi;
-
-    childi = gi->subInterp;
-    for (i = 0; i < gi->nMembers; i++, childi++)
-	DXLocalizeInterpolator(*childi);
-    
-    return (Interpolator)gi;
-}

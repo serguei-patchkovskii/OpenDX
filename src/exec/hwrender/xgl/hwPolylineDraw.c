@@ -14,7 +14,7 @@
 
 
 /*
- * $Source: /src/master/dx/src/exec/hwrender/xgl/hwPolylineDraw.c,v $
+ * $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwPolylineDraw.c,v $
  *
  */
 

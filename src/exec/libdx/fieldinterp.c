@@ -129,7 +129,6 @@ _dxf_NewFieldInterpolator(Field f, float fuzz, Matrix *m,
 	return NULL;
 
     fi->initialized = 0;
-    fi->localized   = 0;
     fi->fuzz 	    = fuzz;
 
     if (m)
@@ -313,7 +312,6 @@ _dxf_CopyFieldInterpolator(FieldInterpolator new,
     if (! _dxf_CopyInterpolator((Interpolator)new, (Interpolator)old))
 	return NULL;
     
-    new->localized          = old->localized;
     new->initialized        = old->initialized;
     new->fuzz 	            = old->fuzz;
     new->data_dependency    = old->data_dependency;

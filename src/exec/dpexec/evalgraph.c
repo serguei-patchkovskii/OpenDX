@@ -868,7 +868,7 @@ ExStartModules(Program *p)
             p->loopctl.first = FALSE;
             p->loopctl.counter++;
             MARK_1("rerun loop");
-            _dxf_ExRunOn(1, ExQueueSubGraph, (Pointer)p, 0);
+            _dxf_ExRunOn(0, ExQueueSubGraph, (Pointer)p, 0);
             return;
         }
 
@@ -948,7 +948,7 @@ ExStartModules(Program *p)
 	    {
 	        if(nfuncs > 0 && !p->deleted && !p->waited) {
 		    p->waited = TRUE;
-                    _dxf_ExRunOn(1, _dxf_ExWaitOnSlaves, NULL, 0);
+                    _dxf_ExRunOn(0, _dxf_ExWaitOnSlaves, NULL, 0);
                 }
 		if (p->outstandingRequests == 0)
 		    _dxf_ExGQDecrement(p);
@@ -1159,7 +1159,7 @@ _execGnode(Pointer ptr)
 	    argsize = MAX(argsize, LOCAL_ARG_MAX);
 	    if (args != NULL)
 		DXFree((Pointer) args);
-	    args = (Object *) DXAllocateLocal(argsize);
+	    args = (Object *) DXAllocate(argsize);
 	    if (args == NULL)
 		_dxf_ExDie("_execGnode:  can't allocate local memory");
 	    argsalloc = argsize;
@@ -1402,7 +1402,7 @@ _execGnode(Pointer ptr)
                      */
                     INCR_RUNABLE
                     MARK_1("queue sub graph");
-                    _dxf_ExRunOn(1, ExQueueSubGraph, (Pointer)n->func.subP, 0);
+                    _dxf_ExRunOn(0, ExQueueSubGraph, (Pointer)n->func.subP, 0);
                     status = OK;
                 }
                 else
@@ -2890,7 +2890,7 @@ ExProcessDPSENDFunction(Program *p, gfunc *gf, Object *DPSEND_obj)
         args->procid = tgprocid, 
         args->pv = pv;
         args->index = outdex;
-        _dxf_ExRunOn(1, QueueSendRequest, args, 0);
+        _dxf_ExRunOn(0, QueueSendRequest, args, 0);
         DXFree(args);
         return(OK);
     }

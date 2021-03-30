@@ -66,11 +66,6 @@
 	*(Pointer*)&xf->comp = DXGetArrayData(xf->CAT(comp,_array));	    \
 	if (!xf->comp)							    \
 	    return ERROR;						    \
-    } else if (xd==XD_LOCAL) {						    \
-	*(Pointer*)&xf->comp = DXGetArrayDataLocal(xf->CAT(comp,_array));	    \
-	xf->CAT(comp,_local) = 1;					    \
-	if (!xf->comp)							    \
-	    return ERROR;						    \
     }									    \
     DXGetArrayInfo(xf->CAT(comp,_array), &xf->CAT(n,comp), NULL,NULL,NULL,NULL);\
 }
@@ -94,11 +89,6 @@ _dxf_XZero(struct xfield *xf)
     int n;								      \
     if (xd==XD_GLOBAL) {						      \
 	*(Pointer*)&xf->comp = DXGetArrayData(xf->CAT(comp,_array));	      \
-	if (!xf->comp)							      \
-	    return ERROR;						      \
-    } else if (xd==XD_LOCAL) {						      \
-	*(Pointer*)&xf->comp = DXGetArrayDataLocal(xf->CAT(comp,_array));     \
-	xf->CAT(comp,_local) = 1;					      \
 	if (!xf->comp)							      \
 	    return ERROR;						      \
     }									      \
@@ -407,16 +397,6 @@ _dxf_XColors(Field f, struct xfield *xf, enum xr required, enum xd xd)
 		xf->fcst = xf->bcst = 1;
 		xf->fcolors = xf->bcolors = (Pointer)&xf->fbuf;
 	    }
-	    else if (xd == XD_LOCAL)
-	    {
-	      xf->fcolors = DXGetArrayDataLocal(xf->fcolors_array);
-	      if (!xf->fcolors)
-		 return ERROR;
-	      xf->bcolors = (Pointer)
-		(((RGBColor *)(xf->fcolors)) + xf->ncolors);
-	      xf->fcolors_local = 1;
-	      xf->fcst = xf->bcst = 0;
-	    }
 	    else if (xd == XD_GLOBAL)
 	    {
 	      xf->fcolors = DXGetArrayData(xf->fcolors_array);
@@ -486,7 +466,7 @@ _dxf_XColors(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	    {
 		check(fcolors, "colors", TYPE_UBYTE, 1);
 		array(cmap_array, "color map", 1);
-		compare(cmap, "color map", 256, XD_LOCAL);
+		compare(cmap, "color map", 256, XD_GLOBAL);
 	    }
 	    else
 	    {
@@ -505,14 +485,6 @@ _dxf_XColors(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	    {
 		xf->fcst = 1;
 		xf->fcolors = (Pointer)&xf->fbuf;
-	    }
-	    else if (xd == XD_LOCAL)
-	    {
-	      xf->fcolors = DXGetArrayDataLocal(xf->fcolors_array);
-	      if (!xf->fcolors)
-		 return ERROR;
-	      xf->fcolors_local = 1;
-	      xf->fcst = 0;
 	    }
 	    else if (xd == XD_GLOBAL)
 	    {
@@ -539,7 +511,7 @@ _dxf_XColors(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	    {
 		check(fcolors, "colors", TYPE_UBYTE, 1);
 		array(cmap_array, "color map", 1);
-		compare(cmap, "color map", 256, XD_LOCAL);
+		compare(cmap, "color map", 256, XD_GLOBAL);
 	    }
 	    else
 	    {
@@ -563,14 +535,6 @@ _dxf_XColors(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	    {
 		xf->bcst = 1;
 		xf->bcolors = (Pointer)&xf->bbuf;
-	    }
-	    else if (xd == XD_LOCAL)
-	    {
-	      xf->bcolors = DXGetArrayDataLocal(xf->bcolors_array);
-	      if (!xf->bcolors)
-		 return ERROR;
-	      xf->bcolors_local = 1;
-	      xf->bcst = 0;
 	    }
 	    else if (xd == XD_GLOBAL)
 	    {
@@ -688,14 +652,6 @@ _dxf_XNormals(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	    xf->ncst = 1;
 	    xf->normals = (Pointer)&xf->nbuf;
 	}
-	else if (xd == XD_LOCAL)
-	{
-	  xf->normals = DXGetArrayDataLocal(xf->normals_array);
-	  if (!xf->normals)
-	     return ERROR;
-	  xf->normals_local = 1;
-	  xf->ncst = 0;
-	}
 	else if (xd == XD_GLOBAL)
 	{
 	  xf->normals = DXGetArrayData(xf->normals_array);
@@ -765,14 +721,6 @@ _dxf_XOpacities(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	    xf->ocst = 1;
 	    xf->opacities = (Pointer)&xf->obuf;
 	}
-	else if (xd == XD_LOCAL)
-	{
-	  xf->opacities = DXGetArrayDataLocal(xf->opacities_array);
-	  if (!xf->opacities)
-	     return ERROR;
-	  xf->opacities_local = 1;
-	  xf->ocst = 0;
-	}
 	else if (xd == XD_GLOBAL)
 	{
 	  xf->opacities = DXGetArrayData(xf->opacities_array);
@@ -807,7 +755,7 @@ _dxf_XOpacities(Field f, struct xfield *xf, enum xr required, enum xd xd)
 	array(omap_array, "opacity map", 0);
 	if (xf->omap_array)
 	{
-	    compare(omap, "opacity map", 256, XD_LOCAL);
+	    compare(omap, "opacity map", 256, XD_GLOBAL);
 	    xf->obyte = 0;
 	}
 	else
@@ -839,34 +787,9 @@ _dxf_XPolylines(Field f, struct xfield *xf, enum xr required, enum xd xd)
     return OK;
 }
 
-#if 0
-
-#define FREE(comp) \
-    if (xf->CAT(comp,_local)) \
-        DXFreeArrayDataLocal(xf->CAT(comp,_array), (Pointer)xf->comp); \
-    if (xf->CAT(comp,_array)) \
-        DXFreeExpandedArrayData(xf->CAT(comp,_array));
-#else
-
-#define FREE(comp) \
-    if (xf->CAT(comp,_local)) \
-        DXFreeArrayDataLocal(xf->CAT(comp,_array), (Pointer)xf->comp); 
-#endif
-
 Error
 _dxf_XFreeLocal(struct xfield *xf)
 {
-    FREE(box);
-    FREE(positions);
-    FREE(neighbors);
-    FREE(fcolors);
-    FREE(bcolors);
-    FREE(normals);
-    FREE(opacities);
-    FREE(polylines);
-    FREE(edges);
-    FREE(cmap);
-    FREE(omap);
     DXFreeInvalidComponentHandle(xf->iPts);
     DXFreeInvalidComponentHandle(xf->iElts);
     return OK;

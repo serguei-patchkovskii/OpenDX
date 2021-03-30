@@ -97,7 +97,7 @@ static Error Screen_Format (Screen screen, struct fmt_info *p);
 static 
 char *objid(struct fmt_info *p, Object o)
 {
-    int id, literal;
+    EDF_Id id, literal;
     static char fred[256];
 
     if (!_dxflook_objident(p->ht, o, &id, &literal))
@@ -148,10 +148,10 @@ Object DXExportDX(Object o, char *filename, char *format)
 	return NULL;
     }
 
-    fname = (char *)DXAllocateLocal(strlen(filename) + 20);
+    fname = (char *)DXAllocate(strlen(filename) + 20);
     if (!fname)
 	return NULL;
-    fname2 = (char *)DXAllocateLocal(strlen(filename) + 20);
+    fname2 = (char *)DXAllocate(strlen(filename) + 20);
     if (!fname2)
 	return NULL;
 
@@ -647,7 +647,8 @@ static char *nameattr(Object o)
 static Error _dxfObject_Format(Object o, struct fmt_info *p)
 {
     int rc = OK;
-    int id, literal;
+    EDF_Id literal;
+    EDF_Id id;
     char *name;
 
     if(!o) {
@@ -985,8 +986,8 @@ static Error Array_Format (Array array, struct fmt_info *p)
 	ptype(p->fp, type);
 
 	origin = delta = NULL;
-	origin = DXAllocateLocal(DXGetItemSize(array));
-	delta = DXAllocateLocal(DXGetItemSize(array));
+	origin = DXAllocate(DXGetItemSize(array));
+	delta = DXAllocate(DXGetItemSize(array));
 	if(!delta || !origin) {
 	    if(delta) DXFree(delta);
 	    if(origin) DXFree(origin);
@@ -1008,8 +1009,8 @@ static Error Array_Format (Array array, struct fmt_info *p)
       case CLASS_PRODUCTARRAY:
 	DXGetArrayInfo(array, &items, &type, &category, &rank, shape);
 	origin = delta = NULL;
-	origin = DXAllocateLocal(DXGetItemSize(array));
-	delta = DXAllocateLocal(DXGetItemSize(array) * shape[0]);
+	origin = DXAllocate(DXGetItemSize(array));
+	delta = DXAllocate(DXGetItemSize(array) * shape[0]);
 	if(!delta || !origin) {
 	    if(delta) DXFree(delta);
 	    if(origin) DXFree(origin);

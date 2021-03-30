@@ -410,13 +410,12 @@ _dxfField_Gather(Field f, struct gather *gather, struct tile *tile)
 	ich = xf->iElts;
 	/* XXX - local? */
 	xf->c.quads = (Quadrilateral *)
-	    DXGetArrayData/*Local*/(xf->connections_array);
+	    DXGetArrayData(xf->connections_array);
 	if (!xf->c.quads)
 	    return NULL;
 	for (i=0; i<xf->nconnections; i++)
 	    if (!ich || DXIsElementValid(ich, i))
 		QUAD(i, 0);
-	DXFreeArrayDataLocal(xf->connections_array, (Pointer)xf->c.quads);
     }
 
 	

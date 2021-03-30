@@ -1,0 +1,107 @@
+<html><head>
+<title>Open Visualization Data Explorer: Mutual Funds</title>
+</head>
+<body bgcolor="white">
+<p>
+
+<table border = 0>
+<tr bgcolor="white">
+<td>
+
+<applet
+	code="MutualFund.class" width = 300 height = 240
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="MutualFund">
+	<param name=NETNAME value="MutualFund.net">
+	<param name=DXUIVERS value="4.1.1">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+	<param name=EXECUTE_ON_CHANGE value="true">
+</applet>
+</td>
+<td>
+<h4>...about the visualization</h4>
+This application shows the performance of a variety
+of mutual funds using data obtained from the web.
+A total of 15 parameters are associated with each
+fund in the source data and one additional value,
+sd, or the standard deviation of the performance,
+is calculated within the visual program.
+
+<h4>...about the visual program</h4>
+The 3 spatial
+axes correspond to the 1, 3, and 5 year performance;
+two additional parameters can be assigned to the size
+and color of the spheres.  Furthermore, by clicking on
+a sphere with the mouse you can query any of the
+parameters assigned to that fund.
+
+<h4>...about the conversion to web page</h4>
+In the <i>Mode</i> menu, select <i>Pick</i>.  
+Then click the mouse on a sphere.  You'll see the <i>Execution</i>
+turn green as Data Explorer computes the result of your
+query.  
+</td>
+</tr>
+</table>
+
+
+<table border = 0>
+<tr bgcolor="white">
+<td>
+<applet
+	code="CaptionLabels.class" width = 425 height = 56
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="Caption">
+	<param name="DXLOutput0" value="PickStr">
+	<param name="DXLOutput1" value="SizeStr">
+	<param name="BACKGROUND" value="[1.0, 1.0, 1.0]">
+	<param name="FOREGROUND" value="[0.0, 0.0, 0.0]">
+</applet>
+</td>
+</tr>
+<tr>
+<td>
+
+<applet
+	code="imageWindow.class" width = 550 height = 455
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/MutualFund2.0.0.gif">
+	<param name=IMAGE_NODE value="Image_2">
+</applet>
+</td>
+<td>
+<applet
+	code="imageWindow.class" width = 154 height = 450
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/MutualFund3.0.0.gif">
+	<param name=IMAGE_NODE value="Image_3">
+</applet>
+</td>
+</tr>
+</table>
+<p>
+
+<hr> <b> &#91 
+<a href="Status.html" TARGET=_parent>Java Explorer</a> |
+<a href="http://www.ibm.com/" TARGET=_parent>IBM home page</a> |
+<a href="http://www.ibm.com/Orders/" TARGET=_parent>Order</a> |
+<a href="http://www.ibm.com/Search/" TARGET=_parent>Search</a> |
+<a href="http://www.ibm.com/Assist/" TARGET=_parent>Contact IBM</a> |
+<a href="http://www.ibm.com/Finding/" TARGET=_parent>Help</a> |
+<a href="http://www.ibm.com/copyright.html" TARGET=_parent>(C)</a> |
+<a href="http://www.ibm.com/trademarks.html" TARGET=_parent>(TM)</a> &#93 </b>
+
+</body>
+</html>

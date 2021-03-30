@@ -440,7 +440,7 @@ Error DXAddModule (char *name, ...)
     flags = va_arg (args,int);
 
     nin = va_arg (args,int);
-    inlist = DXAllocateLocalZero(nin * sizeof(char **));
+    inlist = DXAllocateZero(nin * sizeof(char **));
     if (!inlist)
 	return ERROR;
 
@@ -448,7 +448,7 @@ Error DXAddModule (char *name, ...)
 	inlist[i] = va_arg (args,char *);
 
     nout = va_arg (args,int);
-    outlist = DXAllocateLocalZero(nout * sizeof(char **));
+    outlist = DXAllocateZero(nout * sizeof(char **));
     if (!outlist)
 	return ERROR;
 
@@ -648,7 +648,7 @@ DXCallModule(char *name, int nin,  ModuleInput *in,
     int			retval = OK;
     int			errorexit;
 
-    if(exJID != 1)
+    if(DXProcessorId() != 1)
         return(CallModuleSetupTask(name, nin, in, nout, out));
 
     module = (node*)_dxf_ExMacroSearch(name);
@@ -675,9 +675,9 @@ DXCallModule(char *name, int nin,  ModuleInput *in,
 	return ERROR;
     }
 
-    inputs = (Object*)DXAllocateLocalZero(
+    inputs = (Object*)DXAllocateZero(
 	module->v.function.nin * sizeof (Object));
-    outputs = (Object*)DXAllocateLocalZero(
+    outputs = (Object*)DXAllocateZero(
 	module->v.function.nout * sizeof (Object));
 
     anyNamed = 0;

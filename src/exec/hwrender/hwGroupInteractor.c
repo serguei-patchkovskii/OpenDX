@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwGroupInteractor.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwGroupInteractor.c,v $
   Author: Mark Hood
 
   A Group interactor is an interactor that mutates itself into a copy of

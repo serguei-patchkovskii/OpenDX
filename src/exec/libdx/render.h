@@ -147,21 +147,6 @@ struct xfield {
     Array omap_array;
 
     /* flags to indicate whether data is local */
-    char box_local;
-    char positions_local;
-    char neighbors_local;
-    char opacities_local;
-    char fcolors_local;
-    char bcolors_local;
-    char normals_local;
-    char surface_local;
-    char inner_local;
-    char faces_local;
-    char polylines_local;
-    char loops_local;
-    char edges_local;
-    char cmap_local;
-    char omap_local;
     char volAlg;
 
     InvalidComponentHandle iElts, iPts;
@@ -228,8 +213,7 @@ enum xr {
 
 enum xd {
     XD_NONE,
-    XD_GLOBAL,
-    XD_LOCAL
+    XD_GLOBAL
 };
 
 typedef enum

@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/xgl/hwCacheUtilXGL.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwCacheUtilXGL.h,v $
   Author: Mark Hood
 
   Data structures and prototypes for caching Starbase primitives.

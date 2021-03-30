@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwCursorInteractor.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwCursorInteractor.c,v $
   Adapted for tdm from src/ui/uix/Picture*.* 10/29/91 by Mark Hood
 
   This file contains the GL implementation of the tdm cursor and roam
@@ -163,7 +163,7 @@ _dxfCreateCursorInteractor (tdmInteractorWin W, tdmCursorType C)
 	goto error ;
 
       /* allocate a buffer to store bounding box */
-      if(!(PDATA(basis) = (XmBasis *) tdmAllocateLocal (sizeof(XmBasis))))
+      if(!(PDATA(basis) = (XmBasis *) tdmAllocate (sizeof(XmBasis))))
 	goto error ;
 
       /* initialize cursor pixmaps */
@@ -1819,7 +1819,7 @@ create_cursor (tdmInteractor I)
    * Realloc the appropriate arrays
    */
 
-  itmp = (int *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(int));
+  itmp = (int *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(int));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       itmp[i] = PDATA(xbuff)[i];
@@ -1830,7 +1830,7 @@ create_cursor (tdmInteractor I)
     }
   PDATA(xbuff) = itmp;
 
-  itmp = (int *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(int));
+  itmp = (int *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(int));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       itmp[i] = PDATA(ybuff)[i];
@@ -1841,7 +1841,7 @@ create_cursor (tdmInteractor I)
     }
   PDATA(ybuff) = itmp;
 
-  dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(double));
+  dtmp = (double *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(double));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       dtmp[i] = PDATA(zbuff)[i];
@@ -1852,7 +1852,7 @@ create_cursor (tdmInteractor I)
     }
   PDATA(zbuff) = dtmp;
 
-  dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(double));
+  dtmp = (double *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(double));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       dtmp[i] = PDATA(cxbuff)[i];
@@ -1863,7 +1863,7 @@ create_cursor (tdmInteractor I)
     }
   PDATA(cxbuff) = dtmp;
 
-  dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(double));
+  dtmp = (double *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(double));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       dtmp[i] = PDATA(cybuff)[i];
@@ -1874,7 +1874,7 @@ create_cursor (tdmInteractor I)
     }
   PDATA(cybuff) = dtmp;
 
-  dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(double));
+  dtmp = (double *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(double));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       dtmp[i] = PDATA(czbuff)[i];
@@ -1885,7 +1885,7 @@ create_cursor (tdmInteractor I)
     }
   PDATA(czbuff) = dtmp;
 
-  itmp = (int *)tdmAllocateLocal((PDATA(n_cursors) + 1)*sizeof(int));
+  itmp = (int *)tdmAllocate((PDATA(n_cursors) + 1)*sizeof(int));
   for (i = 0; i < PDATA(n_cursors); i++)
     {
       itmp[i] = PDATA(selected)[i];
@@ -1930,7 +1930,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * xbuff
      */
-    itmp = (int *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(int));
+    itmp = (int *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(int));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{
@@ -1942,7 +1942,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * ybuff
      */
-    itmp = (int *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(int));
+    itmp = (int *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(int));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{
@@ -1954,7 +1954,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * zbuff
      */
-    dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(double));
+    dtmp = (double *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(double));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{
@@ -1966,7 +1966,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * cxbuff
      */
-    dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(double));
+    dtmp = (double *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(double));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{
@@ -1978,7 +1978,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * cybuff
      */
-    dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(double));
+    dtmp = (double *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(double));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{
@@ -1990,7 +1990,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * czbuff
      */
-    dtmp = (double *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(double));
+    dtmp = (double *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(double));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{
@@ -2002,7 +2002,7 @@ delete_cursor ( tdmInteractor I, int id )
     /*
      * selected
      */
-    itmp = (int *)tdmAllocateLocal((PDATA(n_cursors) - 1)*sizeof(int));
+    itmp = (int *)tdmAllocate((PDATA(n_cursors) - 1)*sizeof(int));
     k = 0;
     for (i = 0; i < PDATA(n_cursors); i++)
 	{

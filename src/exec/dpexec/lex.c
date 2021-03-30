@@ -233,7 +233,7 @@ static struct keytab packtab[] =
 
 Error _dxf_ExInitLex ()
 {
-    yyText = (char *) DXAllocateLocal (YYLMAX);
+    yyText = (char *) DXAllocate (YYLMAX);
     if (yyText == NULL)
 	return (ERROR);
     yysptr = yysbuf;
@@ -518,8 +518,10 @@ int yylex(YYSTYPE *lvalp)
                  * input. If the socket was changed to non-blocking it would
                  * return here. We want to continue and get another input.
                  */
+		/*
                 if(errno == EAGAIN)
                     break;
+	        */
                 MYreturn(T_EOF);
          
 	    case '|':

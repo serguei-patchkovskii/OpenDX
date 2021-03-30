@@ -91,7 +91,6 @@ Type FileSelectorNode::setOutputValue(
                                 Type t,
                                 boolean send)
 {
-//GDA
 #if 1
 	char *localValue = DuplicateString(value);
 	for (int i=0; i<strlen(localValue); i++) 

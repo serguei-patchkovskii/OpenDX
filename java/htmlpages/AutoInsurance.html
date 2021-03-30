@@ -1,0 +1,128 @@
+<html><head>
+<title>Open Visualization Data Explorer: Auto Insurance Claims</title>
+</head>
+<body bgcolor="white">
+
+<h2>Auto Insurance Claims</h2>
+<table border = 0>
+<tr bgcolor="white">
+<td>
+<applet
+	code="imageWindow.class" width = 820 height = 253
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/AutoInsurance1.0.0.gif">
+	<param name=IMAGE_NODE value="Image_1">
+</applet>
+</td>
+</tr>
+<tr>
+<td>
+<applet
+	code="CaptionLabels.class" width = 820 height = 25
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=DXLOutput0 value="DXLOutput_1">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+	<param name=FOREGROUND value="[0.0, 0.0, 0.0]">
+	<param name=FONT value="TimesRoman-italic-24">
+</applet>
+</td>
+</tr>
+</table>
+
+<br>
+<table border=0>
+<tr>
+<td>
+<applet
+	code="AutoInsurance.class" width = 380 height = 300
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="AutoInsurance">
+	<param name=NETNAME value="AutoInsurance.net">
+	<param name=DXUIVERS value="4.1.1">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+</applet>
+</td>
+<td>
+<applet
+	code="imageWindow.class" width = 432 height = 141
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/AutoInsurance2.0.0.gif">
+	<param name=IMAGE_NODE value="Image_2">
+</applet>
+
+
+<h3>...about the visualization</h3>
+This visual program shows car insurance claim information 
+projected onto a map using zip codes.  Height and color of 
+each glyph corresponds to statistics on three available claim 
+items: VehicleAge, Claim, and AnnualMileage.  The available 
+statistics are mean, standard deviation, max, and count 
+(the number of claims in the region).
+
+</td>
+</tr>
+</table>
+
+<h3>...about the visual program</h3>
+Also shown is a bounding box of all the zip codes, 
+which indicates claims in NY and CA - making it clear 
+that not all the claims come from addresses within Texas 
+(as might be assumed when mining the data).  This use of 
+data visualization to provide an interactive spatial view 
+of raw data with local aggregation is valuable both for 
+understanding the raw data prior to mining and for discovering 
+trends within the data itself.
+
+<h3>...about clustering</h3>
+The data may be shown by individual zip code or based on 
+the local aggregation of values.  This helps, for example, 
+in downtown regions where many zip codes are clustered 
+together.  AggregateSize specifies the bin size (in degrees) 
+of an imaginary grid overlaying the map, and data for all 
+zip codes in each bin will be gathered together before 
+calculating statistics.  If AggregateSize is 0, individual 
+zip codes will be used.
+<p>
+Another method for clustering is available using the K Means 
+algorithm, which uses spatial information to recognize a user 
+specified number of clusters.  This algorithm takes longer to 
+execute since it requires looping numerous times, but once the 
+clusters have been created the algorithm need not be re-run as 
+the user changes displayed statistics.  Note that the entire 
+algorithm is implemented as a macro in the visual program and 
+no C code was required.
+
+
+<h3>...about the web page</h3>
+In the <i>Execution</i> control panel, select <i>Pick</i> mode.
+Picking on a glyph will produce a caption showing its numeric 
+values, including the zip code, which may be the average zip 
+code in the bin if it encompasses more than one.
+
+<p>
+
+<hr> <b> &#91 
+<a href="Status.html" TARGET=_parent>Java Explorer</a> |
+<a href="http://www.ibm.com/" TARGET=_parent>IBM home page</a> |
+<a href="http://www.ibm.com/Orders/" TARGET=_parent>Order</a> |
+<a href="http://www.ibm.com/Search/" TARGET=_parent>Search</a> |
+<a href="http://www.ibm.com/Assist/" TARGET=_parent>Contact IBM</a> |
+<a href="http://www.ibm.com/Finding/" TARGET=_parent>Help</a> |
+<a href="http://www.ibm.com/copyright.html" TARGET=_parent>(C)</a> |
+<a href="http://www.ibm.com/trademarks.html" TARGET=_parent>(TM)</a> &#93 </b>
+
+</body>
+</html>
+

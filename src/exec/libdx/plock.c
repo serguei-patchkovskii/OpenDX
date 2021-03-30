@@ -1,3 +1,4 @@
+#if 0
 /***********************************************************************/
 /* Open Visualization Data Explorer                                    */
 /* (C) Copyright IBM Corp. 1989,1999                                   */
@@ -610,4 +611,5 @@ PLockStats()
     		locks->_totAllocated - locks->_totFreed);
 }
 
+#endif
 #endif

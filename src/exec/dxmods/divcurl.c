@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/divcurl.c,v 1.4 2000/08/24 20:04:28 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/divcurl.c,v 1.4 2000/08/24 20:04:28 davidt Exp $:
  */
 
 #include <dxconfig.h>

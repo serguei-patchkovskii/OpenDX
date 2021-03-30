@@ -12,7 +12,7 @@
 #ifndef hwPortSB_h
 #define hwPortSB_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwPortSB.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwPortSB.h,v $
   Author: Mark Hood
 
   Data structures used by starbase implementation of tdm renderer.

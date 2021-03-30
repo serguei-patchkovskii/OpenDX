@@ -4,7 +4,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/DXLAppThreadCommand.java,v 1.2 1999/07/09 19:30:00 daniel Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/DXLAppThreadCommand.java,v 1.2 1999/07/09 19:30:00 daniel Exp $
  */
 
 package dx.net;

@@ -6,6 +6,8 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 
+#define MAX_NUM 99999
+
 #include <dxconfig.h>
 #include "../base/defines.h"
 
@@ -79,43 +81,43 @@ extern void _XmBackgroundColorDefault();
 
 /* Declare defaults */
 #define DEF_MIN 1
-#define DEF_MAX 100
+#define DEF_MAX 9998
 #define DEF_STEP 1
 
 static XtResource resources[] =
 {
     {
-      XmNstart, XmCStart, XmRShort, sizeof(short),
+      XmNstart, XmCStart, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.start_value),
       XmRImmediate, (XtPointer) DEF_MIN
     },
     {
-      XmNnext, XmCNext, XmRShort, sizeof(short),
+      XmNnext, XmCNext, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.next_value),
       XmRImmediate, (XtPointer) DEF_MIN
     },
     {
-      XmNcurrent, XmCCurrent, XmRShort, sizeof(short),
+      XmNcurrent, XmCCurrent, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.current_value),
       XmRImmediate, (XtPointer) (DEF_MIN + 1)
     },
     {
-      XmNstop, XmCStop, XmRShort, sizeof(short),
+      XmNstop, XmCStop, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.stop_value),
       XmRImmediate, (XtPointer) DEF_MIN
     },
     {
-      XmNminimum, XmCMinimum, XmRShort, sizeof(short),
+      XmNminimum, XmCMinimum, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.min_value),
       XmRImmediate, (XtPointer) DEF_MIN
     },
     {
-      XmNincrement, XmCIncrement, XmRShort, sizeof(short),
+      XmNincrement, XmCIncrement, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.increment),
       XmRImmediate, (XtPointer) DEF_MIN
     },
     {
-      XmNmaximum, XmCMaximum, XmRShort, sizeof(short),
+      XmNmaximum, XmCMaximum, XmRInt, sizeof(int),
       XtOffset(XmFrameControlWidget, frame_control.max_value),
       XmRImmediate, (XtPointer) DEF_MIN
     },
@@ -317,25 +319,25 @@ Widget arrow;
     new->frame_control.inc_stepper = (XmStepperWidget)
     CreateFrameControlNumber(38, 75, 3, 1, 
                               new->frame_control.increment,
-			      16383, 
+			      MAX_NUM, 
                               "Increment",
 			      (Widget *)&new->frame_control.inc_label, 
                               new, FALSE, TRUE, 
                               TRUE, TRUE, FALSE, None);
 
     new->frame_control.min_number =
-    CreateFrameControlNumber(12, 75, 2, -16383, 
+    CreateFrameControlNumber(12, 75, 2, -MAX_NUM, 
                                new->frame_control.min_value, 
-                               16383, 
+                               MAX_NUM, 
                                "Min",
 			       (Widget *)&new->frame_control.min_label, 
                                new, FALSE, TRUE, 
                                FALSE, FALSE, FALSE, None);
 
     new->frame_control.max_number =
-    CreateFrameControlNumber(79, 75, 2, -16383, 
+    CreateFrameControlNumber(79, 75, 2, -MAX_NUM, 
                                 new->frame_control.max_value, 
-                                16383,
+                                MAX_NUM,
 			        "Max", 
                                 (Widget *)&new->frame_control.max_label, 
                                 new, FALSE, TRUE, 

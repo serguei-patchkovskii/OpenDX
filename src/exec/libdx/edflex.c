@@ -68,7 +68,7 @@ static void pushback(char c, FILE *fp, int *offset)
 Error _dxflexinput(struct finfo *fp)
 {
     char nextc, *cp;
-    int value;
+    EDF_Id value;
     int incomment = 0;
     struct tinfo *tp;
     struct pinfo *pp;
@@ -293,13 +293,13 @@ Error _dxflexinput(struct finfo *fp)
 	     */
 	    if (pp->nodict) {
 		tp->class = STRING;
-		tp->token.id = BADINDEX;
+		tp->token.id = 0;
 		pp->incount = cp - pp->inbuf;  /* plus or minus? */
 		return OK;
 	    }
 
 	    value = _dxfputdict(fp->d, pp->inbuf);
-	    if(value != BADINDEX) {
+	    if(value != 0) {
 		tp->class = STRING;
 		tp->token.id = value;
 		return OK;
@@ -565,14 +565,14 @@ Error _dxflexinput(struct finfo *fp)
  
 	    if (pp->nodict) {
 		tp->class = IDENTIFIER;
-		tp->token.id = BADINDEX;
+		tp->token.id = 0;
 		return OK;
 	    }
 
 	    /* a filename, perhaps. */
 	    /* string identifier - add it to the dictionary */
 	    value = _dxfputdict(fp->d, pp->inbuf);
-	    if (value != BADINDEX) {
+	    if (value != 0) {
 		tp->class = IDENTIFIER;
 		tp->token.id = value;
 		return OK;
@@ -598,7 +598,7 @@ Error _dxflexinput(struct finfo *fp)
  
 /* debug and errors
  */
-char *_dxfprtoken(struct tinfo *t, struct dict *d)
+char *_dxfprtoken(struct tinfo *t, EDF_Id d)
 {
     static char cbuf[512];
  
@@ -671,7 +671,7 @@ char *_dxfprtoken(struct tinfo *t, struct dict *d)
  */ 
 Error _dxfinitparse(struct finfo *f)
 {
-    f->p.inbuf = (char *)DXAllocateLocal(MAXBUF);
+    f->p.inbuf = (char *)DXAllocate(MAXBUF);
     if (!f->p.inbuf)
 	return ERROR;
 
@@ -824,7 +824,7 @@ static Error set_lines(struct finfo *f)
 /* return the info about the current token without reading ahead.
  *  sets class, subclass and id if the pointers are not null.
  */
-Error _dxfnexttoken(struct finfo *f, int *class, int *subclass, int *id)
+Error _dxfnexttoken(struct finfo *f, int *class, int *subclass, EDF_Id *id)
 {
 #if DEBUG_MSG
     if (DXQueryDebug("T"))
@@ -847,7 +847,7 @@ Error _dxfnexttoken(struct finfo *f, int *class, int *subclass, int *id)
 /* return OK if all the input parms specified match.
  *  does NOT read ahead.
  */
-Error _dxfisnexttoken(struct finfo *f, int *class, int *subclass, int *id)
+Error _dxfisnexttoken(struct finfo *f, int *class, int *subclass, EDF_Id *id)
 {
 #if DEBUG_MSG
     if (DXQueryDebug("T"))
@@ -872,7 +872,7 @@ Error _dxfisnexttoken(struct finfo *f, int *class, int *subclass, int *id)
  *  (in contrast to the next routine which should be used if any
  *  subclass is ok and you just need to know what it is)
  */
-Error _dxfmatchsaysub(struct finfo *f, int class, int subclass, int *id)
+Error _dxfmatchsaysub(struct finfo *f, int class, int subclass, EDF_Id *id)
 {
     Error rc = OK;
  
@@ -900,7 +900,7 @@ Error _dxfmatchsaysub(struct finfo *f, int class, int subclass, int *id)
  *  (in contrast to the previous routine which should be used if you
  *  only expect a specific subclass here).
  */
-Error _dxfmatchanysub(struct finfo *f, int class, int *subclass, int *id)
+Error _dxfmatchanysub(struct finfo *f, int class, int *subclass, EDF_Id *id)
 {
     Error rc = OK;
  
@@ -959,7 +959,7 @@ Error _dxfmatchnumber(struct finfo *f, int *subclass, Token *id)
 /* return ok if next thing matches both class and id match. 
  *  parse ahead unless noparse flag is set.
  */
-Error _dxfmatchid(struct finfo *f, int class, int id, int noparse)
+Error _dxfmatchid(struct finfo *f, int class, EDF_Id id, int noparse)
 {
     Error rc = OK;
  

@@ -12,7 +12,7 @@
 #ifndef	hwFlags_h
 #define	hwFlags_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwFlags.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwFlags.h,v $
   Author: Tim Murphy
 
   This file contains defintions for he hwFlags data type and manipulation

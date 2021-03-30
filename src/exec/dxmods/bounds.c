@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/bounds.c,v 1.3 1999/05/10 15:45:22 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/bounds.c,v 1.3 1999/05/10 15:45:22 gda Exp $
  */
 
 #include <dxconfig.h>

@@ -15,7 +15,7 @@
 #ifndef tdmPortOGL_h
 #define tdmPortOGL_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/opengl/hwPortOGL.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/opengl/hwPortOGL.h,v $
 
   Data structures used by OpenGL implementation of the DX hardware renderer.
 

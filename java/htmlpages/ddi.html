@@ -1,0 +1,131 @@
+<html><head>
+<title>Open Visualization Data Explorer</title>
+</head>
+<body bgcolor="white">
+<h3>...about the visualization</h3>
+Data describing a section of the atmosphere are imported.
+This particular section of the atmosphere shows a wide variation
+in moisture content, temperature, and wind velocity.  Choose
+a variable in the "Data Selection" page, and then vary the 
+isosurface value in order to see regions with common characteristics.
+<p>
+<table border = 1>
+<tr bgcolor="black" align="right">
+<td width=135 height=350>
+<applet
+	code="imageWindow.class" width = 135 height = 350
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/ddi7.0.0.gif">
+	<param name=IMAGE_NODE value="Image_7">
+</applet>
+
+</td>
+<td width=626 height=350>
+<applet
+	code="CaptionLabels.class" width = 626 height = 34
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=BACKGROUND value="[0.0, 0.0, 0.0]">
+	<param name=FOREGROUND value="[1.0, 1.0, 1.0]">
+	<param name=FONT value="Helvetica-bold-24">
+	<param name=DXLOutput0 value="DXLOutput_2">
+</applet>
+
+<applet
+	code="imageWindow.class" width = 626 height = 279
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/ddi5.0.0.gif">
+	<param name=IMAGE_NODE value="Image_5">
+</applet>
+
+</td>
+</tr>
+
+</table>
+<p>
+<table border=0>
+<tr>
+<td>
+<!-- The following applet describes ddi.net.  It produces a representation 
+     of the visual program's control panels and provides execution control.
+-->
+<applet
+	code="ddi.class" width = 300 height = 250
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="ddi">
+	<param name=NETNAME value="ddi.net">
+	<param name=DXUIVERS value="4.1.1">
+	<param name=SHADOWS value="true">
+	<param name=EXECUTE_ON_CHANGE value="true">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+	<param name="CACHING_FEATURES" value="true">
+</applet>
+</td>
+<td>
+<blockquote>
+
+<p>
+<h3>...about the visual program</h3>
+<small>
+This visual program demonstrates the use of data-driven scalar
+and integer interactors.  The integer interactor controls the
+slab position and is constrained by the size of the data sets.
+<p>
+The Scalar interactor which chooses the isosurface value is also 
+data-driven, so that it cannot exceed the range of the data values.
+</small>
+<h3>...about the conversion to web page</h3>
+<small>
+The original visual program rendered an object and used the Collect
+tool to combine that with a color bar and a caption.  The web version
+of the .net file, does not use Collect.  Instead each part of the 
+original image is separated into its own Image tool.  The resulting
+pictures are then assembled in an html table giving the web page
+author greater flexibilty in layouting out the document and increasing
+the proportion of meaningful gif byte transmitted with each new image.
+</small>
+</blockquote>
+</td>
+</table>
+<h3>...about <i>Enable Animation</i></h3>
+This web page passes the following parameter to the applet which
+controls the Data Explorer sesssion:
+<tt>
+<pre>
+    &lt param name="CACHING_FEATURES" value="true">
+</pre>
+</tt>
+The applet has the built-in ability to cache images inside the
+browser.  Normally this ability is used on behalf of <i>Orbit</i>
+mode and on behalf of operating Data Explorer's <i>Sequencer</i>.
+The html author can provide access to this caching function
+in his web page by setting CACHING_FEATURES.  Then the end-user
+can enable caching by clicking the <i>Enable Animation</i> toggle
+and specifing a cache size.  The applet will cache as many images
+as requested, allowing the user to play back a sequence by selecting
+<i>Review</i> in the Mode menu.
+<p>
+
+<hr> <b> &#91 
+<a href="Status.html" TARGET=_parent>Java Explorer</a> |
+<a href="http://www.ibm.com/" TARGET=_parent>IBM home page</a> |
+<a href="http://www.ibm.com/Orders/" TARGET=_parent>Order</a> |
+<a href="http://www.ibm.com/Search/" TARGET=_parent>Search</a> |
+<a href="http://www.ibm.com/Assist/" TARGET=_parent>Contact IBM</a> |
+<a href="http://www.ibm.com/Finding/" TARGET=_parent>Help</a> |
+<a href="http://www.ibm.com/copyright.html" TARGET=_parent>(C)</a> |
+<a href="http://www.ibm.com/trademarks.html" TARGET=_parent>(TM)</a> &#93 </b>
+
+</body>
+</html>

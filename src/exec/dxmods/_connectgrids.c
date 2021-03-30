@@ -157,7 +157,7 @@ typedef struct vector2D {
 
 #define CHECK_AND_ALLOCATE_MISSING(missing,size,type,type_enum,shape,ptr) \
 {                                                                      \
-       ptr = (type *)DXAllocateLocal(size);                            \
+       ptr = (type *)DXAllocate(size);                            \
        if (!ptr)                                                      \
           goto error;                                                  \
        if(missing){                                                    \
@@ -513,7 +513,7 @@ static Error ConnectNearest(Group ino, Field base, int numnearest,
     /* irregular positions */
     if (!(handle = DXCreateArrayHandle(positions_base)))
       goto error;
-    scratch = DXAllocateLocal(DXGetItemSize(positions_base));
+    scratch = DXAllocate(DXGetItemSize(positions_base));
     if (!scratch) goto error;
   }
   
@@ -757,11 +757,11 @@ static Error ConnectNearest(Group ino, Field base, int numnearest,
     
     /* need to allocate a buffer of length n to hold the nearest neighbors*/
     bufdata = 
-       (char *)DXAllocateLocal(numnearest*DXGetItemSize(newcomponent)*shape[0]);
+       (char *)DXAllocate(numnearest*DXGetItemSize(newcomponent)*shape[0]);
     if (!bufdata) goto error;
-    bufdistance = (float *)DXAllocateLocal(numnearest*sizeof(float));
+    bufdistance = (float *)DXAllocate(numnearest*sizeof(float));
     if (!bufdistance) goto error; 
-    data = (float *)DXAllocateLocalZero(sizeof(float)*shape[0]);
+    data = (float *)DXAllocateZero(sizeof(float)*shape[0]);
     if (!data) goto error;
     datastep = DXGetItemSize(newcomponent);
     
@@ -1128,7 +1128,7 @@ static Error ConnectNearest(Group ino, Field base, int numnearest,
     }
     else {
       /* need to allocate a buffer of length n to hold the nearest neighbors*/
-      bufdistance = (float *)DXAllocateLocal(numnearest*sizeof(float));
+      bufdistance = (float *)DXAllocate(numnearest*sizeof(float));
       if (!bufdistance) goto error;
       
       /* loop over all the grid points */
@@ -1377,10 +1377,10 @@ static Error ConnectRadiusIrregular(Field ino, Field base, float radius,
   pos_ino_ptr = (float *)DXGetArrayData(positions_ino);
   
   /* make a buffer to hold the distances and flags */
-  flagbuf = (ubyte *)DXAllocateLocalZero((numitemsbase*numitemsino*sizeof(ubyte)));
+  flagbuf = (ubyte *)DXAllocateZero((numitemsbase*numitemsino*sizeof(ubyte)));
   if (!flagbuf) goto error;
   distancebuf = 
-    (float *)DXAllocateLocalZero((numitemsbase*numitemsino*sizeof(float)));
+    (float *)DXAllocateZero((numitemsbase*numitemsino*sizeof(float)));
   if (!distancebuf) goto error;
   
   if (out_invalidhandle) {
@@ -1791,10 +1791,10 @@ static Error ConnectRadiusRegular(Field ino, Field base, float radius,
       goto error;
     }
     
-    weights_ptr = (float *)DXAllocateLocalZero(numitemsbase*sizeof(float));
+    weights_ptr = (float *)DXAllocateZero(numitemsbase*sizeof(float));
     /* I need a floating point buffer to hold the weighted sum data */
     data_ptr = 
-     (float *)DXAllocateLocalZero(numitemsbase*sizeof(float)*shape[0]);
+     (float *)DXAllocateZero(numitemsbase*sizeof(float)*shape[0]);
     if (!weights_ptr) goto error;
     if (!data_ptr) goto error;
   
@@ -1804,7 +1804,7 @@ static Error ConnectRadiusRegular(Field ino, Field base, float radius,
       goto error;
 
     /* allocate the exact hit buf */                   
-    exact_hit = (byte *)DXAllocateLocalZero(numitemsbase*sizeof(byte));
+    exact_hit = (byte *)DXAllocateZero(numitemsbase*sizeof(byte));
 
 
     switch (type) {
@@ -2462,7 +2462,7 @@ static Error FillDataArray(Type type, Array oldcomponent,
   ubyte  *d_in_ub=NULL, *d_ub=NULL, *missingval_ub=NULL;
 
 
-  buffer = (float *)DXAllocateLocal(shape*sizeof(float));
+  buffer = (float *)DXAllocate(shape*sizeof(float));
   if (!buffer) goto error;
 
   /* check that the missing component, if present, matches the component
@@ -3293,7 +3293,7 @@ static Error ConnectScatter(Field ino, Field base, Array missing)
 
 
     /*Need to allocate count and compute inverse of grid matrix*/
-    count = (int *) DXAllocateLocalZero(sizeof(int)*nitemsbase);
+    count = (int *) DXAllocateZero(sizeof(int)*nitemsbase);
     if (! count)
       goto error;
     if(shape_base[0]==3){

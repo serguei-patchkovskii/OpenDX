@@ -76,10 +76,10 @@ static Pixmap CreateArrowPixmap( XmSlideBarWidget w, GC gc,
 				 short width, short height );
 static void FillArrowPixmap( XmSlideBarWidget w, struct ArrowRec* arrow,
                              GC cenGC, Boolean in, Pixmap pixmap );
-static void ChangeSlideBarStart( XmSlideBarWidget w, short detent );
-static void ChangeSlideBarStop( XmSlideBarWidget w, short detent );
-static void ChangeSlideBarNext( XmSlideBarWidget w, short detent );
-static void ChangeSlideBarCurrent( XmSlideBarWidget w, short detent );
+static void ChangeSlideBarStart( XmSlideBarWidget w, int detent );
+static void ChangeSlideBarStop( XmSlideBarWidget w, int detent );
+static void ChangeSlideBarNext( XmSlideBarWidget w, int detent );
+static void ChangeSlideBarCurrent( XmSlideBarWidget w, int detent );
 static void GetArrowDrawRects( int  shadow_thickness,
 			       int  core_width,
 			       int  core_height,
@@ -119,32 +119,38 @@ static XtResource resources[] =
       XmRCallProc, (XtPointer) _XmForegroundColorDefault
     },
     {
-      XmNstart, XmCStart, XmRShort, sizeof(short),
+      // GDAXmNstart, XmCStart, XmRShort, sizeof(short),
+      XmNstart, XmCStart, XmRInt, sizeof(int),
       XtOffset(XmSlideBarWidget, slide_bar.start_mark.detent),
       XmRImmediate, (XtPointer) 0
     },
     {
-      XmNstop, XmCStop, XmRShort, sizeof(short),
+      // GDAXmNstop, XmCStop, XmRShort, sizeof(short),
+      XmNstop, XmCStop, XmRInt, sizeof(int),
       XtOffset(XmSlideBarWidget, slide_bar.stop_mark.detent),
       XmRImmediate, (XtPointer) 10
     },
     {
-      XmNnext, XmCNext, XmRShort, sizeof(short),
+      // GDAXmNnext, XmCNext, XmRShort, sizeof(short),
+      XmNnext, XmCNext, XmRInt, sizeof(int),
       XtOffset(XmSlideBarWidget, slide_bar.next_mark.detent),
       XmRImmediate, (XtPointer) 5
     },
     {
-      XmNcurrent, XmCCurrent, XmRShort, sizeof(short),
+      // GDAXmNcurrent, XmCCurrent, XmRShort, sizeof(short),
+      XmNcurrent, XmCCurrent, XmRInt, sizeof(int),
       XtOffset(XmSlideBarWidget, slide_bar.current_mark.detent),
       XmRImmediate, (XtPointer) 5
     },
     {
-      XmNminValue, XmCMinValue, XmRShort, sizeof(short),
+      // GDAXmNminValue, XmCMinValue, XmRShort, sizeof(short),
+      XmNminValue, XmCMinValue, XmRInt, sizeof(int),
       XtOffset(XmSlideBarWidget, slide_bar.min_detent),
       XmRImmediate, (XtPointer) 0
     },
     {
-      XmNmaxValue, XmCMaxValue, XmRShort, sizeof(short),
+      // GDAXmNmaxValue, XmCMaxValue, XmRShort, sizeof(short),
+      XmNmaxValue, XmCMaxValue, XmRInt, sizeof(int),
       XtOffset(XmSlideBarWidget, slide_bar.max_detent),
       XmRImmediate, (XtPointer) 10
     },
@@ -1499,7 +1505,7 @@ int min;
 /*  Subroutine:	ChangeSlideBarStart
  *  Purpose:	Convenience routine to reposition the start marker
  */
-static void ChangeSlideBarStart( XmSlideBarWidget w, short detent )
+static void ChangeSlideBarStart( XmSlideBarWidget w, int detent )
 {
     short x;
 
@@ -1535,7 +1541,7 @@ static void ChangeSlideBarStart( XmSlideBarWidget w, short detent )
 /*  Subroutine:	ChangeSlideBarStop
  *  Purpose:	Convenience routine to reposition the stop marker
  */
-static void ChangeSlideBarStop( XmSlideBarWidget w, short detent )
+static void ChangeSlideBarStop( XmSlideBarWidget w, int detent )
 {
     short x;
 
@@ -1570,7 +1576,7 @@ static void ChangeSlideBarStop( XmSlideBarWidget w, short detent )
 /*  Subroutine:	ChangeSlideBarNext
  *  Purpose:	Convenience routine to reposition the next marker
  */
-static void ChangeSlideBarNext( XmSlideBarWidget w, short detent )
+static void ChangeSlideBarNext( XmSlideBarWidget w, int detent )
 {
     short x;
 
@@ -1606,7 +1612,7 @@ static void ChangeSlideBarNext( XmSlideBarWidget w, short detent )
 /*  Subroutine:	ChangeSlideBarCurrent
  *  Purpose:	Convenience routine to reposition the next marker
  */
-static void ChangeSlideBarCurrent( XmSlideBarWidget w, short detent )
+static void ChangeSlideBarCurrent( XmSlideBarWidget w, int detent )
 {
     short x;
 

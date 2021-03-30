@@ -108,7 +108,7 @@ m_Import(Object *in, Object *out)
 	 */
 	firstword = format;
 	if ((cp = strchr(format, ' ')) != NULL) {
-	    firstword = (char *)DXAllocateLocal(cp-format+1);
+	    firstword = (char *)DXAllocate(cp-format+1);
 	    if (!firstword)
 		return ERROR;
 	    strncpy(firstword, format, cp-format);
@@ -425,7 +425,7 @@ Object _dxfget_ncdf(struct parmlist *p)
 	goto done;
 
     firstrc = DXGetError();
-    firsterr = (char *)DXAllocateLocal(strlen(DXGetErrorMessage()) + 1);
+    firsterr = (char *)DXAllocate(strlen(DXGetErrorMessage()) + 1);
     if (!firsterr)
 	goto cleanup;
 
@@ -748,7 +748,7 @@ _dxftry_dxfile(char *inname)
 #define XTRA 8   /* space for the null, the / and .dx - plus some extra */
     
     datadir = (char *)getenv("DXDATA");
-    tryname = (char *)DXAllocateLocalZero((datadir ? strlen(datadir) : 0)
+    tryname = (char *)DXAllocateZero((datadir ? strlen(datadir) : 0)
 					  + strlen(inname) + XTRA);
     if (!tryname)
 	return IMPORT_STAT_ERROR;

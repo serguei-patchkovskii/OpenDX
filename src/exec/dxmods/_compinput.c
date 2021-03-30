@@ -168,32 +168,32 @@ ComparePositions(Array master, Array checked)
 	    break;
 	}
 
-	if ((masterCounts = (int *) DXAllocateLocal (masterN * sizeof (int))) == 
+	if ((masterCounts = (int *) DXAllocate (masterN * sizeof (int))) == 
 		NULL) {
 	    status = ERROR;
 	    break;
 	}
-	if ((checkedCounts = (int *) DXAllocateLocal (masterN * sizeof (int))) == 
+	if ((checkedCounts = (int *) DXAllocate (masterN * sizeof (int))) == 
 		NULL) {
 	    status = ERROR;
 	    break;
 	}
-	if ((masterOrigin = (float *) DXAllocateLocal (masterN * sizeof (float))) == 
+	if ((masterOrigin = (float *) DXAllocate (masterN * sizeof (float))) == 
 		NULL) {
 	    status = ERROR;
 	    break;
 	}
-	if ((checkedOrigin = (float *) DXAllocateLocal (masterN * sizeof (float))) == 
+	if ((checkedOrigin = (float *) DXAllocate (masterN * sizeof (float))) == 
 		NULL) {
 	    status = ERROR;
 	    break;
 	}
-	if ((masterDeltas = (float *) DXAllocateLocal (masterN * masterN * sizeof (float))) == 
+	if ((masterDeltas = (float *) DXAllocate (masterN * masterN * sizeof (float))) == 
 		NULL) {
 	    status = ERROR;
 	    break;
 	}
-	if ((checkedDeltas = (float *) DXAllocateLocal (masterN * masterN * sizeof (float))) == 
+	if ((checkedDeltas = (float *) DXAllocate (masterN * masterN * sizeof (float))) == 
 		NULL) {
 	    status = ERROR;
 	    break;

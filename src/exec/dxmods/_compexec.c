@@ -113,7 +113,7 @@ Execute (Pointer ptr)
 	    }
 	    if (result)
 		DXFree(result);
-	    result = DXAllocateLocalZero (
+	    result = DXAllocateZero (
 		this->metaType.items * 
 		DXTypeSize (this->metaType.type) *
 		DXCategorySize (this->metaType.category) *

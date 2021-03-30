@@ -284,20 +284,10 @@ _dxfInitialize(CubesIIInterpolator ci)
      */
     ci->nElements = DXGetItemSize(ci->dataArray) / DXTypeSize(dataType);
 
-    if (ci->fieldInterpolator.localized)
-    {
-	if (ci->nbrsArray)
-	    ci->nbrs = (int   *)DXGetArrayDataLocal(ci->nbrsArray);
-	else
-	    ci->nbrs = NULL;
-    }
+    if (ci->nbrsArray)
+	ci->nbrs = (int   *)DXGetArrayData(ci->nbrsArray);
     else
-    {
-	if (ci->nbrsArray)
-	    ci->nbrs = (int   *)DXGetArrayData(ci->nbrsArray);
-	else
-	    ci->nbrs = NULL;
-    }
+	ci->nbrs = NULL;
 
     if (DXGetError())
 	return ERROR;
@@ -631,12 +621,6 @@ _dxfCubesIIInterpolator_PrimitiveInterpolate(CubesIIInterpolator ci,
 static void
 _dxfCleanup(CubesIIInterpolator ci)
 {
-    if (ci->fieldInterpolator.localized)
-    {
-	if (ci->nbrs)
-	    DXFreeArrayDataLocal(ci->nbrsArray, (Pointer)ci->nbrs);
-    }
-
     if (ci->dHandle)
     {
 	DXFreeArrayHandle(ci->dHandle);
@@ -705,16 +689,8 @@ _dxf_CopyCubesIIInterpolator(CubesIIInterpolator new,
 	if (! new->cHandle || ! new->pHandle || ! new->dHandle)
 	    return NULL;
 
-	if (new->fieldInterpolator.localized)
-	{
-	    if (old->nbrsArray)
-		new->nbrs    = (int *)DXGetArrayDataLocal(new->nbrsArray);
-	}
-	else
-	{
-	    if (old->nbrsArray)
-		new->nbrs    = (int   *)DXGetArrayData(new->nbrsArray);
-	}
+	if (old->nbrsArray)
+	    new->nbrs    = (int *)DXGetArrayData(new->nbrsArray);
 
 	if (old->gridFlag)
 	{
@@ -762,23 +738,6 @@ _dxf_CopyCubesIIInterpolator(CubesIIInterpolator new,
 	return NULL;
 
     return new;
-}
-
-Interpolator
-_dxfCubesIIInterpolator_LocalizeInterpolator(CubesIIInterpolator ci)
-{
-    ci->fieldInterpolator.localized = 1;
-
-    if (ci->fieldInterpolator.initialized)
-    {
-	if (ci->nbrs)
-	    ci->nbrs = (int *)DXGetArrayDataLocal(ci->nbrsArray);
-    }
-
-    if (DXGetError())
-        return NULL;
-    else
-        return (Interpolator)ci;
 }
 
 #define TET0	0x01

@@ -113,36 +113,6 @@ Returns the size in bytes of each individual item of {\tt a}, or returns
 0 to indicate an error.
 **/
 
-Pointer DXGetArrayDataLocal(Array a);
-/**
-\index{DXGetArrayDataLocal}
-Returns a pointer to a C array of items constituting a local copy of
-the data stored in {\tt a}, and records in {\tt a} the fact that a
-local copy of {\tt a} exists on the processor on which the call is
-made.  The returned array contains {\tt n} entries numbered from {\tt
-0} to {\tt n-1}, where {\tt n} is the number of items in {\tt a}.  The
-values of items in the array that have not been set by {\tt
-DXAddArrayData()} are undefined.  You must release the local storage for
-the data when you no longer need it by calling {\tt
-DXFreeArrayDataLocal()}.  On uniprocessor architectures, this routine
-just returns a pointer to the array data.  In either case, the data
-must not be modified directly.  Returns a pointer to the data, or
-returns null and sets the error code to indicate an error.
-**/
-
-Array DXFreeArrayDataLocal(Array a, Pointer data);
-/**
-\index{DXFreeArrayDataLocal}
-Indicates that a reference to the local copy {\tt data} of the data for
-array {\tt a} no longer exists.  If {\tt data} is actually a pointer
-to the global data, this call is ignored, so that it is always safe to
-call this routine on the result of {\tt DXGetArrayDataLocal()}, whether
-or not {\tt data} really is a local pointer.  When the last local
-reference on a given processor is released, the local storage for the
-array data will be freed.  Returns {\tt a}, or returns null and sets
-the error code to indicate an error.
-**/
-
 /*
 \paragraph{Irregular arrays.}
 Irregular arrays are used to store data that exhibit no particular

@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/distp.h,v 1.8 2005/12/30 19:38:43 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/distp.h,v 1.8 2005/12/30 19:38:43 davidt Exp $
  */
 
 #if defined(__cplusplus) || defined(c_plusplus)
@@ -118,7 +118,7 @@ typedef struct dpgraphstat
 typedef struct gvarpkg 
 {
     _gvtype             type;
-    uint32              reccrc;         /* cache tag            */
+    EXCRC               reccrc;         /* cache tag            */
     double              cost;
     int                 skip;           /* error or route shutoff */
     int                 disable_cache;  /* disable output cacheing */
@@ -207,7 +207,7 @@ typedef struct UIPackage
 typedef struct CacheTagList
 {
     int numtags;
-    uint32 ct[N_CACHETAGLIST_ITEMS];
+    EXCRC  ct[N_CACHETAGLIST_ITEMS];
 } CacheTagList;
 
 /* from distpacket.c */

@@ -626,20 +626,3 @@ _dxf_CopyQuadsRR2DInterpolator(QuadsRR2DInterpolator new,
 
     return new;
 }
-
-Interpolator
-_dxfQuadsRR2DInterpolator_LocalizeInterpolator(QuadsRR2DInterpolator qi)
-{
-    if (qi->fieldInterpolator.localized)
-	return (Interpolator)qi;
-
-    qi->fieldInterpolator.localized = 1;
-
-    if (qi->fieldInterpolator.initialized)
-	qi->dHandle = DXCreateArrayHandle(qi->dataArray);
-
-    if (DXGetError())
-        return NULL;
-    else
-        return (Interpolator)qi;
-}

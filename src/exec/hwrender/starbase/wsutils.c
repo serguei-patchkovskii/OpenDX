@@ -23,7 +23,7 @@
  *
  ******************************************************************************/
 /*
- $Header: /src/master/dx/src/exec/hwrender/starbase/wsutils.c,v 1.3 1999/05/10 15:45:39 gda Exp $
+ $Header: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/wsutils.c,v 1.3 1999/05/10 15:45:39 gda Exp $
 */
 
 #include <X11/X.h>

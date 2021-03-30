@@ -197,7 +197,7 @@ DXCreateTaskGroup()
 	/* allocate initial local task structure */
 	lti.alloc = 1000;
 	lti.tasks = (struct task *)
-	    DXAllocateLocal(lti.alloc * sizeof(struct task));
+	    DXAllocate(lti.alloc * sizeof(struct task));
 
         /*  One-time initialization  */
         ti->tasks = NULL;

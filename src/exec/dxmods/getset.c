@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/getset.c,v 1.7 2000/08/24 20:04:32 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/getset.c,v 1.7 2000/08/24 20:04:32 davidt Exp $
  */
 
 #include <string.h>

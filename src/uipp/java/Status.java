@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 /*
- * $Header: /src/master/dx/src/uipp/java/Status.java,v 1.3 2006/05/16 16:04:02 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/Status.java,v 1.3 2006/05/16 16:04:02 davidt Exp $
  */
 import java.applet.*;
 import java.lang.*;

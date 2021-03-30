@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwZoomInteractor.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwZoomInteractor.c,v $
   Author: Mark Hood
     
   This file contains the implementation of the tdm Zoom interactor.

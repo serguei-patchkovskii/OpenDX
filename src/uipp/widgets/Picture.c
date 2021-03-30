@@ -749,8 +749,9 @@ XmStringCharSet charset;
     values.background = new->picture.black;
     values.line_style = LineDoubleDash;
     new->picture.gc_dash = XtGetGC((Widget)new, valuemask, &values);
-    dash_list[0] = 2; dash_list[1] = 3;
-    XSetDashes(XtDisplay(new), new->picture.gc_dash, 0, dash_list, 2);
+    //
+    // dash_list[0] = 2; dash_list[1] = 3;
+    // XSetDashes(XtDisplay(new), new->picture.gc_dash, 0, dash_list, 2);
 
 
     new->picture.ActiveSquareCursor[0] = None;

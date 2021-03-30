@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_partnbrs.c,v 1.5 2000/08/24 20:04:16 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_partnbrs.c,v 1.5 2000/08/24 20:04:16 davidt Exp $
  */
 
 #include <string.h>

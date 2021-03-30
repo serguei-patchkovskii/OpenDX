@@ -13,7 +13,7 @@
 #define tdmXfield_h
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwXfield.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwXfield.h,v $
   Author: Tim Murphy
 
   This file contains definitions for the 'xfield' structure. This structure
@@ -46,8 +46,7 @@ enum xr {
 
 enum xd {
     XD_NONE,
-    XD_GLOBAL,
-    XD_LOCAL
+    XD_GLOBAL
 };
 
 typedef enum {

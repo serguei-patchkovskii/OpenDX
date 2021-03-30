@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/BinaryInstance.java,v 1.1.1.1 1999/03/24 15:17:32 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/BinaryInstance.java,v 1.1.1.1 1999/03/24 15:17:32 gda Exp $
  */
 package dx.runtime;
 import java.awt.*;

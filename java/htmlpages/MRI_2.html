@@ -1,0 +1,78 @@
+<html><head>
+<title>Open Visualization Data Explorer: MRI</title>
+</head>
+<body bgcolor="white">
+<p>
+
+<table border = 0>
+<tr>
+<td>
+<applet
+	code="imageWindow.class" width = 452 height = 389
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="htmlpages/MRI_21.0.0.gif">
+	<param name=IMAGE_NODE value="Image_1">
+</applet>
+</td>
+<td>
+<table border = 0>
+<tr>
+<td>
+<h3>...about the visualization</h3>
+This visualization shows a sequence of slices 
+of mri data. The data consist of 16 slices, each 128x128. 
+
+<h3>...about the visual program</h3>
+An isosurface is displayed with a slice of the data. 
+To move the slice, use the sequencer. You can also 
+change the isosurface value using the interactor in 
+the control panel.
+</td>
+</tr>
+<tr>
+<td>
+
+<applet
+	code="MRI_2.class" width = 280 height = 250
+	codebase=../
+	archive=htmlpages/dx.jar,htmlpages/samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="MRI_2">
+	<param name=NETNAME value="MRI_2.net">
+	<param name=DXUIVERS value="4.1.1">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+</applet>
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+<h3>...about the conversion to web page</h3>
+In the <i>Mode</i> menu, select <i>Sequence</i>.  You'll see
+the frames appear slowly as Data Explorer computes each one.
+When the <i>Execution</i> indicator turns black, Data Explorer
+has finished executing and the animation begins.  Terminate it
+at any time by changing the Mode selector.  You can also change
+the behavior of the animation by selecting <i>Faster</i>,
+<i>Slower</i>, <i>Loop</i>, or <i>Palindrome</i>.
+
+<p>
+
+<hr> <b> &#91 
+<a href="Status.html" TARGET=_parent>Java Explorer</a> |
+<a href="http://www.ibm.com/" TARGET=_parent>IBM home page</a> |
+<a href="http://www.ibm.com/Orders/" TARGET=_parent>Order</a> |
+<a href="http://www.ibm.com/Search/" TARGET=_parent>Search</a> |
+<a href="http://www.ibm.com/Assist/" TARGET=_parent>Contact IBM</a> |
+<a href="http://www.ibm.com/Finding/" TARGET=_parent>Help</a> |
+<a href="http://www.ibm.com/copyright.html" TARGET=_parent>(C)</a> |
+<a href="http://www.ibm.com/trademarks.html" TARGET=_parent>(TM)</a> &#93 </b>
+
+</body>
+</html>

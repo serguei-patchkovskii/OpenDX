@@ -34,6 +34,13 @@ m_Export(Object *in, Object *out)
     char *filename, *format = NULL, *cp;
     int dt = DT_UNKNOWN;
     int req_dt = DT_UNKNOWN;
+
+    {
+        static int knt = -1;
+	knt ++;
+	if (DXGetObjectClass(in[0]) != CLASS_FIELD)
+	    fprintf(stderr, "EXPORT input ERROR seq %d\n", knt);
+    }
     
 
     /* if no object, return */

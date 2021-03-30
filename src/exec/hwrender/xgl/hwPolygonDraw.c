@@ -13,7 +13,7 @@
 
 
 /*
- * $Source: /src/master/dx/src/exec/hwrender/xgl/hwPolygonDraw.c,v $
+ * $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwPolygonDraw.c,v $
  *
  * This file contains all the XGL polygon drawing routines.
  *

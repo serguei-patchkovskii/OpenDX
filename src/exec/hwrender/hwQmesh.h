@@ -13,7 +13,7 @@
 #define tdmQmesh_h
 /*
  *
- * $Header: /src/master/dx/src/exec/hwrender/hwQmesh.h,v 1.3 1999/05/10 15:45:35 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/hwrender/hwQmesh.h,v 1.3 1999/05/10 15:45:35 gda Exp $
  */
 
 

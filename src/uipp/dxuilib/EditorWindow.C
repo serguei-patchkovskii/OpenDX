@@ -1272,6 +1272,7 @@ void EditorWindow::handleNodeStatusChange(Node *n, NodeStatusChange status)
     }
     
 }
+
 Widget EditorWindow::createWorkArea(Widget parent)
 {
     Widget    form;
@@ -1331,9 +1332,6 @@ Widget EditorWindow::createWorkArea(Widget parent)
     NULL);
 #endif
 
-    //
-    // Create the scrolled window.
-    //
     this->scrolledWindow =
 	XtVaCreateManagedWidget
 	    ("scrolledWindow",
@@ -1364,6 +1362,8 @@ Widget EditorWindow::createWorkArea(Widget parent)
 				this, this->pageSelector);
     this->workSpace->initializeRootWidget();
     this->workSpace->manage();
+
+
     this->pageSelector->setRootPage((VPERoot*)this->workSpace);
 
     XtVaSetValues(this->scrolledWindow, XmNworkWindow, 
@@ -1422,7 +1422,6 @@ Widget EditorWindow::createWorkArea(Widget parent)
     //
     return outer_form;
 }
-
 
 void EditorWindow::createFileMenu(Widget parent)
 {

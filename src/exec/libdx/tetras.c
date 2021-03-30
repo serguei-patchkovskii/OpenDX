@@ -262,21 +262,9 @@ _dxf_CopyTetrasInterpolator(TetrasInterpolator new,
 	if (! new->data)
 	    return NULL;
 
-	if (new->fieldInterpolator.localized)
-	{
-	    new->tetras    =
-		    (Tetrahedron *)DXGetArrayDataLocal(new->tetrasArray);
-	    new->neighbors =
-		    (TetNeighbors *)DXGetArrayDataLocal(new->neighborsArray);
-	    new->mm        =(Point *)DXGetArrayDataLocal(new->mmArray);
-	}
-	else
-	{
-	    new->tetras    =(Tetrahedron *)DXGetArrayData(new->tetrasArray);
-	    new->neighbors =
-			(TetNeighbors *)DXGetArrayData(new->neighborsArray);
-	    new->mm        =(Point *)DXGetArrayData(new->mmArray);
-	}
+	new->tetras    = (Tetrahedron *)DXGetArrayData(new->tetrasArray);
+	new->neighbors = (TetNeighbors *)DXGetArrayData(new->neighborsArray);
+	new->mm        =(Point *)DXGetArrayData(new->mmArray);
 
 	if (old->gridFlag)
 	{
@@ -390,15 +378,8 @@ _dxfInitialize(TetrasInterpolator ti)
 
     DXReference((Object)ti->neighborsArray);
 
-    if (ti->fieldInterpolator.localized)
-	ti->neighbors = (TetNeighbors *)DXGetArrayDataLocal(ti->neighborsArray);
-    else
-	ti->neighbors = (TetNeighbors *)DXGetArrayData(ti->neighborsArray);
-
-    if (ti->fieldInterpolator.localized)
-	ti->tetras = (Tetrahedron *)DXGetArrayDataLocal(ti->tetrasArray);
-    else
-	ti->tetras = (Tetrahedron *)DXGetArrayData(ti->tetrasArray);
+    ti->neighbors = (TetNeighbors *)DXGetArrayData(ti->neighborsArray);
+    ti->tetras = (Tetrahedron *)DXGetArrayData(ti->tetrasArray);
 
     ti->mmArray = DXNewArray(TYPE_FLOAT, CATEGORY_REAL, 1, 3);
     if (! ti->mmArray)
@@ -824,22 +805,6 @@ _dxfCleanup(TetrasInterpolator ti)
      * Note: only free up the array data if its allocated
      * in local memory
      */
-
-    if (((FieldInterpolator)ti)->localized)
-    {
-	if (ti->tetras)
-	{
-	    DXFreeArrayDataLocal(ti->tetrasArray, (Pointer)ti->tetras);
-	    ti->tetras = NULL;
-	}
-
-	if (ti->neighbors)
-	{
-	    DXFreeArrayDataLocal(ti->neighborsArray, (Pointer)ti->neighbors);
-	    ti->neighbors = NULL;
-	}
-    }
-
     if (ti->points)
     {
 	DXFreeArrayHandle(ti->points);
@@ -1189,25 +1154,4 @@ _dxfTetraSearch(TetraArgs *args, int index)
     }
 
     return -1;
-}
-
-Interpolator
-_dxfTetrasInterpolator_LocalizeInterpolator(TetrasInterpolator ti)
-{
-    if (ti->fieldInterpolator.localized)
-	return (Interpolator)ti;
-
-    ti->fieldInterpolator.localized = 1;
-
-    if (ti->fieldInterpolator.initialized)
-    {
-	ti->data      = DXGetArrayDataLocal(ti->dataArray);
-	ti->tetras    = (Tetrahedron *)DXGetArrayDataLocal(ti->tetrasArray);
-	ti->neighbors = (TetNeighbors *)DXGetArrayDataLocal(ti->neighborsArray);
-    }
-
-    if (DXGetError())
-	return NULL;
-    else
-	return (Interpolator)ti;
 }

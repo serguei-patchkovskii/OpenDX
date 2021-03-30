@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.57)
 dnl Start of configuration ----
-AC_INIT([dx],[4.4.4])
+AC_INIT([dx],[4.4.5])
 
 dnl Process this file with autoconf to produce a configure script.
 AC_CONFIG_SRCDIR([include/dx/arch.h])
@@ -11,13 +11,16 @@ AM_INIT_AUTOMAKE
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 
-VERSION_STRING="04.4.4000"
+AC_CONFIG_MACRO_DIR([m4])
+ACLOCAL_AMFLAGS="-I m4"
+
+VERSION_STRING="04.4.5000"
 MAJOR_VERSION=4
 MINOR_VERSION=4
-MICRO_VERSION=4
-AC_DEFINE(DXD_VERSION_STRING, "04.4.4000", [Version String Number])
+MICRO_VERSION=5
+AC_DEFINE(DXD_VERSION_STRING, "04.4.5000", [Version String Number])
 AC_DEFINE(DXD_COPYRIGHT_STRING,
-  ["Open Visualization Data Explorer\nMore Info at www.research.ibm.com/dx\nand www.opendx.org\nVersion - 4.4.4"], 
+  ["Open Visualization Data Explorer\nMore Info at www.research.ibm.com/dx\nand www.opendx.org\nVersion - 4.4.5"], 
   [Copyright string placed on splash screen startup.])
 AC_DEFINE_UNQUOTED(DXD_VERSION, $MAJOR_VERSION, [Version Number])
 AC_DEFINE_UNQUOTED(DXD_RELEASE, $MINOR_VERSION, [Release Number])
@@ -219,8 +222,8 @@ dnl End of command line options configuration
 
 dnl Start DX configuration
 AC_LANG([C++])
-AC_CHECK_HEADERS(stdlib.h)
 AC_LANG([C])
+AC_CHECK_HEADERS(stdlib.h)
 
 #
 # Check for large file support
@@ -712,7 +715,7 @@ then
     passed=0;
     AC_CHECK_HEADER(cdf.h,passed=`expr $passed + 1`,failed=`expr $failed + 1`)
 if test "$ARCH" = "intelnt" ; then
-    AC_CHECK_LIB(dllcdf,Hopen,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
+    AC_CHECK_LIB(dllcdf,CDFlib,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
     AC_MSG_CHECKING(if CDF package is complete)
     if test $passed -gt 0
     then
@@ -803,7 +806,7 @@ then
     passed=0;
     AC_CHECK_HEADER([magick/api.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
 if test "$ARCH" = "intelnt" ; then
-    AC_CHECK_LIB(CORE_RL_magick_,Hopen,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
+    AC_CHECK_LIB(CORE_RL_magick_,AcquireMagickMemory,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
     AC_MSG_CHECKING(if ImageMagick package is complete)
     if test $passed -gt 0
     then
@@ -1011,7 +1014,7 @@ DX_CHECK_HEADERS( \
   Xm/ScrolledWP.h Xm/SelectioB.h Xm/SeparatoG.h Xm/SeparatoGP.h Xm/Separator.h \
   Xm/Text.h Xm/TextF.h Xm/ToggleB.h Xm/ToggleBG.h Xm/Xm.h Xm/XmP.h Xm/XmStrDefs.h \
   gl.h gl/device.h gl/gl.h invent.h iop/afb.h iop/mov.h iop/pfs.h license.h \
-  linux/kernel.h linux/sys.h math.h mingw32/dir.h mon.h net/if_arp.h net/route.h \
+  linux/kernel.h math.h mingw32/dir.h mon.h net/if_arp.h net/route.h \
   os2.h setjmp.h starbase.c.h stddef.h stdio.h synch.h sys/access.h \
   sys/ipc.h sys/m88kbcs.h sys/mman.h sys/mode.h sys/pstat.h sys/resource.h \
   sys/svs.h sys/sysconfig.h sys/syslimits.h sys/sysmacros.h ulocks.h x11/xlibxtra.h \

@@ -215,11 +215,7 @@ _dxfInitialize(TrisRI2DInterpolator ti)
      */
     ti->nElements = DXGetItemSize(ti->dArray) / DXTypeSize(dataType);
 
-    if (ti->fieldInterpolator.localized)
-	ti->triangles = (Triangle *)DXGetArrayDataLocal(ti->tArray);
-    else
-	ti->triangles = (Triangle *)DXGetArrayData(ti->tArray);
-
+    ti->triangles = (Triangle *)DXGetArrayData(ti->tArray);
     if (! ti->triangles)
 	return ERROR;
 
@@ -233,11 +229,7 @@ _dxfInitialize(TrisRI2DInterpolator ti)
 
     DXReference((Object)ti->nArray);
 
-    if (ti->fieldInterpolator.localized)
-	ti->neighbors = (Triangle *)DXGetArrayDataLocal(ti->nArray);
-    else
-	ti->neighbors = (Triangle *)DXGetArrayData(ti->nArray);
-
+    ti->neighbors = (Triangle *)DXGetArrayData(ti->nArray);
     if (! ti->neighbors)
 	return ERROR;
 
@@ -469,14 +461,6 @@ _dxfTrisRI2DInterpolator_PrimitiveInterpolate(TrisRI2DInterpolator ti,
 static int
 _dxfCleanup(TrisRI2DInterpolator ti)
 {								
-    if (ti->fieldInterpolator.localized)
-    {
-	if (ti->neighbors)
-	    DXFreeArrayDataLocal(ti->nArray, (Pointer)ti->neighbors);
-	if (ti->triangles)
-	    DXFreeArrayDataLocal(ti->tArray, (Pointer)ti->triangles);
-    }
-
     ti->neighbors = NULL;
     ti->triangles = NULL;
 
@@ -753,16 +737,8 @@ _dxf_CopyTrisRI2DInterpolator(TrisRI2DInterpolator new,
 	new->dArray      = (Array)DXReference((Object)old->dArray);
 	new->nArray = (Array)DXReference((Object)old->nArray);
 
-	if (new->fieldInterpolator.localized)
-	{
-	    new->triangles = (Triangle *)DXGetArrayDataLocal(new->tArray);
-	    new->neighbors = (Triangle *)DXGetArrayDataLocal(new->nArray);
-	}
-	else
-	{
-	    new->triangles = (Triangle *)DXGetArrayData(new->tArray);
-	    new->neighbors = (Triangle *)DXGetArrayData(new->nArray);
-	}
+	new->triangles = (Triangle *)DXGetArrayData(new->tArray);
+	new->neighbors = (Triangle *)DXGetArrayData(new->nArray);
 
 	new->pHandle = DXCreateArrayHandle(new->pArray);
 	new->dHandle = DXCreateArrayHandle(new->dArray);
@@ -791,22 +767,3 @@ _dxf_CopyTrisRI2DInterpolator(TrisRI2DInterpolator new,
     return new;
 }
 
-Interpolator
-_dxfTrisRI2DInterpolator_LocalizeInterpolator(TrisRI2DInterpolator ti)
-{
-    if (ti->fieldInterpolator.localized)
-	return (Interpolator)ti;
-
-    ti->fieldInterpolator.localized = 1;
-
-    if (ti->fieldInterpolator.initialized)
-    {
-        ti->triangles = (Triangle *)DXGetArrayDataLocal(ti->tArray);
-        ti->neighbors = (Triangle *)DXGetArrayDataLocal(ti->nArray);
-    }
-
-    if (DXGetError())
-        return NULL;
-    else
-        return (Interpolator)ti;
-}

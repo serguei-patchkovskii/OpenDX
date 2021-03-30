@@ -1663,7 +1663,7 @@ MakeOverlap(Field field, Boundary boundary, int nRings, char **components)
     DXGetArrayInfo(cArray, &nElts, NULL, NULL, NULL, &vPerE);
     elements = (int *)DXGetArrayData(cArray);
 
-    eltHash = (int *)DXAllocateLocal(nElts * sizeof(int));
+    eltHash = (int *)DXAllocate(nElts * sizeof(int));
     if (! eltHash)
     {
 	eltHash = (int *)DXAllocate(nElts * sizeof(int));
@@ -1674,7 +1674,7 @@ MakeOverlap(Field field, Boundary boundary, int nRings, char **components)
     for (i = 0, eltPtr = eltHash; i < nElts; i++)
        *eltPtr++ = -1;
 
-    ptHash = (PtHash)DXAllocateLocal(nPoints * sizeof(struct ptHash));
+    ptHash = (PtHash)DXAllocate(nPoints * sizeof(struct ptHash));
     if (! ptHash)
     {
 	ptHash = (PtHash)DXAllocate(nPoints * sizeof(struct ptHash));

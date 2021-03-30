@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwTriDrawSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwTriDrawSB.c,v $
   Author: Mark Hood
 \*---------------------------------------------------------------------------*/
 

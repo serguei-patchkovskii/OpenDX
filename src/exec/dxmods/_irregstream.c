@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_irregstream.c,v 1.9 2006/01/03 17:02:21 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_irregstream.c,v 1.9 2006/01/03 17:02:21 davidt Exp $
  */
 
 #include <dxconfig.h>

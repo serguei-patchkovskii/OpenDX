@@ -10,7 +10,7 @@
 
 
 /*
- * $Source: /src/master/dx/src/exec/hwrender/hwPolyline.c,v $
+ * $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwPolyline.c,v $
  * $L:$
  */
 

@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwPortSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwPortSB.c,v $
   Authors: Ellen Ball, Mark Hood
 
   A few Starbase differences from IBM GL:

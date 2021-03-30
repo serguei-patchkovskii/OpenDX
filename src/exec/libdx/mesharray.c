@@ -104,7 +104,6 @@ _dxfMeshArray_GetArrayData(MeshArray a)
     int i, j, k, l, m, nterms, nle, nre, nlp, nrp, nr;
     Array *terms;
     int *result = NULL, *res, *right, *rt, *left, *lt;
-    int freelocal = 0;
 
     /* DXlock array */
     EXPAND_LOCK(a);
@@ -131,14 +130,12 @@ _dxfMeshArray_GetArrayData(MeshArray a)
     } else for (i=1; i<nterms; i++) {
 
 	/* right operand is next term */
-	right = (int *) DXGetArrayDataLocal(terms[i]);
+	right = (int *) DXGetArrayData(terms[i]);
 	if (!right) {
-	    freelocal = 0;
 	    right = (int *) DXGetArrayData(terms[i]);
 	    if (!right)
 		goto error;
-	} else
-	    freelocal = 1;
+	} 
 
 	nre = terms[i]->items;
 	nrp = terms[i]->shape[0];
@@ -183,9 +180,6 @@ _dxfMeshArray_GetArrayData(MeshArray a)
 	left = result;
 	nle *= nre;
 	nlp *= nrp;
-
-	if (freelocal)
-	    DXFreeArrayDataLocal(terms[i], (Pointer)right);
     }
 
     ASSERT(nle==a->array.items);
@@ -195,8 +189,6 @@ _dxfMeshArray_GetArrayData(MeshArray a)
     EXPAND_RETURN(a, result);
 
 error:
-    if (freelocal)
-	DXFreeArrayDataLocal(terms[i], (Pointer)right);    /* and fall thru */
     EXPAND_ERROR(a);
 }
 

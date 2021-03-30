@@ -10,7 +10,7 @@
 
 
 /*
- * $Source: /src/master/dx/src/exec/hwrender/hwTmesh.c,v $
+ * $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwTmesh.c,v $
  */
 
 #if defined(HAVE_STRING_H)

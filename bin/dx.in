@@ -1,5 +1,4 @@
 #!/bin/sh
-
 #
 # shell script to start DX.  normally called indirectly from /usr/bin/dx
 #  so that $DXROOT can be interpreted if dx isn't installed in the default
@@ -271,19 +270,26 @@ exit 1
 # a UI installed with one DXROOT can connect to a machine with
 # another DXROOT. 
 #
-x=`echo "$*" | grep  'dxroot'`
-ARGS="$*"
-if [ ! -z "$x" ]; then
-    while [ ! "$*" = "" ]; do
-	case $1 in
-	    -dxroot)   DXROOT=$2; shift ;;
-	    *)      
-	    ;;
-	esac
-	shift
-    done
-fi
+cmdline_args=( $* )
+for (( i = 0; i < ${#a[@]} ; i++ )) ; do
+    if test ${a[$]} == -dxroot ; then
+        (( i = $i + 1 ))
+	DXROOT=${a[$i]}
+    fi
+done
 
+# x=`echo "$*" | grep  'dxroot'`
+# ARGS="$*"
+# if [ ! -z "$x" ]; then
+    # while [ ! "$*" = "" ]; do
+	# case $1 in
+	    # -dxroot)   DXROOT=$2; shift ;;
+	    # *)      
+	    # ;;
+	# esac
+	# shift
+    # done
+# fi
 
 if [ -z "$DXROOT" ]; then
   prefix=@prefix@
@@ -1770,7 +1776,7 @@ if test $exonly -eq 1 ; then
       fi
     fi
   fi
-    
+
   # -script <filename>
   if test -n "$FileName" ; then
   

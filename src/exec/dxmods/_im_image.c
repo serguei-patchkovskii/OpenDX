@@ -192,7 +192,7 @@ static Error write_im(RWImageArgs *iargs) {
 	tmpargs.imgtyp=img_typ_miff;
 
 	/* does file exist? */
-	miff_filename = (char *)DXAllocateLocal(strlen(iargs->basename)+strlen(tmpargs.format)+2);
+	miff_filename = (char *)DXAllocate(strlen(iargs->basename)+strlen(tmpargs.format)+2);
 	strcpy(miff_filename,iargs->basename);
 	strcat(miff_filename,".");
 	strcat(miff_filename,tmpargs.format);

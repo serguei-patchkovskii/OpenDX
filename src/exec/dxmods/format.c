@@ -54,6 +54,8 @@ m_Format(Object *in, Object *out)
      */
     
     out[0] = (Object)format_one(in+1, cp);
+
+    // fprintf(stderr, "FORMAT ran - produced 0x%lx\n", out[0]);
     
     return (out[0] ? OK : ERROR);
 }
@@ -255,7 +257,7 @@ static String format_one(Object *in, char *cp)
 		else if (DXQueryParameter(in[input], TYPE_INT, 1, &nitems)) {
 		    int *ip;
 		    
-		    ip = (int *)DXAllocateLocal(sizeof(int) * nitems);
+		    ip = (int *)DXAllocate(sizeof(int) * nitems);
 		    if (ip == NULL)
 			return ERROR;
 
@@ -302,7 +304,7 @@ static String format_one(Object *in, char *cp)
 		else if (DXQueryParameter(in[input], TYPE_INT, 1, &nitems)) {
 		    int *ip;
 		    
-		    ip = (int *)DXAllocateLocal(sizeof(int) * nitems);
+		    ip = (int *)DXAllocate(sizeof(int) * nitems);
 		    if (ip == NULL)
 			return ERROR;
 
@@ -356,11 +358,11 @@ static String format_one(Object *in, char *cp)
 		else if (DXQueryParameter(in[input], TYPE_DOUBLE, 1, &nitems)) {
 		    if (DXQueryParameter(in[input], TYPE_FLOAT, 1, &nitems)) {
 		       type=TYPE_FLOAT;
-		       p = DXAllocateLocal(sizeof(float) * nitems);
+		       p = DXAllocate(sizeof(float) * nitems);
 		    }
 		    else {
 		       type = TYPE_DOUBLE;
-		       p = DXAllocateLocal(sizeof(double) * nitems);
+		       p = DXAllocate(sizeof(double) * nitems);
 		    }
 
 		    if (p == NULL)
@@ -391,11 +393,11 @@ static String format_one(Object *in, char *cp)
 		else if (DXQueryParameter(in[input], TYPE_DOUBLE, 2, &nitems)) {
 		    if (DXQueryParameter(in[input], TYPE_FLOAT, 2, &nitems)) {
 		        type = TYPE_FLOAT;
-			p = DXAllocateLocal(sizeof(float) * 2 * nitems);
+			p = DXAllocate(sizeof(float) * 2 * nitems);
 		    }
 		    else {
 		        type = TYPE_DOUBLE; 
-		        p = DXAllocateLocal(sizeof(double) * 2 * nitems);
+		        p = DXAllocate(sizeof(double) * 2 * nitems);
 		    }
 
 		    if (p == NULL)
@@ -439,11 +441,11 @@ static String format_one(Object *in, char *cp)
 		else if (DXQueryParameter(in[input], TYPE_FLOAT, 3, &nitems)) {
 		    if (DXQueryParameter(in[input], TYPE_FLOAT, 3, &nitems)) {
 		        type = TYPE_FLOAT;
-			p = DXAllocateLocal(sizeof(float) * 3 * nitems);
+			p = DXAllocate(sizeof(float) * 3 * nitems);
 		    }
 		    else {
 		        type = TYPE_DOUBLE; 
-		        p = DXAllocateLocal(sizeof(double) * 3 * nitems);
+		        p = DXAllocate(sizeof(double) * 3 * nitems);
 		    }
 		    
 		    if (p == NULL)

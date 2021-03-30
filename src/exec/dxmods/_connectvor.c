@@ -351,8 +351,8 @@ static Error ConnectVoronoiField(Field ino, Vector normal)
   }
   
   /* allocate the arrays for the triangle list and the neighbors list */
-  trianglelist = (Triangle *)DXAllocateLocal((2*(numpos+3)-2)*sizeof(Triangle));
-  neighborlist = (Triangle *)DXAllocateLocal((2*(numpos+3)-2)*sizeof(Triangle));
+  trianglelist = (Triangle *)DXAllocate((2*(numpos+3)-2)*sizeof(Triangle));
+  neighborlist = (Triangle *)DXAllocate((2*(numpos+3)-2)*sizeof(Triangle));
   if (!trianglelist || !neighborlist) 
      goto error;
  
@@ -387,7 +387,7 @@ static Error ConnectVoronoiField(Field ino, Vector normal)
        right = DXCross(up, normal);
     }
 
-    old_pos_ptr = (float *)DXAllocateLocal(numpos*2*sizeof(float));
+    old_pos_ptr = (float *)DXAllocate(numpos*2*sizeof(float));
     threeD_pos_ptr = (float *)DXGetArrayData(positions);
     for (i=0; i<numpos; i++) {
       oldpt = DXPt(threeD_pos_ptr[3*i], 
@@ -404,7 +404,7 @@ static Error ConnectVoronoiField(Field ino, Vector normal)
     old_pos_ptr = (float *)DXGetArrayData(positions);
   }
 
-  pos_ptr = (float *)DXAllocateLocal((numpos+3)*2*sizeof(float));
+  pos_ptr = (float *)DXAllocate((numpos+3)*2*sizeof(float));
   if (!pos_ptr)
     goto error;
 

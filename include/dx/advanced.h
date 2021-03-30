@@ -11,6 +11,10 @@
 extern "C" {
 #endif
 
+#include <sys/types.h>
+#include <unistd.h>
+#include <pthread.h>
+
 #ifndef _DXI_ADVANCED_H_
 #define _DXI_ADVANCED_H_
 
@@ -35,15 +39,34 @@ internal use within the data model access routines and in the executive.
 Thus, they are intentionally given names in a style different from the
 rest of the library.
 */
-#if defined(DXD_USE_MUTEX_LOCKS) && DXD_USE_MUTEX_LOCKS==1
-#include <synch.h>
-typedef volatile mutex_t lock_type;
-#elif defined(alphax)
-#include <sys/mman.h>
-typedef msemaphore lock_type;
-#else
-typedef volatile int lock_type;
-#endif
+#include <pthread.h>
+
+// typedef pthread_mutex_t lock_type;
+typedef struct
+{
+    pthread_mutex_t lock;
+    int pid;
+    int tag;
+    pthread_t tid;
+    int seq;
+    int locked;
+    int knt;
+} lock_type;
+
+typedef pthread_cond_t  wait_type;
+
+struct dxthread_data
+{
+    int pid;
+};
+
+struct dxthread_data *DXGetThreadData();
+
+int DXcreate_wait(wait_type *w, char *name);
+int DXdestroy_wait(wait_type *w);
+void DXbroadcast(wait_type *w);
+void DXsignal(wait_type *w);
+void DXwait(wait_type *w, lock_type *l);
 
 void DXenable_locks(int enable);
 /**

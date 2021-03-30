@@ -1,7 +1,7 @@
 //
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/ControlPanel.java,v 1.5 2005/12/26 21:33:43 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/ControlPanel.java,v 1.5 2005/12/26 21:33:43 davidt Exp $
  */
 
 package dx.net;

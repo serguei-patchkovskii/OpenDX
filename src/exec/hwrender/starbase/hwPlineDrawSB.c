@@ -12,7 +12,7 @@
 #ifndef hwPlineDrawSB_c
 #define hwPlineDrawSB_c
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwPlineDrawSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwPlineDrawSB.c,v $
   Author: Tim Murphy
 
   This routine takes a DX field, looks up the previously generated

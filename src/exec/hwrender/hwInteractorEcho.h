@@ -12,7 +12,7 @@
 #ifndef tdmInteractorEcho_h
 #define tdmInteractorEcho_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwInteractorEcho.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwInteractorEcho.h,v $
   Author: Mark Hood
 
   Prototypes and stuff for the routines used to implement TDM direct

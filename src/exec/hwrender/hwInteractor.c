@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/hwrender/hwInteractor.c,v 1.6 2006/01/03 17:02:27 davidt Exp $"  ;
+ * $Header: /cvsroot/opendx2/dx/src/exec/hwrender/hwInteractor.c,v 1.6 2006/01/03 17:02:27 davidt Exp $"  ;
  */
 
 #include <dxconfig.h>
@@ -20,7 +20,7 @@
 #endif
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwInteractor.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwInteractor.c,v $
     
   This file contains core utilities for managing direct interactors.
 
@@ -57,7 +57,7 @@ _dxfInitInteractors (void *portHandle, void *stack)
   ENTRY(("_dxfInitInteractors(0x%x, 0x%x)", portHandle, stack));
 
   /* allocate interactor common data associated with image window */
-  if (! (W = (tdmInteractorWin) tdmAllocateLocal (sizeof(tdmInteractorWinT))))
+  if (! (W = (tdmInteractorWin) tdmAllocate (sizeof(tdmInteractorWinT))))
     {
       /* !!!!! No warning message set???? */
       EXIT(("ERROR:out of memory"));
@@ -179,7 +179,7 @@ _dxfAllocateInteractor (tdmInteractorWin W, int size)
   
   if (size) {
       /* allocate interactor private data */
-      if (! (PRIVATE(I) = tdmAllocateLocal(size))) {
+      if (! (PRIVATE(I) = tdmAllocate(size))) {
           goto error ;
       } else {
           bzero ((char *) PRIVATE(I), size) ;
@@ -275,7 +275,7 @@ _allocateMoreInteractors (tdmInteractorWin W)
 
   /* allocate ARRAYSIZE more interactor pointers */
   tmp = (tdmInteractor *)
-        tdmAllocateLocal((W->numUsed + ARRAYSIZE) * sizeof(tdmInteractor)) ;
+        tdmAllocate((W->numUsed + ARRAYSIZE) * sizeof(tdmInteractor)) ;
 
   if (! tmp) goto error ;
 
@@ -322,7 +322,7 @@ _allocateInteractorArray (tdmInteractorWin W)
 
   /* get a bigger array of array pointers */
   tmp = (InteractorArray *)
-        tdmAllocateLocal((numInteractorArrays + 1) * sizeof(InteractorArray)) ;
+        tdmAllocate((numInteractorArrays + 1) * sizeof(InteractorArray)) ;
 
   if (! tmp) {
     EXIT(("ERROR"));
@@ -331,7 +331,7 @@ _allocateInteractorArray (tdmInteractorWin W)
   
   /* allocate a new InteractorArray of size ARRAYSIZE */
   tmp[numInteractorArrays] =
-      (InteractorArray) tdmAllocateLocal(ARRAYSIZE * sizeof(tdmInteractorT)) ;
+      (InteractorArray) tdmAllocate(ARRAYSIZE * sizeof(tdmInteractorT)) ;
 
   if (! tmp[numInteractorArrays])
     {
@@ -402,7 +402,7 @@ _PushInteractorCamera (tdmInteractorCam *stack, tdmInteractorCam new)
 
   if (! new) {
       /* allocate new camera */
-      if ( (new = (tdmInteractorCam) tdmAllocateLocal(sizeof(tdmInteractorCamT))) ) {
+      if ( (new = (tdmInteractorCam) tdmAllocate(sizeof(tdmInteractorCamT))) ) {
           if (*stack) {
               /* copy current top */
               memcpy ((void *)new, (void *)*stack, sizeof(tdmInteractorCamT)) ;

@@ -19,8 +19,7 @@ extern "C" {
 /*
 \section{Storage allocation}
 The Data Explorer provides its own storage allocation routines, which provide
-hooks for debugging and distinguish between local and global storage
-allocation.
+hooks for debugging.
 */
 
 Pointer DXAllocate(unsigned int n);
@@ -34,44 +33,11 @@ the error code to indicate an error (such as out of memory or a
 corrupted arena).
 **/
 
-Pointer DXAllocateLocal(unsigned int n);
-Pointer DXAllocateLocalZero(unsigned int n);
-/**
-\index{DXAllocateLocal}\index{DXAllocateLocalZero}
-On machines which do not have pre-processor local memory (this includes
-all workstations currently supported by Data Explorer), this call is
-identical to {\tt DXAllocate()} and {\tt DXAllocateZero()}.
-On machines with per-processor local memory, these routines first try
-to allocate storage from local memory, and if it is not available (for
-example if it is all in use), then it allocates from global memory.
-This call is preferred to both of the above if you are allocating space
-for something which is temporary and will not need to be shared with
-other processors.
-Returns a pointer to the storage, or returns null and sets
-the error code to indicate an error (such as out of all memory or a
-corrupted arena).
-**/
-
-Pointer DXAllocateLocalOnly(unsigned int n);
-Pointer DXAllocateLocalOnlyZero(unsigned int n);
-/**
-\index{DXAllocateLocalOnly}\index{DXAllocateLocalOnlyZero}
-{\tt DXAllocateLocalOnly()} allocates {\tt n} bytes of storage in the local
-memory of the processor where the call is made.  {\tt
-DXAllocateLocalOnlyZero()} allocates {\tt n} bytes and zeroes the allocated
-memory.  Returns a pointer to the storage, or returns null and sets
-the error code to indicate an error (such as out of memory or a
-corrupted arena).  Unlike the preceeding routines, these routines do not
-try to allocate out of global memory, so the caller can tell whether
-local memory was actually obtained.
-**/
-
 Pointer DXReAllocate(Pointer x, unsigned int n);
 /**
 \index{DXReAllocate}
 Increases the size of the previously allocated block of storage
-pointed to by {\tt x} to {\tt n} bytes.  The block may be global or
-local to the processor where the call is made.  The block is copied if
+pointed to by {\tt x} to {\tt n} bytes.  The block is copied if
 necessary; this invalidates any pointers to the old storage.  Returns
 a pointer to the new block, or returns null and sets the error code to
 indicate an error (such as out of memory or a corrupted arena).
@@ -81,7 +47,6 @@ Error DXFree(Pointer x);
 /**
 \index{DXFree}
 Frees the previously allocated block of storage pointed to by {\tt x}.
-The block may be global or local to the processor where the call is made.
 Returns {\tt OK}, or returns {\tt ERROR} and sets the error code to
 indicate an error such as a corrupted arena.
 **/
@@ -95,16 +60,6 @@ to free up memory when necessary.  The scavenger routine will be
 called with a target number of bytes, and is expected to return {\tt
 OK} if it believes it has freed memory or null if it cannot free
 any memory.
-**/
-
-Scavenger DXRegisterScavengerLocal(Scavenger scavenger);
-/**
-\index{DXRegisterScavengerLocal}
-Declares to the memory allocation system a routine that can be called
-to free up local memory when necessary.  The scavenger routine will be
-called with a target number of bytes to be freed on the current processor,
-and is expected to return {\tt OK} if it believes it has freed memory
-or null if it cannot free any memory.
 **/
 
 #define MEMORY_SMALL  0x10
@@ -143,29 +98,26 @@ typedef Error (*MemDebug)(int blocktype, Pointer start, ulong size, Pointer p);
 
 
 Error DXDebugAlloc(int arena, int blocktype, MemDebug m, Pointer p);
-Error DXDebugLocalAlloc(int procnum, int blocktype, MemDebug m, Pointer p);
 /**
-\index{DebugAlloc}\index{DebugLocalAlloc}
-{\t DebugAlloc} and {\t DebugLocalAlloc} allows you to specify a routine
+\index{DebugAlloc}
+{\t DebugAlloc} allows you to specify a routine
 to be called on any or all types of memory blocks.  The routine is called
 with the type of block, the starting address of the block, the size in bytes, 
 and a pointer to whatever private information the debug routine was called
-with.  For {\t DebugLocalAlloc()}, the pointer must be to global memory
-since the routine must be executed from the requested processor.  If
-{\t procnum} is -1, it is called in sequence from all processors.
+with.  
 **/
 
 
 Error DXSetMemorySize(ulong size, int ratio);
-Error DXGetMemorySize(ulong *sm, ulong *lg, ulong *lo);
-Error DXGetMemoryBase(Pointer *sm, Pointer *lg, Pointer *lo);
+Error DXGetMemorySize(ulong *sm, ulong *lg);
+Error DXGetMemoryBase(Pointer *sm, Pointer *lg);
 /**
 \index{SetMemorySize}\index{GetMemorySize}\index{GetMemoryBase}
 {\t SetMemorySize} must be called before any other library routine.
 The maximum shared memory size in bytes is set with {\t size}, and the
 ratio between shared memory allocated for large blocks compared to 
 small blocks is set with {\t ratio}.  {\t GetMemorySize} returns the
-size in bytes of the small, large and local arenas.  If any of the
+size in bytes of the small and large arenas.  If any of the
 arena types are is not supported on this architecture 0 is returned.  
 {\t GetMemoryBase} returns the starting memory address of each arena.  
 If any of the arena types are not supported on this architecture

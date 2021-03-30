@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/background.h,v 1.5 2004/06/09 16:14:27 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/background.h,v 1.5 2004/06/09 16:14:27 davidt Exp $
  */
 
 #include <dxconfig.h>

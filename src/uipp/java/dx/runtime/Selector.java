@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/Selector.java,v 1.4 2006/03/26 23:50:23 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/Selector.java,v 1.4 2006/03/26 23:50:23 davidt Exp $
  */
 package dx.runtime;
 import java.awt.*;

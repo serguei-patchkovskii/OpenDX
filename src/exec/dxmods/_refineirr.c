@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_refineirr.c,v 1.6 2002/03/21 02:57:30 rhh Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_refineirr.c,v 1.6 2002/03/21 02:57:30 rhh Exp $:
  */
 
 #include <string.h>

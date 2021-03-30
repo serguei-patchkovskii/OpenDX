@@ -3,7 +3,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/ImageNode.java,v 1.5 2005/12/02 23:37:27 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/ImageNode.java,v 1.5 2005/12/02 23:37:27 davidt Exp $
  */
 
 package dx.net;

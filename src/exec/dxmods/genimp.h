@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/genimp.h,v 1.4 2000/08/24 20:04:30 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/genimp.h,v 1.4 2000/08/24 20:04:30 davidt Exp $
  */
 
 #include <dxconfig.h>

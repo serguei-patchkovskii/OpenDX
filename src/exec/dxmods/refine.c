@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/refine.c,v 1.4 2000/08/24 20:04:45 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/refine.c,v 1.4 2000/08/24 20:04:45 davidt Exp $:
  */
 
 #include <dxconfig.h>

@@ -449,8 +449,8 @@ plane(Pointer ic,
     osy2 = osy - skew2 * osy1;		/* output y offset */
 
     /* allocate intermediate buffers */
-    ic1 = (RGBColor *) DXAllocateLocalZero(nx1 * ny1 * sizeof(*ic1));
-    io1 = (float *) DXAllocateLocalZero(nx1 * ny1 * sizeof(*io1));
+    ic1 = (RGBColor *) DXAllocateZero(nx1 * ny1 * sizeof(*ic1));
+    io1 = (float *) DXAllocateZero(nx1 * ny1 * sizeof(*io1));
     if (!ic1 || !io1)
 	return ERROR;
     DXMarkTimeLocal("overhead");		/* timing */

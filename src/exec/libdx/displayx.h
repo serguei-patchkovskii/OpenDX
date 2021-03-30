@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/libdx/displayx.h,v 1.2 2003/07/11 05:50:41 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/libdx/displayx.h,v 1.2 2003/07/11 05:50:41 davidt Exp $
  */
 
 #include <dxconfig.h>

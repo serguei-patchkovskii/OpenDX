@@ -885,7 +885,7 @@ openCDF(char *filename, Infocdf *cdfp, int fill)
     */
 
   datadir = (char *)getenv("DXDATA");
-  outname = (char *)DXAllocateLocalZero((datadir ? strlen(datadir) : 0) +
+  outname = (char *)DXAllocateZero((datadir ? strlen(datadir) : 0) +
 			strlen(filename) + XTRA);
 
   /*

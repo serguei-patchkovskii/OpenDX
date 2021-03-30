@@ -1838,7 +1838,7 @@ _Filter_Array (Field obj, Filter *filter, Array ga, Array oa, DepOn d,
      */
 
     size = irrdata.fsize * sizeof (int);
-    irrdata.offsets = (int *) DXAllocateLocal (size);
+    irrdata.offsets = (int *) DXAllocate (size);
     if (irrdata.offsets == NULL)
 	irrdata.offsets = (int *) DXAllocate (size);
     if (irrdata.offsets == NULL)
@@ -1882,7 +1882,7 @@ _Filter_Array (Field obj, Filter *filter, Array ga, Array oa, DepOn d,
      */
 
     size = irrdata.fsize * sizeof (float);
-    irrdata.filter  = (float *) DXAllocateLocal (size);
+    irrdata.filter  = (float *) DXAllocate (size);
     if (irrdata.filter == NULL)
 	irrdata.filter = (float *) DXAllocate (size);
     if (irrdata.filter == NULL)
@@ -2108,7 +2108,7 @@ static void _Apply_Irregular (IrregularData *data)
 
     size = input.fsize * sizeof (double);
     _sort = (double *) (input.fsize <= LOCAL_SORT ? __sort
-						  : DXAllocateLocal (size));
+						  : DXAllocate (size));
     if (! _sort)
     {
 	_sort = (double *) DXAllocate (size);
@@ -2247,10 +2247,10 @@ static Error _Apply_3x3 (IrregularData *data)
     f20 = input.filter[6]; f21 = input.filter[7]; f22 = input.filter[8];
 
     size = nselem * sizeof (float);
-    r0base  = nselem <= MAXROWLEN ? row0 : (float *) DXAllocateLocal (size);
-    r1base  = nselem <= MAXROWLEN ? row1 : (float *) DXAllocateLocal (size);
-    r2base  = nselem <= MAXROWLEN ? row2 : (float *) DXAllocateLocal (size);
-    outbase = nselem <= MAXROWLEN ? rowo : (float *) DXAllocateLocal (size);
+    r0base  = nselem <= MAXROWLEN ? row0 : (float *) DXAllocate (size);
+    r1base  = nselem <= MAXROWLEN ? row1 : (float *) DXAllocate (size);
+    r2base  = nselem <= MAXROWLEN ? row2 : (float *) DXAllocate (size);
+    outbase = nselem <= MAXROWLEN ? rowo : (float *) DXAllocate (size);
 
     if (r0base == NULL || r1base == NULL || r2base == NULL || outbase == NULL)
 	goto cleanup;

@@ -1,0 +1,85 @@
+<html><head>
+<title>Open Visualization Data Explorer: Streamlines</title>
+</head>
+<body bgcolor="white">
+<p>
+
+<table border = 0>
+<tr bgcolor="white">
+<td>
+<h3>...about the visualization</h3>
+You're viewing a sample data 
+set "velocity.dx". 
+This data is a velocity field in which the velocity 
+vectors spiral outward in the xz plane, except 
+near the center of the field. Near the center, 
+the velocity has a strong positive y component. 
+
+<h3>...about the visual program</h3>
+There are two selector interactors in the <i>Options</i>
+panel which allow you to control how the streamlines are colored.
+
+<applet
+	code="Streamline.class" width = 300 height = 260
+	archive=dx.jar,samples.jar
+	MAYSCRIPT=true
+>
+	<param name="name" value="Streamline">
+	<param name=NETNAME value="Streamline.net">
+	<param name=DXUIVERS value="4.1.1">
+	<param name=BACKGROUND value="[1.0, 1.0, 1.0]">
+</applet>
+</td>
+<td>
+<table border = 0>
+<tr bgcolor="black">
+<td>
+
+<applet
+	code="imageWindow.class" width = 340 height = 458
+	archive=dx.jar,samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="Streamline2.0.0.gif">
+	<param name=IMAGE_NODE value="Image_2">
+</applet>
+</td>
+</tr>
+<tr bgcolor="black">
+<td>
+<applet
+	code="imageWindow.class" width = 433 height = 65
+	archive=dx.jar,samples.jar
+	MAYSCRIPT=true
+>
+	<param name=INITIAL_IMAGE value="Streamline7.0.0.gif">
+	<param name=IMAGE_NODE value="Image_7">
+</applet>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<h3>...about the conversion to web page</h3>
+In the <i>Mode</i> menu, select <i>Sequence</i>.  You'll see
+the frames appear slowly as Data Explorer computes each one.
+When the <i>Execution</i> indicator turns black, Data Explorer
+has finished executing and the animation begins.  Terminate it
+at any time by changing the Mode selector.  You can also change
+the behavior of the animation by selecting <i>Faster</i>,
+<i>Slower</i>, <i>Loop</i>, or <i>Palindrome</i>.
+<p>
+
+<hr> <b> &#91 
+<a href="Status.html" TARGET=_parent>Java Explorer</a> |
+<a href="http://www.ibm.com/" TARGET=_parent>IBM home page</a> |
+<a href="http://www.ibm.com/Orders/" TARGET=_parent>Order</a> |
+<a href="http://www.ibm.com/Search/" TARGET=_parent>Search</a> |
+<a href="http://www.ibm.com/Assist/" TARGET=_parent>Contact IBM</a> |
+<a href="http://www.ibm.com/Finding/" TARGET=_parent>Help</a> |
+<a href="http://www.ibm.com/copyright.html" TARGET=_parent>(C)</a> |
+<a href="http://www.ibm.com/trademarks.html" TARGET=_parent>(TM)</a> &#93 </b>
+
+</body>
+</html>

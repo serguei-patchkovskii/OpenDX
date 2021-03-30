@@ -918,7 +918,7 @@ Equalize (EQData *eq, Type type, int n, Pointer src, Pointer dst)
     size  = nbin;
     size *= output ? 6 : 3;
     size *= sizeof (float);
-    base  = (float  *) DXAllocateLocal (size);
+    base  = (float  *) DXAllocate (size);
 
     if (base)
     {

@@ -72,7 +72,7 @@ _dxf_VolumeIrregular(struct buffer *b, struct gather *gather, int clip)
 
     /* allocate buffer for sort index array */
     sortindex = (struct sortindex *)
-	DXAllocateLocal(gather->nthings * sizeof(struct sortindex));
+	DXAllocate(gather->nthings * sizeof(struct sortindex));
     if (!sortindex) {
 	DXResetError();
 	sortindex = (struct sortindex *)
@@ -541,7 +541,7 @@ _dxf_VolumeRegular(struct buffer *b, struct gather *gather, int clip)
 
     /* allocate an array of pointers to xfields */
     xfields = (struct xfield **)
-	DXAllocateLocal(gather->nfields * sizeof(struct xfield *));
+	DXAllocate(gather->nfields * sizeof(struct xfield *));
     if (!xfields)
 	goto error;
 
@@ -645,11 +645,6 @@ _dxf_VolumeRegular(struct buffer *b, struct gather *gather, int clip)
 	    rc = VolumeRegularPlane(b, xf, clip);
 	else
 	    DXErrorGoto(ERROR_BAD_PARAMETER, "unknown volume rendering method");
-	if (xf->positions_local) {
-	    DXFreeArrayDataLocal(xf->positions_array, (Pointer)xf->positions);
-    	    xf->positions = NULL;
-	    xf->positions_local = 0;
-	}
 	if (!rc) goto error;
     }
 
@@ -678,8 +673,7 @@ error:
 
 /* XXX - for now */
 #define EXPAND_POSITIONS						    	\
-    xf->positions = (Point *) DXGetArrayDataLocal(xf->positions_array);	    	\
-    xf->positions_local = 1;						        \
+    xf->positions = (Point *) DXGetArrayData(xf->positions_array);	    	\
     if (!xf->positions)								\
 	return ERROR;
 

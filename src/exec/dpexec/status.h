@@ -41,9 +41,9 @@ extern int *_dxd_exProcessorStatus;
 Error _dxf_ExInitStatus	(int n, int flag);
 void _dxf_ExCleanupStatus	(void);
 
-#define	set_status(_s)	if (_dxd_exProcessorStatus) _dxd_exProcessorStatus[_dxd_exMyPID] = (_s)
+#define	set_status(_s)	if (_dxd_exProcessorStatus) _dxd_exProcessorStatus[DXGetThreadPid()] = (_s)
 #define	get_status() \
-		(_dxd_exProcessorStatus ? _dxd_exProcessorStatus[_dxd_exMyPID] : PS_NONE)
+		(_dxd_exProcessorStatus ? _dxd_exProcessorStatus[DXGetThreadPid()] : PS_NONE)
 #else
 #define	set_status(_s)   FALSE
 #define	get_status()     FALSE

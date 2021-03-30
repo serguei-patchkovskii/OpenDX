@@ -44,15 +44,15 @@ static Error parse_screen(struct finfo *f);
 static Error parse_clipped(struct finfo *f);
 static Error parse_attribute(struct finfo *f, Object o);
 
-static Error local_objectid(struct finfo *f, int *objnum, char *what);
-static Error remote_objectid(struct finfo *f, int *objnum, char *what);
-static Error parse_objectid(struct finfo *f, int *objnum, int *objtype, 
+static Error local_objectid(struct finfo *f, EDF_Id *objnum, char *what);
+static Error remote_objectid(struct finfo *f, EDF_Id *objnum, char *what);
+static Error parse_objectid(struct finfo *f, EDF_Id *objnum, int *objtype, 
 			    char *what);
 static Error object_or_id(struct finfo *f, Object *o, char *what, int *which);
 static Error seriesobject_or_id(struct finfo *f, Object *o, char *what, 
 				int *which, int enumval, int *skip);
 static Error remote_object(struct finfo *f, int value, Object *o);
-static Error file_lists(struct finfo *f, int value);
+static Error file_lists(struct finfo *f, EDF_Id value);
 
 static Error parse_include(struct finfo *f);
 static Error parse_datadefs(struct finfo *f);
@@ -69,8 +69,10 @@ static Error make_obj(struct finfo *f);
  */
 Error _dxfparse_file(struct finfo *fp, Object *returnobj)
 {
-    int state, keywd;
+    int state;
+    EDF_Id keywd;
     Error rc = OK;
+    int knt = 0;
  
 #if DEBUG_MSG
     DXDebug("E", "entering _dxfparse_file");
@@ -117,6 +119,8 @@ Error _dxfparse_file(struct finfo *fp, Object *returnobj)
     }
 
     while(1) {
+
+        knt ++;
 
 	if (!rc)
 	    goto geterror;
@@ -214,7 +218,7 @@ Error _dxfparse_file(struct finfo *fp, Object *returnobj)
 			 fp->fname, _dxfgetprevline(fp));
 	    
 	    if (fp->t.class == LEXERROR)
-		DXAddMessage(" %s", _dxfprtoken(&fp->t, fp->d));
+		DXAddMessage(" %s", _dxfprtoken(&fp->t, (EDF_Id)fp->d));
 	    
 	    goto done;
 	}
@@ -320,10 +324,10 @@ Error _dxfparse_file(struct finfo *fp, Object *returnobj)
  */
 static Error parse_object(struct finfo *f)
 {
-    int kind;
+    EDF_Id kind;
     int skip = 0;
-    int dictid;
-    int objnum;
+    EDF_Id dict_id;
+    EDF_Id objnum;
     Error rc = OK;
  
 #if DEBUG_MSG
@@ -369,8 +373,9 @@ static Error parse_object(struct finfo *f)
 	 * getdictalias is going to be SLOW and is this going to happen for 
 	 *  every object we define.  this is bad.
 	 */
-	if (_dxfgetdictalias(f->d, objnum, &dictid))
-	    rc = _dxfaddobjlist(f, objnum, NULL, _dxfdictname(f->d, dictid), 1);
+	dict_id = _dxfgetdictalias(f->d, objnum);
+	if (dict_id)
+	    rc = _dxfaddobjlist(f, objnum, NULL, _dxfdictname(f->d, dict_id), 1);
 	else
 	    rc = _dxfaddobjlist(f, objnum, NULL, NULL, 1);
     }
@@ -541,7 +546,7 @@ static Error parse_object(struct finfo *f)
 static Error parse_include(struct finfo *f)
 {
     int rc;
-    int remoteid;
+    EDF_Id remoteid;
     Object o;
  
 #if DEBUG_MSG
@@ -965,7 +970,8 @@ static Error make_group(struct finfo *f, Object o, char *thing)
  
 static Error parse_member(struct finfo *f) 
 {
-    int name, enumval;
+    EDF_Id name;
+    int enumval;
     int byname;
     int which;
     Object o;
@@ -1103,7 +1109,8 @@ static Error parse_field(struct finfo *f)
 
 static Error parse_component(struct finfo *f)
 { 
-    int name, which;
+    EDF_Id name;
+    int which;
     Object o;
     Error rc = OK;
  
@@ -1148,10 +1155,10 @@ static Error parse_component(struct finfo *f)
 /* normal arrays and constant arrays */
 static Error parse_array(struct finfo *f, int kind)
 {
-    int value;
+    EDF_Id value;
     Object o = NULL;
     Object tmp = NULL, tmp2 = NULL;
-    int i, id, done = 0;
+    int i, id, done = 0, val;
     int conitems=0;
     int makeit;
     int issigned = SIGN_UNSET;
@@ -1174,7 +1181,7 @@ static Error parse_array(struct finfo *f, int kind)
 #endif
  
     /* initialize this to 0's */
-    shape = (int *)DXAllocateLocalZero(sizeof(int) * MAXRANK);
+    shape = (int *)DXAllocateZero(sizeof(int) * MAXRANK);
 
     /* are we making or skipping this object?
      */
@@ -1301,22 +1308,22 @@ static Error parse_array(struct finfo *f, int kind)
           case KW_COUNT:
             rc = skipkeyword(f);
  
-            rc = _dxfmatchint(f, &value);
-            if (!rc || value < 0) {
+            rc = _dxfmatchint(f, &val);
+            if (!rc || val < 0) {
                 DXSetError(ERROR_DATA_INVALID, 
 			   "bad or missing array item count");
 		goto error;
 	    }
             
-            items = value;
+            items = val;
             break;
             
           case KW_RANK:
             rc = skipkeyword(f);
  
-            rc = _dxfmatchint(f, &value);
-            if (!rc || value < 0 || value >= MAXRANK) {
-		if (!rc || value < 0)
+            rc = _dxfmatchint(f, &val);
+            if (!rc || val < 0 || val >= MAXRANK) {
+		if (!rc || val < 0)
 		    DXSetError(ERROR_DATA_INVALID, 
 			       "bad or missing array rank");
 		else
@@ -1325,12 +1332,12 @@ static Error parse_array(struct finfo *f, int kind)
 		goto error;
 	    }
 	    
-	    if (rankset && rank != value) {
+	    if (rankset && rank != val) {
 		DXSetError(ERROR_DATA_INVALID, "rank doesn't match shape");
 		goto error;
 	    }
  
-            rank = value;
+            rank = val;
 	    rankset++;
  
             break;
@@ -1350,45 +1357,45 @@ static Error parse_array(struct finfo *f, int kind)
 		}
 		
 		for (i=0; i<rank; i++) {
-		    rc = _dxfmatchint(f, &value);
+		    rc = _dxfmatchint(f, &val);
 		    if (!rc) {
 			DXSetError(ERROR_DATA_INVALID,
 				 "array shape list does not match rank");
 			goto error;
 		    }
-		    if (value <= 0) {
+		    if (val <= 0) {
 			DXSetError(ERROR_DATA_INVALID, 
 				 "non-positive array shape value");
 			goto error;
 		    }
 		    
-		    shape[i] = value;
+		    shape[i] = val;
 		    /* add more checks to shape here for 0? for very large? */
 		}
 		
 	    } else {
  
-		rc = _dxfmatchint(f, &value);
+		rc = _dxfmatchint(f, &val);
 		if (!rc) {
 		    DXSetError(ERROR_DATA_INVALID, "missing or bad array shape");
 		    goto error;
 		}
-		if (value <= 0) {
+		if (val <= 0) {
 		    DXSetError(ERROR_DATA_INVALID, 
 			     "non-positive array shape value");
 		    goto error;
 		}
 		
 		i = 0;
-		shape[i++] = value;
+		shape[i++] = val;
 		
 		do {
-		    rc = _dxfmatchint(f, &value);
+		    rc = _dxfmatchint(f, &val);
 		    if (!rc) {
 			rc = OK;
 			break;
 		    }
-		    shape[i++] = value;
+		    shape[i++] = val;
 		    
 		} while(i < MAXRANK);
 		
@@ -1533,10 +1540,10 @@ static Error parse_array(struct finfo *f, int kind)
 		    
 		}
 		
-	    } else if (_dxfmatchint(f, &value))  {
+	    } else if (_dxfmatchint(f, &val))  {
 		
 		if (makeit) {
-		    rc = _dxfreadoffset(f, (Array)o, value, datatype);
+		    rc = _dxfreadoffset(f, (Array)o, val, datatype);
 		    if (!rc)
 			goto error;
 		}
@@ -1653,7 +1660,7 @@ static Error parse_array(struct finfo *f, int kind)
  
 static Error parse_sarray(struct finfo *f, int kind)
 {
-    int value;
+    int value, val;
     Object o = NULL;
     int i, done = 0;
     int drank = 0;
@@ -1682,9 +1689,9 @@ static Error parse_sarray(struct finfo *f, int kind)
     switch(kind) {
       case KW_REGULARARRAY:
 	/* initialize these */
-	origin = DXAllocateLocalZero(sizeof(double) * MAXRANK);
-	deltas = DXAllocateLocalZero(sizeof(double) * MAXRANK);
-	counts = (int *)DXAllocateLocalZero(sizeof(int) * MAXRANK);
+	origin = DXAllocateZero(sizeof(double) * MAXRANK);
+	deltas = DXAllocateZero(sizeof(double) * MAXRANK);
+	counts = (int *)DXAllocateZero(sizeof(int) * MAXRANK);
 	rank = 1;
  
 	done = 0;
@@ -1780,13 +1787,13 @@ static Error parse_sarray(struct finfo *f, int kind)
 	      case KW_COUNT:
 		skipkeyword(f);
 		
-		rc = _dxfmatchint(f, &value);
+		rc = _dxfmatchint(f, &val);
 		if(!rc) {
 		    DXSetError(ERROR_DATA_INVALID, "missing or bad item count");
 		    goto error;
 		}
 		
-		items = value;
+		items = val;
 		break;
 		
 	      case KW_TYPE:
@@ -1892,31 +1899,31 @@ static Error parse_sarray(struct finfo *f, int kind)
 	      case KW_RANK:
 		rc = skipkeyword(f);
 		
-		rc = _dxfmatchint(f, &value);
+		rc = _dxfmatchint(f, &val);
 		if(!rc) {
 		    DXSetError(ERROR_DATA_INVALID, "bad or missing array rank");
 		    goto error;
 		}
 		
-		if(value != 1) {
+		if(val != 1) {
 		    DXSetError(ERROR_NOT_IMPLEMENTED, 
 			     "only rank = 1 supported for regular arrays");
 		    goto error;
 		}
  
-		rank = value;
+		rank = val;
 		break;
             
 	      case KW_SHAPE:
 		rc = skipkeyword(f);
 		
-		rc = _dxfmatchint(f, &value);
+		rc = _dxfmatchint(f, &val);
 		if(!rc) {
 		    DXSetError(ERROR_DATA_INVALID,
 			     "missing regular array shape");
 		    goto error;
 		}
-		shape = value;
+		shape = val;
 		break;
  
 	      default:
@@ -1946,14 +1953,14 @@ static Error parse_sarray(struct finfo *f, int kind)
 	/* optional */
 	match_keyword(f, KW_COUNT);
  
-	rc = _dxfmatchint(f, &value);
+	rc = _dxfmatchint(f, &val);
 	if (!rc) {
 	    DXSetError(ERROR_DATA_INVALID, "bad or missing path array length");
 	    goto error;
 	}
 		
 	/* make array here */
-	o = (Object)DXNewPathArray(value);
+	o = (Object)DXNewPathArray(val);
 	if (!o)
 	    goto error;
  
@@ -1964,8 +1971,8 @@ static Error parse_sarray(struct finfo *f, int kind)
  
       case KW_MESHARRAY:
 	/* initialize these */
-	offsets = (int *)DXAllocateLocalZero(sizeof(int) * MAXRANK);
-	terms = (Array *)DXAllocateLocalZero(sizeof(Array) * MAXTERMS);
+	offsets = (int *)DXAllocateZero(sizeof(int) * MAXRANK);
+	terms = (Array *)DXAllocateZero(sizeof(Array) * MAXTERMS);
 	items = 0;
  
 	done = 0;
@@ -2016,14 +2023,14 @@ static Error parse_sarray(struct finfo *f, int kind)
 
 		/* parse 'items' numbers */
 		for (i=0; i<items; i++) {
-		    rc = _dxfmatchint(f, &value);
+		    rc = _dxfmatchint(f, &val);
 		    if (!rc) {
 			DXSetError(ERROR_DATA_INVALID, 
 				   "missing or bad mesh offset");
 			goto error;
 		    }
 		    
-		    offsets[i] = value;
+		    offsets[i] = val;
 		}
 		break;
 		
@@ -2056,7 +2063,7 @@ static Error parse_sarray(struct finfo *f, int kind)
  
       case KW_PRODUCTARRAY:
 	/* initialize these */
-	terms = (Array *)DXAllocateLocalZero(sizeof(Array) * MAXTERMS);
+	terms = (Array *)DXAllocateZero(sizeof(Array) * MAXTERMS);
  
 	if(match_keyword(f, KW_ATTRIBUTE)) {
  
@@ -2116,29 +2123,29 @@ static Error parse_sarray(struct finfo *f, int kind)
  
       case KW_GRIDPOSITIONS:
 	/* initialize these */
-	origin = DXAllocateLocalZero(sizeof(float) * MAXRANK);
-	deltas = DXAllocateLocalZero(sizeof(float) * MAXRANK * MAXRANK);
-	counts = (int *)DXAllocateLocalZero(sizeof(int) * MAXRANK);
+	origin = DXAllocateZero(sizeof(float) * MAXRANK);
+	deltas = DXAllocateZero(sizeof(float) * MAXRANK * MAXRANK);
+	counts = (int *)DXAllocateZero(sizeof(int) * MAXRANK);
  
 	match_keyword(f, KW_COUNT);
  
-	rc = _dxfmatchint(f, &value);
+	rc = _dxfmatchint(f, &val);
 	if(!rc) {
 	    DXSetError(ERROR_DATA_INVALID, "bad or missing counts");
 	    goto error;
 	}
  
 	i = 0;
-	counts[i++] = value;
+	counts[i++] = val;
 	
 	do {
-	    rc = _dxfmatchint(f, &value);
+	    rc = _dxfmatchint(f, &val);
 	    if(!rc) {
 		rc = OK;
 		break;
 	    }
 	    
-	    counts[i++] = value;
+	    counts[i++] = val;
  
 	} while(i < MAXRANK);
 	
@@ -2217,28 +2224,28 @@ static Error parse_sarray(struct finfo *f, int kind)
  
       case KW_GRIDCONNECTIONS:
 	/* initialize these */
-	counts = (int *)DXAllocateLocalZero(sizeof(int) * MAXRANK);
-	offsets = (int *)DXAllocateLocalZero(sizeof(int) * MAXRANK);
+	counts = (int *)DXAllocateZero(sizeof(int) * MAXRANK);
+	offsets = (int *)DXAllocateZero(sizeof(int) * MAXRANK);
  
 	match_keyword(f, KW_COUNT);
  
-	rc = _dxfmatchint(f, &value);
+	rc = _dxfmatchint(f, &val);
 	if(!rc) {
 	    DXSetError(ERROR_DATA_INVALID, "bad or missing counts");
 	    goto error;
 	}
  
 	i = 0;
-	counts[i++] = value;
+	counts[i++] = val;
 	
 	do {
-	    rc = _dxfmatchint(f, &value);
+	    rc = _dxfmatchint(f, &val);
 	    if(!rc) {
 		rc = OK;
 		break;
 	    }
 	    
-	    counts[i++] = value;
+	    counts[i++] = val;
  
 	} while(i < MAXRANK);
 	
@@ -2261,13 +2268,13 @@ static Error parse_sarray(struct finfo *f, int kind)
 	if (match_keyword(f, KW_MESHOFFSETS)) {
 
 	    for (i=0; i<rank; i++) {
-		rc = _dxfmatchint(f, &value);
+		rc = _dxfmatchint(f, &val);
 		if(!rc) {
 		    DXSetError(ERROR_DATA_INVALID, "missing or bad meshoffsets");
 		    goto error;
 		}
 		
-		offsets[i] = value;
+		offsets[i] = val;
 	    }
 	}
  
@@ -2323,7 +2330,7 @@ static Error parse_light(struct finfo *f)
     int type = KW_DISTANT;
     int relative = KW_LIGHT;
     float fvalue;
-    int value;
+    EDF_Id value;
     Object o = NULL;
     Vector d;
     Point p;
@@ -2495,7 +2502,7 @@ static Error parse_camera(struct finfo *f)
     Error rc = OK;
     float width, aspect, angle, fov;
     float *fp, fvalue;
-    int value;
+    EDF_Id value;
     float xxx;
     int isortho = -1;
     int type;
@@ -3043,7 +3050,7 @@ static Error parse_screen(struct finfo *f)
 
 static Error parse_attribute(struct finfo *f, Object o)
 {
-    int name;
+    EDF_Id name;
     Token value;
     int ntype;
     int makeit, which;
@@ -3136,9 +3143,11 @@ static Error parse_attribute(struct finfo *f, Object o)
 
 /* return the next object id - either number or dict id of "name"
  */
-static Error local_objectid(struct finfo *f, int *objnum, char *what)
+static Error local_objectid(struct finfo *f, EDF_Id *objnum, char *what)
 {
-    int slot, type, value;
+    int type, val;
+    EDF_Id value;
+    EDF_Id slot;
     
 #if DEBUG_MSG
     DXDebug("E", "in local_objectid");
@@ -3152,8 +3161,8 @@ static Error local_objectid(struct finfo *f, int *objnum, char *what)
     }
 
     /* is it a simple number? */
-    if (_dxfmatchint(f, &value)) {
-	*objnum = USER_ID(value);
+    if (_dxfmatchint(f, &val)) {
+	*objnum = USER_ID(val);
 	return OK;
     }
     
@@ -3185,10 +3194,10 @@ static Error local_objectid(struct finfo *f, int *objnum, char *what)
  * <<<THIS HAS TO SET *objnum TO SOMETHING BEFORE IT RETURNS>>>
  */
 static Error 
-remote_objectid(struct finfo *f, int *objnum, char *what)
+remote_objectid(struct finfo *f, EDF_Id *objnum, char *what)
 {
     Error rc = OK;
-    int value;
+    EDF_Id value ;
     
 #if DEBUG_MSG
     DXDebug("E", "in remote_objectid");
@@ -3223,7 +3232,7 @@ remote_objectid(struct finfo *f, int *objnum, char *what)
  *  is supposed to be identifying.
  */ 
 static Error 
-parse_objectid(struct finfo *f, int *objnum, int *objtype, char *what)
+parse_objectid(struct finfo *f, EDF_Id *objnum, int *objtype, char *what)
 {
     if (match_keyword(f, KW_FILE)) {
 	*objtype = ID_REMOTE;
@@ -3243,7 +3252,7 @@ static Error
 object_or_id(struct finfo *f, Object *o, char *what, int *which)
 {
     int rc;
-    int value;
+    EDF_Id value;
     int objtype;
 
     *which = f->activity;
@@ -3284,7 +3293,7 @@ seriesobject_or_id(struct finfo *f, Object *o, char *what, int *which,
 		   int enumval, int *skip)
 {
     int rc;
-    int value;
+    EDF_Id value;
     int objtype;
     int start;
     struct getby *gp;
@@ -3442,7 +3451,7 @@ static Error remote_object(struct finfo *f, int value, Object *o)
  *  the getby struct gets deleted when objectlist is deleted.
  */
 static Error 
-file_lists(struct finfo *f, int value)
+file_lists(struct finfo *f, EDF_Id value)
 {
     struct getby **gpp;
     char *cp;
@@ -3456,7 +3465,7 @@ file_lists(struct finfo *f, int value)
     if (!gpp)
 	return ERROR;
 
-    *gpp = (struct getby *)DXAllocateLocalZero(sizeof(struct getby));
+    *gpp = (struct getby *)DXAllocateZero(sizeof(struct getby));
     if (!(*gpp))
 	return ERROR;
 
@@ -3477,7 +3486,7 @@ file_lists(struct finfo *f, int value)
     _dxfsetnexttype(f, 0);
 
     cp = _dxfdictname(f->d, value);
-    (*gpp)->fname = DXAllocateLocal(strlen(cp) + 1);
+    (*gpp)->fname = DXAllocate(strlen(cp) + 1);
     if (!(*gpp)->fname)
 	return ERROR;
     strcpy((*gpp)->fname, cp);
@@ -3499,7 +3508,7 @@ file_lists(struct finfo *f, int value)
     } else if (get_int(f, &(*gpp)->num)) {
 	/* object number */
 	(*gpp)->which = GETBY_NUM;  /* what it should be */
-	(*gpp)->gbuf = DXAllocateLocal(2 * sizeof(int));
+	(*gpp)->gbuf = DXAllocate(2 * sizeof(int));
 	(*gpp)->numlist = (int *)(*gpp)->gbuf;
 	(*gpp)->numlist[0] = (*gpp)->num;
 	(*gpp)->numlist[1] = -1;
@@ -3511,7 +3520,7 @@ file_lists(struct finfo *f, int value)
 	(*gpp)->which = GETBY_NAME;
 	cp = _dxfdictname(f->d, value);
     /*  hasname: */
-	(*gpp)->gbuf = DXAllocateLocal(2*sizeof(char *) + strlen(cp)+1);
+	(*gpp)->gbuf = DXAllocate(2*sizeof(char *) + strlen(cp)+1);
 	if (!(*gpp)->gbuf)
 	    return ERROR;
 	strcpy((char *)((*gpp)->gbuf)+(2*sizeof(char *)), cp);
@@ -3538,7 +3547,7 @@ file_lists(struct finfo *f, int value)
     if (!input || (strlen(input) <= 0))
 	goto error;
 	
-    *buf = (char *)DXAllocateLocal(strlen(input)+16);
+    *buf = (char *)DXAllocate(strlen(input)+16);
     if (!*buf)
 	goto error;
 
@@ -3700,7 +3709,7 @@ static Error parse_default(struct finfo *f)
 {
     struct getby *gp;
     int rc = OK;
-    int objnum;
+    EDF_Id objnum;
     int objcount = 0;
 
     gp = &(f->gb);
@@ -3726,7 +3735,7 @@ static Error parse_default(struct finfo *f)
     DXDebug("O", "setting default object %d", objnum);
 #endif
 
-    gp->gbuf = DXAllocateLocal(sizeof(int) * 2);
+    gp->gbuf = DXAllocate(sizeof(int) * 2);
     if (!gp->gbuf)
 	return ERROR;
     gp->numlist = (int *)gp->gbuf;
@@ -3775,13 +3784,22 @@ static Error parse_default(struct finfo *f)
  *  a stringlist is "xxx" "yyy" "zzz" ... until the next thing which 
  *    isn't a double quoted token.
  */
+
+void ms_hit(){}
+static int ms_target = -1;
+
 static Object make_string(struct finfo *f)
 {
-    int id, nid;
+    EDF_Id id, nid;
     Object o;
     char **clist = NULL;
     int nalloc = 0, nfilled = 0;
     Error rc = OK;
+    static int knt = -1;
+
+    knt++;
+    if (ms_target == knt)
+        ms_hit();
  
 #if DEBUG_MSG
     DXDebug("E", "in make_string");
@@ -3795,7 +3813,7 @@ static Object make_string(struct finfo *f)
     if (rc == OK) {
 	while(rc == OK) {
 	    if (!clist) {
-		clist = (char **)DXAllocateLocal(CHUNK * sizeof(char *));
+		clist = (char **)DXAllocate(CHUNK * sizeof(char *));
 		if (!clist)
 		    return ERROR;
  

@@ -90,7 +90,7 @@ static RGBColor DEFAULT_SURFACE_COLOR = { 0.5, 0.7, 1.0 }; /*bluish slate grey*/
 static RGBColor DEFAULT_LINE_COLOR    = { 0.7, 0.7, 0.0 };
 
                         /* sizeof unsigned int is 4 bytes, 32 bits */
-#define  NEWBIT(n)      ((Pointer)DXAllocateLocalZero((((n)+31)/32)*4))
+#define  NEWBIT(n)      ((Pointer)DXAllocateZero((((n)+31)/32)*4))
 #define  SETBIT(a,i,v)  (((unsigned int*)(a))[((i)/32)]|=((v)<<((i)&31)))
 #define  GETBIT(a,i)    (1&(((unsigned int*)(a))[((i)/32)]>>((i)&31)))
 
@@ -2694,7 +2694,7 @@ Field create_iso_points
              !_dxf_SetIterator    ( comp )
              ||
              ( ERROR == ( out_data = DXGetArrayData  ( array )))             ||
-             ( ERROR == ( scratch  = DXAllocateLocal ( 2 * a_info->itemsize )))
+             ( ERROR == ( scratch  = DXAllocate ( 2 * a_info->itemsize )))
              ||
              !DXInitGetNextHashElement ( vtx_hash.table ) )
             goto error;
@@ -3136,7 +3136,7 @@ Field create_band_lines
 
     if ( ( connection_count > 0 ) && ( c_ID_list != NULL ) )
     {
-        if ( ( ERROR == ( c_ID_pull = DXAllocateLocal
+        if ( ( ERROR == ( c_ID_pull = DXAllocate
                                           ( connection_count * sizeof(int) ) ) )
              ||
              !copy_seglist_to_memory
@@ -3232,7 +3232,7 @@ Field create_band_lines
 	     ||
 	     !(itemsize = DXGetItemSize(array))
 	     ||
-             ( ERROR == ( scratch  = DXAllocateLocal ( 2 * itemsize)))
+             ( ERROR == ( scratch  = DXAllocate ( 2 * itemsize)))
              ||
              !DXInitGetNextHashElement ( vtx_hash.table ) )
             goto error;
@@ -3595,7 +3595,7 @@ Field create_iso_contours
 
     if ( ( edge_hash.count > 0 ) && ( c_ID_list != NULL ) )
     {
-        if ( ( ERROR == ( c_ID_pull = DXAllocateLocal
+        if ( ( ERROR == ( c_ID_pull = DXAllocate
                                           ( edge_hash.count * sizeof(int) ) ) )
              ||
              !copy_seglist_to_memory
@@ -3690,7 +3690,7 @@ Field create_iso_contours
              !_dxf_SetIterator    ( comp )
              ||
              ( ERROR == ( out_data = DXGetArrayData  ( array )))             ||
-             ( ERROR == ( scratch  = DXAllocateLocal ( 2 * a_info->itemsize )))
+             ( ERROR == ( scratch  = DXAllocate ( 2 * a_info->itemsize )))
              ||
              !DXInitGetNextHashElement ( vtx_hash.table ) )
             goto error;
@@ -4116,7 +4116,7 @@ Field create_band_surface
 
     if ( ( connection_count > 0 ) && ( c_ID_list != NULL ) )
     {
-        if ( ( ERROR == ( c_ID_pull = DXAllocateLocal
+        if ( ( ERROR == ( c_ID_pull = DXAllocate
                                           ( connection_count * sizeof(int) ) ) )
              ||
              !copy_seglist_to_memory
@@ -4227,7 +4227,7 @@ Field create_band_surface
 	     ||
 	     !(itemsize = DXGetItemSize(array))
 	     ||
-             ( ERROR == ( scratch  = DXAllocateLocal ( 2 * itemsize)))
+             ( ERROR == ( scratch  = DXAllocate ( 2 * itemsize)))
              ||
              !DXInitGetNextHashElement ( vtx_hash.table ) )
             goto error;
@@ -5013,8 +5013,8 @@ Field remove_degenerates ( Field in )
 
 
 #define SETUP_AREAS \
-{if ((ERROR==(new_pts=(int*)DXAllocateLocal(p_info->items*sizeof(int))))\
- ||(ERROR==(new_tris=(int*)DXAllocateLocal(c_info->items*sizeof(int)))))\
+{if ((ERROR==(new_pts=(int*)DXAllocate(p_info->items*sizeof(int))))\
+ ||(ERROR==(new_tris=(int*)DXAllocate(c_info->items*sizeof(int)))))\
     goto error; \
     DXDebug ( "I", "RemoveDegenerates: Doin' it at i=%d.", i ); \
     for ( j=0; j<c_info->items; j++ ) new_tris [ j ] = j; \
@@ -5255,7 +5255,7 @@ Field create_iso_surface
                               = DXNewSegList ( sizeof(Vector), 1000, 1000 ) ) ) 
              ||
              ( ERROR == ( grad_table.index = (Vector**)
-                              DXAllocateLocalZero
+                              DXAllocateZero
                                   ( pi_info->items * sizeof(Vector*) ) ) )
              ||
              ( ERROR == ( vtx_hash.set_vertices
@@ -5437,7 +5437,7 @@ Field create_iso_surface
 
     if ( ( connection_count > 0 ) && ( c_ID_list != NULL ) )
     {
-        if ( ( ERROR == ( c_ID_pull = DXAllocateLocal
+        if ( ( ERROR == ( c_ID_pull = DXAllocate
                                           ( connection_count * sizeof(int) ) ) )
              ||
              !copy_seglist_to_memory
@@ -5527,7 +5527,7 @@ Field create_iso_surface
              !_dxf_SetIterator    ( comp )
              ||
              ( ERROR == ( out_data = DXGetArrayData  ( array )))             ||
-             ( ERROR == ( scratch  = DXAllocateLocal ( 2 * a_info->itemsize )))
+             ( ERROR == ( scratch  = DXAllocate ( 2 * a_info->itemsize )))
              ||
              !DXInitGetNextHashElement ( vtx_hash.table ) )
             goto error;

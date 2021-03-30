@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 /*
- $Header: /src/master/dx/src/exec/hwrender/starbase/wsutils.h,v 1.3 1999/05/10 15:45:39 gda Exp $
+ $Header: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/wsutils.h,v 1.3 1999/05/10 15:45:39 gda Exp $
 */
 
 /* This is the actual structure returned by the X server describing the

@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/post.c,v 1.6 2000/12/21 15:21:31 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/post.c,v 1.6 2000/12/21 15:21:31 davidt Exp $:
  */
 
 #include <stdio.h>

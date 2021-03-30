@@ -18,6 +18,8 @@
 #include "distp.h"
 #include "rq.h"
 
+int dict_debug = 0;
+
 typedef struct varupdateArg
 {
     char *name;
@@ -42,6 +44,9 @@ int
 _dxf_ExVariableInsert(char *name, EXDictionary dict, EXO_Object obj)
 {
     int		ret;
+
+    if (dict_debug)
+        fprintf(stderr, "VI 0x%016lx: %s 0x%016lx\n", dict, name, obj);
 
     if (!strcmp(name, "NULL"))
     {
@@ -86,7 +91,15 @@ _dxf_ExVariableDelete(char *name, EXDictionary dict)
 EXObj
 _dxf_ExVariableSearch (char *name, EXDictionary dict)
 {
-    return (_dxf_ExDictionarySearch (dict, name));
+    EXObj o =  (_dxf_ExDictionarySearch (dict, name));
+
+    if (dict_debug)
+	if (o)
+	    fprintf(stderr, "VS 0x%016lx: %s FOUND 0x%016lx\n", dict, name, o);
+	else
+	    fprintf(stderr, "VS 0x%016lx: %s NOT FOUND\n", dict, name);
+
+    return o;
 }
 
 

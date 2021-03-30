@@ -12,7 +12,7 @@
 #ifndef tdmClientMessage_h
 #define tdmClientMessage_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwClientMessage.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwClientMessage.h,v $
   Author: Mark Hood
 
   Types, prototypes, and other stuff for the client message utilities.

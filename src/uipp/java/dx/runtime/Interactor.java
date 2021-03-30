@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/Interactor.java,v 1.4 2006/03/28 20:07:53 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/Interactor.java,v 1.5 2006/09/12 15:43:43 davidt Exp $
  */
 
 //-----------------------------------------------------
@@ -187,7 +187,6 @@ public void keyReleased(KeyEvent e){ }
     public void setValue( String s )
     {
         TextField tf = ( TextField ) ipart;
-        System.err.println("Setting: " + s);
         tf.setText( s );
     }
 

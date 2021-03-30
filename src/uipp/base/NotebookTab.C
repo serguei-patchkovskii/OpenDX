@@ -87,7 +87,7 @@ void NotebookTab::createButton(Widget parent)
 	XmNmultiClick, XmMULTICLICK_KEEP,
 	XmNpushButtonEnabled, FALSE,
 	XmNshadowThickness, 0,
-	XmNrecomputeSize, FALSE,
+	XmNheight, 23,
     NULL);
     this->setRootWidget(w);
 

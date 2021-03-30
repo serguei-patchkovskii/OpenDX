@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_refinereg.c,v 1.5 2000/08/24 20:04:19 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_refinereg.c,v 1.5 2000/08/24 20:04:19 davidt Exp $
  */
 
 #include <stdio.h>
@@ -384,7 +384,7 @@ RefineDepConIrreg(Array inArray, int n, int nDim, int *inCounts, int *outCounts)
     /*
      * Get the input data.
      */
-    inBuffer = (char *)DXGetArrayDataLocal(inArray);
+    inBuffer = (char *)DXGetArrayData(inArray);
     if (! inBuffer)
     {
 	DXResetError();
@@ -482,9 +482,6 @@ RefineDepConIrreg(Array inArray, int n, int nDim, int *inCounts, int *outCounts)
 	outBase = obase[0];
     }
 	
-    if (inBuffer != (char *)DXGetArrayData(inArray))
-	DXFreeArrayDataLocal(inArray, (Pointer)inBuffer);
-
     return outArray;
 
 error:
@@ -562,7 +559,7 @@ RefineDepConBoolean(Array inArray, int n,
     /*
      * Get the input data.
      */
-    inBuffer = (char *)DXGetArrayDataLocal(inArray);
+    inBuffer = (char *)DXGetArrayData(inArray);
     if (! inBuffer)
     {
 	DXResetError();
@@ -658,7 +655,7 @@ RefineDepConBoolean(Array inArray, int n,
     }
 	
     if (inBuffer != (char *)DXGetArrayData(inArray))
-	DXFreeArrayDataLocal(inArray, (Pointer)inBuffer);
+	DXFreeArrayData(inArray, (Pointer)inBuffer);
 
     return outArray;
 
@@ -819,7 +816,7 @@ RefineDepPosIrreg(Array inArray, int n, int nDim, int *inCounts, int *outCounts)
      * that affects it.  Create a local buffer (if possible) for the
      * output values.  Leave the input in global memory.
      */
-    buffer = (float *)DXAllocateLocal(nOutItems * nValues * sizeof(float));
+    buffer = (float *)DXAllocate(nOutItems * nValues * sizeof(float));
     if (! buffer)
     {
 	DXResetError();
@@ -1215,7 +1212,7 @@ RefineDepPosIrregBoolean(Array inArray, int n,
      * that affects it.  Create a local buffer (if possible) for the
      * output values.  Leave the input in global memory.
      */
-    buffer = (byte *)DXAllocateLocal(nOutItems * nValues * sizeof(byte));
+    buffer = (byte *)DXAllocate(nOutItems * nValues * sizeof(byte));
     if (! buffer)
     {
 	DXResetError();

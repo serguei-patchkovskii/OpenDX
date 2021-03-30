@@ -1,3 +1,9 @@
+x.x.x
+=================
+Updates for Java Explorer so that HTMLDisplay accepts
+form input. Added wait cursor to applets when dx is
+executing.
+
 4.4.4
 =================
 Fix a bug in Compute when comparing two strings of

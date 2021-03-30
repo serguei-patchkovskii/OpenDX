@@ -4,7 +4,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/client/AppletLoadThread.java,v 1.2 2005/10/27 19:43:05 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/client/AppletLoadThread.java,v 1.2 2005/10/27 19:43:05 davidt Exp $
  */
 
 package dx.client;

@@ -203,13 +203,13 @@ typedef struct _XmFrameControlPart
     unsigned long next_color;
     unsigned long current_color;
     unsigned long limit_color;
-    short max_value;			/* total number of frames covered  */
-    short min_value;			/* 0 to actual offset (usually 1)  */
-    short start_value;			/* first frame of current sequence */
-    short next_value;			/* last frame shown or queued (!!) */
-    short current_value;		/* last frame shown or queued (!!) */
-    short stop_value;			/* last frame of current sequence  */
-    short increment;			/* number of frames per advance    */
+    int   max_value;			/* total number of frames covered  */
+    int   min_value;			/* 0 to actual offset (usually 1)  */
+    int   start_value;			/* first frame of current sequence */
+    int   next_value;			/* last frame shown or queued (!!) */
+    int   current_value;		/* last frame shown or queued (!!) */
+    int   stop_value;			/* last frame of current sequence  */
+    int   increment;			/* number of frames per advance    */
     void *user_data;
     XtCallbackList value_callback;      /* Callback list for any change    */
     Boolean current_visible;		/* Display the current info ?      */

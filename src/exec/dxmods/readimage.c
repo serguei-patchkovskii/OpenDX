@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/readimage.c,v 1.9 2003/07/11 05:50:36 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/readimage.c,v 1.9 2003/07/11 05:50:36 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -1178,7 +1178,7 @@ Field InputR_G_B (int width, int height, int fh[3], char *colortype)
     pixels = DXGetArrayData(colorsArray);
 
     oneframe = width * height;
-    if (!( buffer = DXAllocateLocal(oneframe)))
+    if (!( buffer = DXAllocate(oneframe)))
         goto error;
 
     DXGetArrayInfo(colorsArray, NULL, &type, NULL, &rank, shape);

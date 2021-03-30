@@ -31,10 +31,6 @@ DXAddTriangles
 DXAdjointTranspose
 DXAllocate
 DXAllocateArray
-DXAllocateLocal
-DXAllocateLocalOnly
-DXAllocateLocalOnlyZero
-DXAllocateLocalZero
 DXAllocateZero
 DXApply
 DXApplyTransform
@@ -72,7 +68,6 @@ DXCull
 DXCullConditional
 DXDebug
 DXDebugAlloc
-DXDebugLocalAlloc
 DXDelete
 DXDeleteAttribute
 DXDeleteComponent
@@ -104,17 +99,13 @@ DXExtractInteger
 DXExtractNthString
 DXExtractParameter
 DXExtractString
-DXFindAlloc
-DXFoundAlloc
 DXFree
-DXFreeArrayDataLocal
 DXFreeArrayHandle
 DXFreeInvalidComponentHandle
 DXFreeModuleId
 DXGeometricText
 DXGetArrayClass
 DXGetArrayData
-DXGetArrayDataLocal
 DXGetArrayInfo
 DXGetAttribute
 DXGetBackgroundColor
@@ -147,8 +138,6 @@ DXGetInvalidCount
 DXGetItemSize
 DXGetMember
 DXGetMemberCount
-DXGetMemoryBase
-DXGetMemorySize
 DXGetMeshArrayInfo
 DXGetMeshOffsets
 DXGetModuleId
@@ -207,7 +196,6 @@ DXIsElementValid
 DXIsElementValidSequential
 DXLength
 DXLn
-DXLocalizeInterpolator
 DXMakeFloat
 DXMakeGridConnections
 DXMakeGridConnectionsV
@@ -300,7 +288,6 @@ DXReadyToRun
 DXReference
 DXRegisterInputHandler
 DXRegisterScavenger
-DXRegisterScavengerLocal
 DXRemove
 DXRename
 DXRender
@@ -334,7 +321,6 @@ DXSetGroupType
 DXSetGroupTypeV
 DXSetIntegerAttribute
 DXSetMember
-DXSetMemorySize
 DXSetMeshOffsets
 DXSetObjectTag
 DXSetOrthographic
@@ -344,6 +330,7 @@ DXSetPerspective
 DXSetResolution
 DXSetScreenObject
 DXSetSeriesMember
+DXSetSoftwareWindowActive
 DXSetStringAttribute
 DXSetView
 DXSetXformObject
@@ -378,7 +365,6 @@ DXdestroy_lock
 DXfetch_and_add
 DXinitdx
 DXlock
-DXmemsize
 DXqflush
 DXqmessage
 DXsyncmem
@@ -391,6 +377,7 @@ _dxdlight_class
 _dxfChangeBufferMode
 _dxfGetCompositeMatrix
 _dxfRedrawInteractorEchos
+_dxfRedrawInActiveContext
 _dxfSetInteractorViewDepth
 _dxfSetXError
 _dxfTriangulateField
@@ -460,6 +447,7 @@ _dxfPopInteractorCamera
 _dxfPopMatrix
 _dxfPopViewMatrix
 _dxfPopViewport
+_dxfPostArray
 _dxfProcessEvents
 _dxfPushInteractorCamera
 _dxfPushMatrix

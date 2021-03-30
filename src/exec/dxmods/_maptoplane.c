@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_maptoplane.c,v 1.7 2006/01/03 17:02:21 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_maptoplane.c,v 1.7 2006/01/03 17:02:21 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -636,7 +636,7 @@ MTP_tetras(Field field, Plane plane)
     DXGetArrayInfo (cArray, &nTetras, NULL, NULL, NULL, NULL);
     DXGetArrayInfo (pArray, &nPts, NULL, NULL, NULL, NULL);
 
-    hilo = (float *)DXAllocateLocal(nPts*sizeof(float));
+    hilo = (float *)DXAllocate(nPts*sizeof(float));
     if (! hilo)
     {
 	DXResetError();

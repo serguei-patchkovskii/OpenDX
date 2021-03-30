@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 package dx.runtime;
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/StepperInteractor.java,v 1.2 2005/10/27 19:43:08 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/StepperInteractor.java,v 1.2 2005/10/27 19:43:08 davidt Exp $
  */
 import java.awt.*;
 import dx.net.PacketIF;

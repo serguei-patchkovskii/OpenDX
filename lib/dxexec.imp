@@ -468,6 +468,7 @@ _dxfPopInteractorCamera
 _dxfPopMatrix
 _dxfPopViewMatrix
 _dxfPopViewport
+_dxfPostArray
 _dxfProcessEvents
 _dxfPushInteractorCamera
 _dxfPushMatrix

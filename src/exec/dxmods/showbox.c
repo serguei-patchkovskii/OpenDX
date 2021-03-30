@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/showbox.c,v 1.4 1999/07/12 22:32:57 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/showbox.c,v 1.4 1999/07/12 22:32:57 gda Exp $
  */
 
 #include <dxconfig.h>

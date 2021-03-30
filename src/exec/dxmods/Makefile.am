@@ -13,6 +13,8 @@ DISTCLEANFILES = dx.mdf dxcm.mdf user.c usercm.c tmp.c
 
 dxmdf_DATA = dx.mdf
 
+user.c: dx.mdf
+
 _complex.o: _compparse.h
 
 HEADERS1 = \

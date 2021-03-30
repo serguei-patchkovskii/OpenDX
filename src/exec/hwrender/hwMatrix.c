@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Source: /src/master/dx/src/exec/hwrender/hwMatrix.c,v $
+ * $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwMatrix.c,v $
  */
 
 #include <dxconfig.h>
@@ -97,7 +97,7 @@ typedef struct tdmTransformStackS {
   register int i ;						            \
   register type *p, *newTop, *newStack ;			            \
  								            \
-  newStack = newTop = (type *) tdmAllocateLocal(sizeof(type) * (size+32)) ; \
+  newStack = newTop = (type *) tdmAllocate(sizeof(type) * (size+32)) ; \
   								            \
   for (i=0, p=stack ; i<size ; i++)			                    \
       *newTop++ = *p++ ;					            \
@@ -133,7 +133,7 @@ _dxfCreateStack()
   ENTRY(("_dxfCreateStack()"));
 
   if (! (tdmStack = (tdmTransformStackP)
-	            tdmAllocateLocal(sizeof(tdmTransformStackT))))
+	            tdmAllocate(sizeof(tdmTransformStackT))))
       goto error ;
 
   tdmStack->mSize = 0 ;

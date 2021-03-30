@@ -37,7 +37,7 @@ _dxf_InitBuffer(struct buffer *b, enum pix_type pix_type,
 #   define ALIGN 16
     /* allocate buffer */
     if (pix_type==pix_fast) {
-	b->buffer = DXAllocateLocal(n*sizeof(struct fast) + ALIGN);
+	b->buffer = DXAllocate(n*sizeof(struct fast) + ALIGN);
 	if (!b->buffer) {
 	    DXResetError();
 	    b->buffer = DXAllocate(n*sizeof(struct fast));
@@ -50,7 +50,7 @@ _dxf_InitBuffer(struct buffer *b, enum pix_type pix_type,
 	}
 	b->u.fast = (struct fast *) ((((long)b->buffer)+ALIGN-1) & ~(ALIGN-1));
     } else if (pix_type==pix_big) {
-	b->buffer = DXAllocateLocal(n*sizeof(struct big));
+	b->buffer = DXAllocate(n*sizeof(struct big));
 	if (!b->buffer) {
 	    DXResetError();
 	    b->buffer = DXAllocate(n*sizeof(struct big));
@@ -62,7 +62,7 @@ _dxf_InitBuffer(struct buffer *b, enum pix_type pix_type,
 	}
 	b->u.big = (struct big *) b->buffer;
     } else if (pix_type==pix_zbuf) {
-	b->buffer = DXAllocateLocal(n*sizeof(struct zbuf));
+	b->buffer = DXAllocate(n*sizeof(struct zbuf));
 	if (!b->buffer) {
 	    DXResetError();
 	    b->buffer = DXAllocate(n*sizeof(struct zbuf));

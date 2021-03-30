@@ -12,15 +12,16 @@
 #include <dx/dx.h>
 #include <stdlib.h>
 
-static Object ScreenObject(Object, Vector, Vector, int, int, int);
+static Object ScreenObject(Object, Vector, Vector, int, int);
   
 Error
-m_Screen(Object *in, Object *out)
+m_ScreenObject(Object *in, Object *out)
 {
   Point translation, size;
   Object ino;
-  int depthflag, units, how;
+  int depthflag, how;
   float scalarsize;
+  char *strBuf;
   
   /* in[0] is the object to be turned into a screen object */
   if (!in[0]) {
@@ -43,22 +44,37 @@ m_Screen(Object *in, Object *out)
   /* in[2] is units of screen object location */
   if (in[2]) {
     if (!DXExtractInteger(in[2], &how)) {
-      DXSetError(ERROR_BAD_PARAMETER, "#10040", "how", 0, 2);
-      goto error;
-    }
-    if ((how < 0)||(how > 2)) {
-      DXSetError(ERROR_BAD_PARAMETER, "#10040", "how", 0, 2);
-      goto error;
-    }
-    if (how == 0) 
-      how = SCREEN_VIEWPORT;
-    else if (how == 1) 
-      how = SCREEN_PIXEL;
-    else
-      how = SCREEN_WORLD;
+    	if(!DXExtractString(in[2], &strBuf)) {
+	      DXSetError(ERROR_BAD_PARAMETER, "#10370", "how", "integer or valid string");
+    	  goto error;
+    	}
+    	if(strcmp(strBuf,"viewport")==0)
+	  		how = SCREEN_VIEWPORT;
+		else if(strcmp(strBuf,"pixel")==0)
+	  		how = SCREEN_PIXEL;
+		else if(strcmp(strBuf,"world")==0)
+	  		how = SCREEN_WORLD;
+		else
+		{
+			DXSetError(ERROR_BAD_PARAMETER, "#10370", "how", "integer or valid string");
+    		goto error;
+		}
+    } 
+    else {
+    	if ( how < 0 || how > 2 ) {
+    	  DXSetError(ERROR_BAD_PARAMETER, "#10040", "how", 0, 2);
+    	  goto error;
+    	}
+    	if (how == 0) 
+      		how = SCREEN_VIEWPORT;
+    	else if (how == 1) 
+    		how = SCREEN_PIXEL;
+    	else
+    		how = SCREEN_WORLD;
+  	}
   }
   else {
-    how = SCREEN_VIEWPORT;
+  	how = SCREEN_VIEWPORT;
   }
 
 
@@ -138,28 +154,25 @@ m_Screen(Object *in, Object *out)
       goto error;
     }
   }
-
-  /* now the coordinates of the size parameter */
+  
+  
+  /* in[4] is within, infrontof, behind */
   if (in[4]) {
-    if (!DXExtractInteger(in[4], &units)) {
-       DXSetError(ERROR_NOT_IMPLEMENTED,"#10370","units", "1");
-       goto error;
-    }
-    if (units != 1) {
-       DXSetError(ERROR_NOT_IMPLEMENTED,"#10370","units", "1");
-       goto error;
-    }
-  }
-  else {
-    units = 1;
-  }
-  
-  
-  /* in[5] is within, infrontof, behind */
-  if (in[5]) {
-    if (!DXExtractInteger(in[5], &depthflag)) {
-      DXSetError(ERROR_BAD_PARAMETER, "#10040", "depth", -1, 1);
-      goto error;
+    if (!DXExtractInteger(in[4], &depthflag)) {
+    	if(!DXExtractString(in[4], &strBuf)) {
+	      DXSetError(ERROR_BAD_PARAMETER, "#10370", "depth", "integer or valid string");
+    	  goto error;
+    	}
+    	if(strcmp(strBuf, "behind")==0)
+    		depthflag = -1;
+    	else if(strcmp(strBuf, "within")==0)
+    		depthflag = 0;
+    	else if(strcmp(strBuf, "in front")==0)
+    		depthflag = 1;
+    	else {
+	      DXSetError(ERROR_BAD_PARAMETER, "#10370", "depth", "integer or valid string");
+    	  goto error;    	
+    	}
     }
     if ((depthflag != -1)&&(depthflag != 0)&&(depthflag != 1)) {
       DXSetError(ERROR_BAD_PARAMETER, "#10040", "depth", -1, 1);
@@ -170,7 +183,7 @@ m_Screen(Object *in, Object *out)
     depthflag = 1;
   }
 
-  if (!(out[0] = ScreenObject(ino, translation, size, how, units, depthflag)))
+  if (!(out[0] = ScreenObject(ino, translation, size, how, depthflag)))
      goto error;
   return OK;
 
@@ -180,7 +193,7 @@ error:
   
 
 static Object ScreenObject(Object ino, Vector translation, Vector size,
-                          int how, int units, int depthflag)
+                          int how, int depthflag)
 {  
   Point box[8], min, max;
   Object o=NULL, oo=NULL, outscreen=NULL;
@@ -205,7 +218,6 @@ static Object ScreenObject(Object ino, Vector translation, Vector size,
   width = max.x - min.x;
   height = max.y - min.y;
   
-  /* get the thing into pixel units now */
   /* now nudge it a bit so that the reference point is at "position"
      relative to the object (just like caption, colorbar, etc) */
   if (how != SCREEN_VIEWPORT)

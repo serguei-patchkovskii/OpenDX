@@ -32,7 +32,7 @@
 static char *dictplace(struct dict *d, int len);
 
 static Error initkeywords(struct dict *d);
-static Error putkeyinfo(struct dict *d, char *word, int value);
+static Error putkeyinfo(struct dict *d, char *word, EDF_Id value);
 static char *strcpy_lc(char *a, char *b);
 
 #if TIMING
@@ -51,7 +51,7 @@ static int hashCompare(Key search, Element matched);
  */
 static struct keywords {
     char *word;
-    int id;
+    EDF_Id id;
 } keywords[] = {
     {    "object",		KW_OBJECT 	},
     {    "group",		KW_GROUP 	},
@@ -168,14 +168,14 @@ static struct keywords {
 /* compare input word to a list of known keywords.  return the keyword value
  *  if it matches, else return KW_NULL.
  */
-int _dxfiskeyword(struct dict *d, char *word)
+EDF_Id _dxfiskeyword(struct dict *d, char *word)
 {
 #if TIMING
     struct kinfo *ki, search;
     char lcase[LONGESTKEY];
 
     if (!d || !word)
-        return BADINDEX;
+        return KW_NULL;
 
 #if DEBUG_MSG
     DXDebug("D", "looking for %s in keyword dictionary", word);
@@ -230,7 +230,7 @@ char *_dxflookkeyword(int id)
 
 /* add a new keyword to dictionary and set value.  
  */
-static Error putkeyinfo(struct dict *d, char *word, int value)
+static Error putkeyinfo(struct dict *d, char *word, EDF_Id value)
 {
     struct kinfo ki;
 
@@ -328,11 +328,15 @@ static char *strcpy_lc(char *a, char *b)
  * dictionary section.  
  */
 
+static int show_hash = 0;
+
 static PseudoKey hashFunc(char *str)
 {
     unsigned long h = 1;
+    if (show_hash) fprintf(stderr, "str: %s ", str);
     while(*str)
 	h = (17*h + *str++);
+    if (show_hash) fprintf(stderr, "hash: %lx\n", h);
     return (PseudoKey)h;
  
 }
@@ -361,7 +365,7 @@ static char *dictplace(struct dict *d, int len)
      */
     if (ls->bytesleft < len) {
 	newls = (struct localstor *)
-	        DXAllocateLocalZero(sizeof(struct localstor));
+	        DXAllocate(sizeof(struct localstor));
 	if (!newls)
 	    return NULL;
     
@@ -396,7 +400,7 @@ Error _dxfinitdict(struct dict *d)
 	goto error;
     
     d->localdict = (struct localstor *)
-	           DXAllocateLocalZero(sizeof(struct localstor));
+	           DXAllocate(sizeof(struct localstor));
     if (!d->localdict)
 	goto error;
     
@@ -443,7 +447,7 @@ Error _dxfdeletedict(struct dict *d)
     }
 	
     d->localdict = NULL;
-    d->nextid = BADINDEX;
+    d->nextid = -1;
 
     return OK;
 }
@@ -453,15 +457,16 @@ Error _dxfdeletedict(struct dict *d)
  *  and aliases.  if string is already in table, return id.  if not,
  *  create new slot and return id.
  */
-int _dxfputdict(struct dict *d, char *word)
+EDF_Id
+_dxfputdict(struct dict *d, char *word)
 {
-    struct dinfo di;
-    int id;
+    EDF_Id id;
+    struct dinfo di, *di_ptr;
 
     if (!d || !word)
-        return BADINDEX;
+        return 0;
 
-    if ((id = _dxflookdict(d, word)) != BADINDEX)
+    if ((id = _dxflookdict(d, word)) != 0)
 	return id;
 
 #if DEBUG_MSG
@@ -471,13 +476,15 @@ int _dxfputdict(struct dict *d, char *word)
     di.key = hashFunc(word);
     di.contents = dictplace(d, strlen(word)+1);
     if (!di.contents)
-	return BADINDEX;
+	return 0;
     strcpy(di.contents, word);
     di.type = STRING;
     di.value = 0;
 
     if (!DXInsertHashElement(d->dicttab, (Pointer)&di))
-	return BADINDEX;
+	return 0;
+
+    id = _dxflookdict(d, word);
 
     return _dxflookdict(d, word);
 }
@@ -485,12 +492,13 @@ int _dxfputdict(struct dict *d, char *word)
 
 /* look up a string in the lookup table.  if not found, return error.
  */
-int _dxflookdict(struct dict *d, char *word)
+EDF_Id
+_dxflookdict(struct dict *d, char *word)
 {
     struct dinfo *di, search;
 
     if (!d || !word)
-        return BADINDEX;
+        return 0;
 
 #if DEBUG_MSG
     DXDebug("D", "looking for %s in dictionary", word);
@@ -501,9 +509,9 @@ int _dxflookdict(struct dict *d, char *word)
 
     if ((di = (struct dinfo *)DXQueryHashElement(d->dicttab, 
 					       (Pointer)&search)) == NULL)
-	return BADINDEX;
+	return 0;
 
-    return (int)((byte *)di - (byte *)d->dicttab);
+    return (EDF_Id)di;
 
 }
 
@@ -511,14 +519,13 @@ int _dxflookdict(struct dict *d, char *word)
 
 /* return the string associated with a dictionary slot.
  */
-char *_dxfdictname(struct dict *d, int slot)
+char *_dxfdictname(struct dict *d, EDF_Id id)
 {
-    struct dinfo *di;
+    struct dinfo *di = (struct dinfo *)id;
 
-    if (!d || !slot)
+    if (!d || !di)
         return NULL;
 
-    di = (struct dinfo *)((byte *)d->dicttab + slot);
     return di->contents;
 }
 
@@ -528,19 +535,15 @@ char *_dxfdictname(struct dict *d, int slot)
  *  makes sure internally generated numbers don't collide with numbers
  *  assigned to objects by the user.
  */
-Error _dxfsetdictalias(struct dict *d, int slot, int *value)
+Error _dxfsetdictalias(struct dict *d, EDF_Id id, EDF_Id *value)
 {
-    struct dinfo *di;
-
-    if (!d || !slot)
+    struct dinfo *di = (struct dinfo *)id;
+    if (!d || !di)
         return ERROR;
 
-    di = (struct dinfo *)((byte *)d->dicttab + slot);
-
     di->type = ALIAS;
-    di->value = SYS_ID(d->nextid);
-    *value = SYS_ID(d->nextid);
-    d->nextid++;
+    di->value = _dxfgetuniqueid(d);
+    *value = di->value;
 
 #if DEBUG_MSG
     DXDebug("D", "setting %s to alias value %d", di->contents, di->value);
@@ -551,14 +554,11 @@ Error _dxfsetdictalias(struct dict *d, int slot, int *value)
 
 /* return the type and value associated with a dictionary slot
  */
-Error _dxfgetdictinfo(struct dict *d, int slot, int *type, int *value)
+Error _dxfgetdictinfo(struct dict *d, EDF_Id id, int *type, EDF_Id *value)
 {
-    struct dinfo *di;
-
-    if (!d || !slot)
+    struct dinfo *di = (struct dinfo *)id;
+    if (!d || !di)
         return ERROR;
-
-    di = (struct dinfo *)((byte *)d->dicttab + slot);
 
     if (type)
 	*type = di->type;
@@ -572,7 +572,7 @@ Error _dxfgetdictinfo(struct dict *d, int slot, int *type, int *value)
 /* return the type and value associated with a dictionary slot
  * it would be nice if this could be fast somehow.
  */
-Error _dxfgetdictalias(struct dict *d, int alias, int *value)
+EDF_Id _dxfgetdictalias(struct dict *d, int alias)
 {
     struct dinfo *di;
 
@@ -581,24 +581,23 @@ Error _dxfgetdictalias(struct dict *d, int alias, int *value)
      */
     
     if (!DXInitGetNextHashElement(d->dicttab))
-	return ERROR;
+	return 0;
     
     while ((di = (struct dinfo *)DXGetNextHashElement(d->dicttab)) != NULL) {
 	if (di->type != ALIAS)
 	    continue;
 	if (di->value == alias) {
-	    *value = (int)((byte *)di - (byte *)d->dicttab);
-	    return OK;
+	    return (EDF_Id)di;
 	}
     }
 
-    return ERROR;
+    return 0;
 }
 
 /* allocate just a unique id from the dictionary list so we are 
  *  guarenteed not to collide with other valid object ids.
  */
-int _dxfgetuniqueid(struct dict *d)
+EDF_Id _dxfgetuniqueid(struct dict *d)
 {
     int value;
 

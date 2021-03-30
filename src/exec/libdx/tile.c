@@ -117,7 +117,9 @@ patch(Pointer ptr)
     /* short circuit empty patches */
     if (!p->nconnections) {
 	_dxf_ZeroPixels(c->image, p->left, p->right, p->top, p->bot, p->background);
+#if 0
 	finished(c);
+#endif
 	DXMarkTimeLocal("empty");
 	return OK;
     }
@@ -132,7 +134,7 @@ patch(Pointer ptr)
 	gather.max = DXPt(p->right-c->width/2, p->top-c->height/2, 0);
 	gather.nfields = 0;
 	gather.fields = (struct xfield *)
-	    DXAllocateLocal((p->tfields+1) * sizeof(struct xfield));
+	    DXAllocate((p->tfields+1) * sizeof(struct xfield));
 	if (!gather.fields)
 	    goto error;
 	gather.clipping = NULL;
@@ -141,7 +143,7 @@ patch(Pointer ptr)
 		goto error;
 	    DXASSERTGOTO(gather.nfields == p->tfields);
 	} else {
-	    gather.sort = (struct sort *) DXAllocateLocal(p->nbytes);
+	    gather.sort = (struct sort *) DXAllocate(p->nbytes);
 	    if (!gather.sort) {
 		DXResetError();
 		gather.sort = (struct sort *) DXAllocate(p->nbytes);
@@ -217,7 +219,9 @@ patch(Pointer ptr)
 	for (i=0; i<gather.nfields; i++)
 	    _dxf_XFreeLocal(&gather.fields[i]);
     DXFree((Pointer)gather.sort);
+#if 0
     finished(c);
+#endif
     DXMarkTimeLocal("free local");
 
     /* transfer from rendering buffer to image */
@@ -233,7 +237,9 @@ patch(Pointer ptr)
     return OK;
 
 error:
+#if 0
     finished(c);
+#endif
     DXFree((Pointer)gather.sort);
     DXFree((Pointer)gather.fields);
     DXFree((Pointer)b.buffer);
@@ -428,10 +434,11 @@ DXRender(Object o, Camera camera, char *format)
 
 	*cp = c;
 
+#if 0
 	DXcreate_lock(&cp->DXlock, "cleanup DXlock");
 	DXcreate_lock(&cp->done,   "done DXlock");    
-
 	DXlock(&cp->done, 0);
+#endif
 
 	patches = (struct patch *) DXAllocate(3*sizeof(struct patch)*ci*ci);
 	if (!patches)
@@ -489,6 +496,8 @@ DXRender(Object o, Camera camera, char *format)
 		}
 	    }
 	}
+
+#if 0
 	if (!DXAddTask(cleanup, (Pointer)cp, 0, -1))
 	{
 	    DXAbortTaskGroup();
@@ -497,6 +506,7 @@ DXRender(Object o, Camera camera, char *format)
 	    else
 		return NULL;
 	}
+#endif
 
 	if (!DXExecuteTaskGroup())
 	{
@@ -508,9 +518,11 @@ DXRender(Object o, Camera camera, char *format)
 	else 
 	    break;
 
+
 out_of_memory:
 	DXResetError();
 	if (cp) {
+#if 0
 	    DXtry_lock(&cp->DXlock, 0);
 	    DXunlock(&cp->DXlock, 0);
 	    DXdestroy_lock(&cp->DXlock);
@@ -522,6 +534,8 @@ out_of_memory:
 	    DXtry_lock(&count->DXlock, 0);
 	    DXunlock(&count->DXlock, 0);
 	    DXdestroy_lock(&count->DXlock);
+#endif
+	    DXDelete(cp->o);
 
 	    DXFree((Pointer)cp);
 	    cp = NULL;
@@ -540,8 +554,11 @@ out_of_memory:
 
 
     /* clean up and go home */
+#if 0
     DXdestroy_lock(&cp->DXlock);
     DXdestroy_lock(&cp->done);
+#endif
+    /* GDA */DXDelete(cp->o);
     DXFree((Pointer)cp);
     DXFree((Pointer)patches);
     DXFree((Pointer)count->pcount);
@@ -555,8 +572,10 @@ out_of_memory:
 
 error:
     if (cp) {
+#if 0
 	DXdestroy_lock(&cp->DXlock);
 	DXdestroy_lock(&cp->done);
+#endif
 	DXFree((Pointer)cp);
     }
     DXFree((Pointer)patches);

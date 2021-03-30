@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/genimp_parse.c,v 1.9 2002/03/21 02:57:35 rhh Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/genimp_parse.c,v 1.9 2002/03/21 02:57:35 rhh Exp $
  */
 
 #include <dxconfig.h>
@@ -169,7 +169,7 @@ _dxf_gi_InputInfoTable(char *table, char *format, FILE **datafp)
   ps.lineno = 0;
   /* copy name of file to headerfile so this can change if 
    * template exists and allocate own space for filename */
-  headerfile = (char *)DXAllocateLocal(strlen(table) +1);
+  headerfile = (char *)DXAllocate(strlen(table) +1);
   if (!headerfile)
      goto error;
   strcpy(headerfile,table);

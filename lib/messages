@@ -6,7 +6,7 @@
 #1030 old format file, please resave
 #1040 %d degenerate triangles found
 #1050 data mean used as default value, %g
-#1060 worker here [%d]
+#1060 worker here
 #1070 requested %d, using %d processors
 #1080 only one processor allowed on this architecture
 #1090 cleaning up and exiting

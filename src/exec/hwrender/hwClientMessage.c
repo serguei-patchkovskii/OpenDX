@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwClientMessage.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwClientMessage.c,v $
 
   This file contains functions implementing the client message protocol for
   communicating with other DX processes.  Most of the direct interactor

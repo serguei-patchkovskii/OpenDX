@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/loader.h,v 1.2 2000/08/11 15:28:12 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/loader.h,v 1.2 2000/08/11 15:28:12 davidt Exp $
  */
 
 #ifndef _LOADER_H

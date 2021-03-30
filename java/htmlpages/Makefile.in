@@ -1,0 +1,313 @@
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+C_LDARGS = @C_LDARGS@
+DXARCH = @DXARCH@
+DXCC = @DXCC@
+DXEXEC_EXP = @DXEXEC_EXP@
+DXEXEC_IMP = @DXEXEC_IMP@
+DXINST = @DXINST@
+DX_JAR = @DX_JAR@
+DX_JAVA_CLASSPATH = @DX_JAVA_CLASSPATH@
+JAR = @JAR@
+JAVAC = @JAVAC@
+LN_S = @LN_S@
+MAKEINFO = @MAKEINFO@
+MAKE_JAVADX_SAMPLES = @MAKE_JAVADX_SAMPLES@
+PACKAGE = @PACKAGE@
+RTL_LIBS = @RTL_LIBS@
+SHARED_LINK = @SHARED_LINK@
+SHELL = @SHELL@
+VERSION = @VERSION@
+
+javasampdir = $(prefix)/dx/java/htmlpages
+javasamp_DATA = $(WEB_FILES)
+EXTRA_DIST = $(WEB_FILES)
+
+SUBDIRS = userdata usermacros nets makes @MAKE_JAVADX_SAMPLES@
+
+WEB_FILES =  AutoInsurance.html AutoInsurance1.0.0.gif AutoInsurance2.0.0.gif AutoInsurance3.0.0.gif CCNet2.html CCNet23.0.0.gif CCNet24.0.0.gif CCNet25.0.0.gif Demo4.gif GroceryList.html GroceryList2.0.0.gif GroceryList3.0.0.gif GroceryList4.0.0.gif GroceryList4.0.1.gif GroceryList4.0.2.gif GroceryList4.0.3.gif GroceryList4.0.4.gif GroceryList4.0.5.gif GroceryList4.0.6.gif GroceryList4.0.7.gif GroceryList4.0.8.gif HomeOwn.html HomeOwn1.0.0.gif HomeOwn2.0.0.gif HomeOwn3.0.0.gif HomeOwn4.0.0.gif HomeOwn4.0.1.gif HomeOwn4.0.2.gif HomeOwn4.0.3.gif HomeOwn4.0.4.gif HomeOwn4.0.5.gif HomeOwn4.0.6.gif HomeOwn4.0.7.gif HomeOwn4.0.8.gif MRI_2.html MRI_21.0.0.gif MRI_22.0.0.gif MRI_22.0.1.gif MRI_22.0.2.gif MRI_22.0.3.gif MRI_22.0.4.gif MRI_22.0.5.gif MRI_22.0.6.gif MRI_22.0.7.gif MRI_22.0.8.gif Makefile.am Makefile.in Makefile.sample MutualFund.html MutualFund10.0.0.gif MutualFund2.0.0.gif MutualFund3.0.0.gif Navigation.html Navigation1.0.0.gif Navigation6.0.0.gif Navigation7.0.0.gif ScatterData.html ScatterData3.0.0.gif ScatterData4.0.0.gif ScatterData4.0.1.gif ScatterData4.0.2.gif ScatterData4.0.3.gif ScatterData4.0.4.gif ScatterData4.0.5.gif ScatterData4.0.6.gif ScatterData4.0.7.gif ScatterData4.0.8.gif Status.htm Status.html Streamline.html Streamline2.0.0.gif Streamline3.0.0.gif Streamline3.0.1.gif Streamline3.0.2.gif Streamline3.0.3.gif Streamline3.0.4.gif Streamline3.0.5.gif Streamline3.0.6.gif Streamline3.0.7.gif Streamline3.0.8.gif Streamline7.0.0.gif ThunderGlyphSheet.htm ThunderGlyphSheet.html ThunderGlyphSheet2.0.0.wrl ThunderGlyphSheet3.0.0.gif Topo.gif Topo.html Topo2.0.0.gif Topo3.0.0.gif Topo3.0.1.gif Topo3.0.2.gif Topo3.0.3.gif Topo3.0.4.gif Topo3.0.5.gif Topo3.0.6.gif Topo3.0.7.gif Topo3.0.8.gif Topo4.0.0.gif activex.htm ddi.html ddi5.0.0.gif ddi7.0.0.gif ddi8.0.0.gif earlier.htm gordon.html gordon1.0.0.gif gordon2.0.0.gif hedge.html hedge3.0.0.gif ibmqw.html ibmqw1.0.0.gif ibmqw2.0.0.gif npvcall.html npvcall3.0.0.gif optval.html optval1.0.0.gif pagea.gif pagea2.gif pagea3.gif perp1.0.0.gif perp1.0.1.gif perp1.0.2.gif perp1.0.3.gif perp1.0.4.gif perp1.0.5.gif perp1.0.6.gif perp1.0.7.gif perp1.0.8.gif toc.htm wacc.html wacc1.0.0.gif
+
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_CLEAN_FILES = 
+DATA =  $(javasamp_DATA)
+
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+all: all-redirect
+.SUFFIXES:
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps java/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+install-javasampDATA: $(javasamp_DATA)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(javasampdir)
+	@list='$(javasamp_DATA)'; for p in $$list; do \
+	  if test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(javasampdir)/$$p"; \
+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(javasampdir)/$$p; \
+	  else if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(javasampdir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(javasampdir)/$$p; \
+	  fi; fi; \
+	done
+
+uninstall-javasampDATA:
+	@$(NORMAL_UNINSTALL)
+	list='$(javasamp_DATA)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(javasampdir)/$$p; \
+	done
+
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+
+@SET_MAKE@
+
+all-recursive install-data-recursive install-exec-recursive \
+installdirs-recursive install-recursive uninstall-recursive  \
+check-recursive installcheck-recursive info-recursive dvi-recursive:
+	@set fnord $(MAKEFLAGS); amf=$$2; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@set fnord $(MAKEFLAGS); amf=$$2; \
+	dot_seen=no; \
+	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
+	  rev="$$subdir $$rev"; \
+	  test "$$subdir" = "." && dot_seen=yes; \
+	done; \
+	test "$$dot_seen" = "no" && rev=". $$rev"; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+   if test "$$subdir" = .; then :; else \
+	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
+   fi; \
+	done; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = java
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+	for subdir in $(SUBDIRS); do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d $(distdir)/$$subdir \
+	    || mkdir $(distdir)/$$subdir \
+	    || exit 1; \
+	    chmod 777 $(distdir)/$$subdir; \
+	    (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir=../$(top_distdir) distdir=../$(distdir)/$$subdir distdir) \
+	      || exit 1; \
+	  fi; \
+	done
+info-am:
+info: info-recursive
+dvi-am:
+dvi: dvi-recursive
+check-am: all-am
+check: check-recursive
+installcheck-am:
+installcheck: installcheck-recursive
+install-exec-am:
+install-exec: install-exec-recursive
+
+install-data-am: install-javasampDATA
+install-data: install-data-recursive
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-recursive
+uninstall-am: uninstall-javasampDATA
+uninstall: uninstall-recursive
+all-am: Makefile $(DATA)
+all-redirect: all-recursive
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs: installdirs-recursive
+installdirs-am:
+	$(mkinstalldirs)  $(DESTDIR)$(javasampdir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-tags mostlyclean-generic
+
+mostlyclean: mostlyclean-recursive
+
+clean-am:  clean-tags clean-generic mostlyclean-am
+
+clean: clean-recursive
+
+distclean-am:  distclean-tags distclean-generic clean-am
+
+distclean: distclean-recursive
+
+maintainer-clean-am:  maintainer-clean-tags maintainer-clean-generic \
+		distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-recursive
+
+.PHONY: uninstall-javasampDATA install-javasampDATA \
+install-data-recursive uninstall-data-recursive install-exec-recursive \
+uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
+all-recursive check-recursive installcheck-recursive info-recursive \
+dvi-recursive mostlyclean-recursive distclean-recursive clean-recursive \
+maintainer-clean-recursive tags tags-recursive mostlyclean-tags \
+distclean-tags clean-tags maintainer-clean-tags distdir info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all installdirs-am \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

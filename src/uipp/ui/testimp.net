@@ -43,7 +43,7 @@ main_Import_1_out_1 =
     main_Import_1_out_1,
     main_Describe_1_in_2
     ) [instance: 1, cache: 1];
-// decorator Annotate	pos=(162,7) size=20x20 style(Marker), value = /*\n * $Header: /src/master/dx/src/uipp/ui/testimp.net,v 1.1 1999/06/02 20:36:24 gda Exp $\n */
+// decorator Annotate	pos=(162,7) size=20x20 style(Marker), value = /*\n * $Header: /cvsroot/opendx2/dx/src/uipp/ui/testimp.net,v 1.1 1999/06/02 20:36:24 gda Exp $\n */
 // network: end of macro body
 }
 test_file = NULL;

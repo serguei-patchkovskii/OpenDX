@@ -15,6 +15,9 @@
 Error
 m_CacheScene(Object *in, Object *out)
 {
+#if 0
+    return OK;
+#else
     char *tag;
     char *buf = NULL;
 
@@ -79,4 +82,5 @@ m_CacheScene(Object *in, Object *out)
 error:
     DXFree((Pointer)buf);
     return ERROR;
+#endif
 }

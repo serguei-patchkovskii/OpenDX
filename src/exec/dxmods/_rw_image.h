@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_rw_image.h,v 1.8 2005/02/01 00:36:23 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_rw_image.h,v 1.8 2005/02/01 00:36:23 davidt Exp $
  */
 
 #include <dxconfig.h>

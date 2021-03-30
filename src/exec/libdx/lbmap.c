@@ -677,14 +677,12 @@ Map_Field_Constant(Array indexArray, Array map)
 
     DXGetArrayInfo(indexArray, &nItems, NULL, NULL, NULL, NULL);
 
-    oldData = (char *)DXGetArrayDataLocal(map);
+    oldData = (char *)DXGetArrayData(map);
     if (! oldData)
 	return NULL;
 
     newArray = (Array)DXNewConstantArrayV(nItems, (Pointer)oldData,
 				type, cat, rank, shape);
-
-    DXFreeArrayDataLocal(map, (Pointer)oldData);
 
     return newArray;
 }

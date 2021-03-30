@@ -11,7 +11,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/showboundary.c,v 1.8 2003/07/11 05:50:36 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/showboundary.c,v 1.8 2003/07/11 05:50:36 davidt Exp $
  */
 
 #include <string.h>

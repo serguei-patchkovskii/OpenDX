@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwCacheUtilSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwCacheUtilSB.c,v $
   Author: Mark Hood
 
   Cache utilities for Starbase strip primitives.

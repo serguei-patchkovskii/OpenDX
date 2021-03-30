@@ -561,7 +561,7 @@ static Error ColorField(Pointer ptr)
         minmap=0;
         maxmap=255;
 	numentries=maxmap-minmap+1;
-	colortable = DXAllocateLocal(numentries*sizeof(RGBColor));
+	colortable = DXAllocate(numentries*sizeof(RGBColor));
 	if (!colortable) {
 	  DXAddMessage("cannot allocate delayed color table with %d entries",
 		       numentries);
@@ -617,7 +617,7 @@ static Error ColorField(Pointer ptr)
         minmap=0;
         maxmap=255;
 	numentries=maxmap-minmap+1;
-	colortable = DXAllocateLocal(numentries*sizeof(RGBColor));
+	colortable = DXAllocate(numentries*sizeof(RGBColor));
 	if (!colortable) {
 	  DXAddMessage("cannot allocate delayed color table with %d entries",
 		       numentries);
@@ -783,7 +783,7 @@ static Error ColorField(Pointer ptr)
         minmap = 0;
         maxmap = 255;
         numentries=maxmap-minmap+1;
-        opacitytable = DXAllocateLocal(numentries*sizeof(float));
+        opacitytable = DXAllocate(numentries*sizeof(float));
         if (!opacitytable) {
           DXAddMessage("cannot allocate delayed opacity table with %d entries",
                        numentries);
@@ -819,7 +819,7 @@ static Error ColorField(Pointer ptr)
         minmap = 0;
         maxmap = 255;
 	numentries=maxmap-minmap+1;
-	opacitytable = DXAllocateLocal(numentries*sizeof(float));
+	opacitytable = DXAllocate(numentries*sizeof(float));
 	if (!opacitytable) {
 	  DXAddMessage("cannot allocate delayed opacity table with %d entries",
 		       numentries);

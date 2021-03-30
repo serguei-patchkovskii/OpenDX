@@ -101,7 +101,7 @@ _dxfField_Paint(Field f, struct buffer *b, int clip_status, struct tile *tile)
 	}
     }
     DXMarkTimeLocal("extract");
-    if (!_dxf_XPositions(f, &xf, XR_REQUIRED, XD_LOCAL)) goto error;
+    if (!_dxf_XPositions(f, &xf, XR_REQUIRED, XD_GLOBAL)) goto error;
     n = xf.nconnections;
     DXMarkTimeLocal("localize");
 

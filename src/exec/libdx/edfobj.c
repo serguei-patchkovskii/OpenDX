@@ -96,10 +96,19 @@ Error _dxfdeleteobjlist(struct finfo *f)
  *  to the head of the list - a fact the _dxfnumberedobjlist currently
  *  counts on to be able to tell which is the most recently defined object.
  */
-Error _dxfaddobjlist(struct finfo *f, int id, Object o, char *name, int start)
+Error _dxfaddobjlist(struct finfo *f, EDF_Id id, Object o, char *name, int start)
 {
     struct objlist *new;
     struct hashidtolist he;
+
+#if 0
+    fprintf(stderr, "Add: id 0x%lx obj 0x%lx class %s name %s\n",
+    	id, o, 
+	DXGetObjectClass(o) == CLASS_FIELD ? "FIELD" :
+	    DXGetObjectClass(o) == CLASS_STRING ? "STRING" : "other",
+	name);
+#endif
+		
 
     /* error if bad file ptr */
     if (!f)
@@ -115,7 +124,7 @@ Error _dxfaddobjlist(struct finfo *f, int id, Object o, char *name, int start)
         return ERROR;
 
     if (name) {
-        new->name = (char *)DXAllocateLocal(strlen(name)+1);
+        new->name = (char *)DXAllocate(strlen(name)+1);
         if (!new->name) 
             return ERROR;
         strcpy(new->name, name);
@@ -257,7 +266,7 @@ Error _dxflookobjlist(struct finfo *f, int id, Object *o, char **name)
 
 /* retrieve a pointer to the the getby struct from an object by id.
  */
-struct getby **_dxfgetobjgb(struct finfo *f, int id)
+struct getby **_dxfgetobjgb(struct finfo *f, EDF_Id id)
 {
     struct hashidtolist *he;
     long lid = (long)id;
@@ -305,7 +314,7 @@ Error _dxfobjusesobj(struct finfo *f, int id, int refd_id)
      */
     this = he->ol;
     if (this->nrefs == 0) {
-        this->refs = (struct objlist **)DXAllocateLocal(sizeof(struct objlist *));
+        this->refs = (struct objlist **)DXAllocate(sizeof(struct objlist *));
 	this->refs[0] = refd_he->ol;
 	this->nrefs++;
     } else {
@@ -678,7 +687,7 @@ static void printobjlist(struct finfo *f)
 
 struct hashobjtoid {
     Object o;
-    int id;
+    EDF_Id id;
     int literal;
 };
 
@@ -715,7 +724,7 @@ Error _dxfdelete_objident(HashTable ht)
  *  inputs are the object, the associated id, and a flag to say whether
  *  this is a literal number or a dictionary id.
  */
-Error _dxfadd_objident(HashTable ht, Object o, int id, int literal)
+Error _dxfadd_objident(HashTable ht, Object o, EDF_Id id, EDF_Id literal)
 {
     struct hashobjtoid he;
 
@@ -740,7 +749,7 @@ Error _dxfadd_objident(HashTable ht, Object o, int id, int literal)
 /* return the id associated with an object if it is already in the table.
  *  if not found, return NULL id.  only return error if something bad happens.
  */
-Error _dxflook_objident(HashTable ht, Object o, int *id, int *literal)
+Error _dxflook_objident(HashTable ht, Object o, EDF_Id *id, EDF_Id *literal)
 {
     struct hashobjtoid *he;
 

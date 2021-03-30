@@ -323,7 +323,7 @@ Error DXPrintV(Object o, char *options, char **components)
     /* printinfo about the object structure itself */
     if (do_sum) {
 	if (!(p.s = (struct sum_info *)
-	      DXAllocateLocalZero(sizeof(struct sum_info) * NCLASSES)))
+	      DXAllocateZero(sizeof(struct sum_info) * NCLASSES)))
 	    return ERROR;
 	
 	init_sum(p.s);
@@ -635,8 +635,8 @@ static void Array_Print (Array array, struct prt_info *p)
 	    break;
 	
 	origin = delta = NULL;
-	origin = DXAllocateLocal(DXGetItemSize(array));
-	delta = DXAllocateLocal(DXGetItemSize(array));
+	origin = DXAllocate(DXGetItemSize(array));
+	delta = DXAllocate(DXGetItemSize(array));
 	if(!delta || !origin) {
 	    if(delta) DXFree(delta);
 	    if(origin) DXFree(origin);
@@ -1390,7 +1390,7 @@ static void Field_Summary (Field field, struct prt_info *p)
 #if COMPS  /* new stuff */
 	if (p->s[class].c == NULL) {
 	    if ((sp = (struct str_info *)
-		DXAllocateLocalZero(sizeof (struct str_info))) == NULL)
+		DXAllocateZero(sizeof (struct str_info))) == NULL)
 		return;
 	    p->s[class].c = sp;
 	    sp->strname = name;
@@ -1405,7 +1405,7 @@ static void Field_Summary (Field field, struct prt_info *p)
 		}
 		if (sp->l == NULL) {
 		    if ((sp->l = (struct str_info *)
-			 DXAllocateLocalZero(sizeof (struct str_info))) == NULL)
+			 DXAllocateZero(sizeof (struct str_info))) == NULL)
 			return;
 		    sp->l->strname = name;
 		    sp->l->cs.num++;

@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/arrange.c,v 1.6 2003/07/11 05:50:34 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/arrange.c,v 1.6 2003/07/11 05:50:34 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -209,8 +209,8 @@ m_Arrange ( Object *in, Object *out )
 	DXWarning("#11713", "y", max_y);
     }
 
-    binx = DXAllocateLocalZero((ncols+1)*sizeof(int));
-    biny = DXAllocateLocalZero((nrows+1)*sizeof(int));
+    binx = DXAllocateZero((ncols+1)*sizeof(int));
+    biny = DXAllocateZero((nrows+1)*sizeof(int));
     if (ERROR == _get_bins(I_group, num_images, nrows, ncols, c, p, s, binx, biny)) {
         DXSetError(ERROR_NO_MEMORY, "8360");
         return ERROR;

@@ -15,7 +15,7 @@
 #ifndef tdmPortXGL_h
 #define tdmPortXGL_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/xgl/hwPortXGL.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwPortXGL.h,v $
 
   Private data structures used by the XGL implementation of DX renderer.
 

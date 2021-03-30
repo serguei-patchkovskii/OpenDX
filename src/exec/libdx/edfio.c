@@ -329,7 +329,7 @@ _dxfValidate(Field f)
 static Error mkfifo(char *path, mode_t mode)
 {
     int rc;
-    char *cmd = (char *)DXAllocateLocal(strlen("mknod ") +
+    char *cmd = (char *)DXAllocate(strlen("mknod ") +
 				      strlen(path) +
 				      strlen(" p; chmod ") + 
 				      12 + 
@@ -343,7 +343,7 @@ static Error mkfifo(char *path, mode_t mode)
 static Error Unlink(char *path)
 {
     int rc;
-    char *cmd = (char *)DXAllocateLocal(strlen("rm -f") +
+    char *cmd = (char *)DXAllocate(strlen("rm -f") +
 				      strlen(path) + 1);
     sprintf(cmd, "rm -f %s", path);
     rc = system(cmd);
@@ -534,7 +534,7 @@ FILE *_dxfopen_dxfile(char *inname, char *auxname, char **outname,char *ext)
 	} else
 	    ungetc(rc, fd);
 
-	*outname = (char *)DXAllocateLocalZero(strlen(inname)+1);
+	*outname = (char *)DXAllocateZero(strlen(inname)+1);
 	if (!*outname) {
 	    pclose(fd);
 	    return NULL;
@@ -559,10 +559,10 @@ FILE *_dxfopen_dxfile(char *inname, char *auxname, char **outname,char *ext)
                 strlen(inname) + 1 +
                 strlen(TEMPLATE) + 6;
         
-	if ((cmd = (char *)DXAllocateLocalZero(bytes)) == NULL)
+	if ((cmd = (char *)DXAllocateZero(bytes)) == NULL)
 	    return NULL;
         
-	if ((*outname = (char *)DXAllocateLocalZero(strlen(TEMPLATE) + 6)) == NULL)
+	if ((*outname = (char *)DXAllocateZero(strlen(TEMPLATE) + 6)) == NULL)
 	    return NULL;
 
         pid = getpid();
@@ -611,7 +611,7 @@ FILE *_dxfopen_dxfile(char *inname, char *auxname, char **outname,char *ext)
 	if (is_dir(fd, inname) != OK)
 	    goto error;
 
-	*outname = (char *)DXAllocateLocalZero(strlen(inname)+1);
+	*outname = (char *)DXAllocateZero(strlen(inname)+1);
 	if (!*outname) 
 	    goto error;
 	
@@ -634,7 +634,7 @@ FILE *_dxfopen_dxfile(char *inname, char *auxname, char **outname,char *ext)
     if (datadir)
 	bytes += strlen(datadir);
 
-    *outname = (char *)DXAllocateLocalZero(bytes);
+    *outname = (char *)DXAllocateZero(bytes);
     if (!*outname)
 	goto error;
 
@@ -867,7 +867,7 @@ Error _dxfinitfinfo(struct finfo *fp)
 
     /* initialize the dictionary
      */
-    fp->d = (struct dict *)DXAllocateLocal(sizeof(struct dict));
+    fp->d = (struct dict *)DXAllocate(sizeof(struct dict));
     if(!fp->d)
         goto done;
 

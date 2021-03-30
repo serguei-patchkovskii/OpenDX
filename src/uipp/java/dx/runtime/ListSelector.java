@@ -3,19 +3,20 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/ListSelector.java,v 1.3 2005/12/02 23:37:27 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/ListSelector.java,v 1.4 2006/09/12 15:43:43 davidt Exp $
  */
 package dx.runtime;
 import java.awt.*;
 import dx.net.PacketIF;
 import java.awt.event.*;
 
-public class ListSelector extends Selector implements ActionListener
+public class ListSelector extends Selector implements ActionListener, ItemListener
 {
         //
         // private member data
         //
         private boolean mode = false;
+	private int[] lastSelected = null;
         
         //
         // protected member data
@@ -27,11 +28,36 @@ public class ListSelector extends Selector implements ActionListener
                 return GridBagConstraints.BOTH;
         }
         
+	private void checkChange(){
+	    boolean changed = false;
+	    List lst = (List) ipart;
+	    int[] ixs = lst.getSelectedIndexes();
+	    if(lastSelected == null)
+	        changed = true;
+	    else {
+		if(ixs.length != lastSelected.length)
+		    changed = true;
+		else {
+	            for(int i=0; i<ixs.length; i++)
+			if(ixs[i] != lastSelected[i])
+			    changed = true;
+		}
+	    }
+	    if(changed){
+		//System.out.println("ListSelector: changed.");
+	        PacketIF pif = this.getNode();
+                pif.setOutputValues ( this.getOutputValue(), this.getOutput2Value() );
+	    }
+	    lastSelected = ixs;
+	}
+
         public void actionPerformed(ActionEvent ae) {
-        	System.out.println("ListSelector.actionPerformed: ");
-        	PacketIF pif = this.getNode();
-            pif.setOutputValues ( this.getOutputValue(), this.getOutput2Value() );
+	    checkChange();
         }
+
+	public void itemStateChanged(ItemEvent ie){
+	    checkChange();
+	}
 
 
         //
@@ -49,11 +75,13 @@ public class ListSelector extends Selector implements ActionListener
                 if ( this.local_bg != null )
                         ch.setBackground( this.local_bg );
                 
-                ch.addActionListener(this);
-
                 ipart = ch;
 
                 if ( mode ) ch.setMultipleMode( true );
+
+                //ch.addActionListener(this);
+		ch.addItemListener(this);
+
         }
 
         public void newItem( int i, String name )

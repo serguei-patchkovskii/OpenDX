@@ -1,0 +1,13 @@
+!
+CVS
+Makefile
+Makefile.in
+netlex.c
+netyacc.c
+dxmac.h
+gifmac.h
+imagemac.h
+lex.yy.c
+local.mk
+vrmlmac.h
+sequence.h

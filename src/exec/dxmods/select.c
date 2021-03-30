@@ -67,6 +67,24 @@ m_Select(Object *in, Object *out)
 
     out[0] = NULL;
 
+#if 0
+    {
+	int i; static knt = -1;
+
+	knt++;
+	for (i = 27420; i < 27440; i++)
+	{
+	    Object o = DXGetEnumeratedMember(in[0], i, NULL);
+	    if (DXGetObjectClass(o) != CLASS_FIELD)
+	    {
+	    	fprintf(stderr, "bad class in select! knt = %d i = %d\n", knt, i);
+		abort();
+	    }
+	}
+    }
+#endif
+    
+
     /* no input object 
      */
     if (!in[0]) {
@@ -99,7 +117,8 @@ m_Select(Object *in, Object *out)
 
     out[0] = doobject(in[0], in[1], fexcept);
 
-    
+    // fprintf(stderr, "SELECT ran - produced 0x%lx\n", out[0]);
+
     return ((out[0] == NULL) ? ERROR : OK);
 }
 

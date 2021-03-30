@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 //
-// $Header: /src/master/dx/src/exec/libdx/fieldinterpClass.X,v 1.5 2003/07/11 05:50:42 davidt Exp $
+// $Header: /cvsroot/opendx2/dx/src/exec/libdx/fieldinterpClass.X,v 1.5 2003/07/11 05:50:42 davidt Exp $
 //
 
 typedef struct fieldinterpolator *FieldInterpolator;
@@ -36,7 +36,6 @@ struct fieldinterpolator
 {
     struct interpolator	   interpolator;
     int			   initialized;
-    int			   localized;
     float		   fuzz;
     int			   data_dependency;
     InvalidComponentHandle invCon;

@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/opengl/hwPortOGL.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/opengl/hwPortOGL.c,v $
 \*---------------------------------------------------------------------------*/
 
 #include <dxconfig.h>
@@ -726,7 +726,7 @@ _dxf_ALLOCATE_PIXEL_ARRAY (void *ctx, int width, int height)
 
   ENTRY(("_dxf_ALLOCATE_PIXEL_ARRAY(0x%x, %d, %d)",ctx, width, height));
   
-  ret = tdmAllocateLocal(width*height*sizeof(int32)) ;
+  ret = tdmAllocate(width*height*sizeof(int32)) ;
 
   EXIT(("ret = 0x%x", ret));
   return ret ;
@@ -1947,7 +1947,7 @@ tdmPortHandleP _dxfInitPortHandleOGL(Display *dpy, char *hostname)
     _dxfExportHwddVersion(DXD_HWDD_INTERFACE_VERSION);
 #endif
 
-  ret = (tdmPortHandleP)tdmAllocateLocal(sizeof(tdmPortHandleT)) ;
+  ret = (tdmPortHandleP)tdmAllocate(sizeof(tdmPortHandleT)) ;
 
   if(ret)
     {

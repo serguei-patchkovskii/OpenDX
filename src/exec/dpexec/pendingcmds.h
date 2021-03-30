@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/pendingcmds.h,v 1.4 2006/01/04 22:00:49 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/pendingcmds.h,v 1.4 2006/01/04 22:00:49 davidt Exp $
  */
 
 #if defined(__cplusplus) || defined(c_plusplus)

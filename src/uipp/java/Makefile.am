@@ -181,8 +181,8 @@ DXLink.o:  server.jar
 ##	Topo.java TwoWells.java ddi.java gordon.java hedge.java ibmqw.java \
 ##	mutFun.java npvcall.java optval.java tgsheet.java wacc.java
 
-DX_OBJS = imageWindow.class CaptionLabels.class Status.class HTMLDisplay.class
-DX_SRCS = imageWindow.java CaptionLabels.java Status.java HTMLDisplay.java
+DX_OBJS = imageWindow.class CaptionLabels.class Status.class
+DX_SRCS = imageWindow.java CaptionLabels.java Status.java
 
 CLEANFILES = dx.jar server.jar javainfo libAnyDX.dll libAnyDX.so libAnyDX.dylib
 

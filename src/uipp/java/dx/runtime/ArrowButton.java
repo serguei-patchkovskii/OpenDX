@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/ArrowButton.java,v 1.2 2005/10/27 19:43:07 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/ArrowButton.java,v 1.2 2005/10/27 19:43:07 davidt Exp $
  */
 package dx.runtime;
 import java.awt.*;

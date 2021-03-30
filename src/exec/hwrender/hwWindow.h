@@ -13,7 +13,7 @@
 #define	tdmWindow_h
 /*
  *
- * $Header: /src/master/dx/src/exec/hwrender/hwWindow.h,v 1.6 2003/07/30 22:39:07 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/hwrender/hwWindow.h,v 1.6 2003/07/30 22:39:07 davidt Exp $
  */
 
 #include "hwStereo.h"
@@ -303,7 +303,7 @@ typedef struct _OGLWindow
 /*
  *===================================================================
  *	 END OF FILE 
- *	$Source: /src/master/dx/src/exec/hwrender/hwWindow.h,v $
+ *	$Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwWindow.h,v $
  *===================================================================
  */
 #endif	/* tdmWindow_h */

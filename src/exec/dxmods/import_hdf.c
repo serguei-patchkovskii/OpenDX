@@ -321,7 +321,7 @@ findfile(char *filename, char *pathname)
 #define XTRA 8 /* room for trailing /, .hdf, NULL, plus some slop */
     
     dir = (char *)getenv("DXDATA");
-    foundname = (char *)DXAllocateLocalZero((dir ? strlen(dir) : 0) +
+    foundname = (char *)DXAllocateZero((dir ? strlen(dir) : 0) +
 					    strlen(filename) + XTRA);
     if (!foundname)
 	return ERROR;
@@ -525,7 +525,7 @@ Array posarray(int rank, int *dimsize,Type type)
  
    /* are there positions? (DFSDgetdimscale) */
    for (dim=0; dim<rank; dim++){
-      scale = (float *)DXAllocateLocal(sizeof(float)*dimsize[dim]);
+      scale = (float *)DXAllocate(sizeof(float)*dimsize[dim]);
       ret=read_scale(type, dim, dimsize, scale);
       if (!ret)
          goto error;
@@ -603,7 +603,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
 
    switch(type){
    case(TYPE_FLOAT):
-      data_f = (float *)DXAllocateLocal(sizeof(float)*dimsize[dim]);
+      data_f = (float *)DXAllocate(sizeof(float)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],(Pointer)data_f))!=0)
          return -1;
       else{
@@ -617,7 +617,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_f);
       break;
    case(TYPE_BYTE):
-      data_b = (byte *)DXAllocateLocal(sizeof(byte)*dimsize[dim]);
+      data_b = (byte *)DXAllocate(sizeof(byte)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_b))!=0)
          return -1;
       else{
@@ -631,7 +631,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_b);
       break;
    case(TYPE_INT):
-      data_i = (int *)DXAllocateLocal(sizeof(int)*dimsize[dim]);
+      data_i = (int *)DXAllocate(sizeof(int)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_i))!=0)
          return -1;
       else{
@@ -645,7 +645,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_i);
       break;
    case(TYPE_DOUBLE):
-      data_d = (double *)DXAllocateLocal(sizeof(double)*dimsize[dim]);
+      data_d = (double *)DXAllocate(sizeof(double)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_d))!=0)
          return -1;
       else{
@@ -659,7 +659,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_d);
       break;
    case(TYPE_SHORT):
-      data_s = (short *)DXAllocateLocal(sizeof(short)*dimsize[dim]);
+      data_s = (short *)DXAllocate(sizeof(short)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_s))!=0)
          return -1;
       else{
@@ -673,7 +673,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_s);
       break;
    case(TYPE_UBYTE):
-      data_ub = (ubyte *)DXAllocateLocal(sizeof(ubyte)*dimsize[dim]);
+      data_ub = (ubyte *)DXAllocate(sizeof(ubyte)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_ub))!=0)
          return -1;
       else{
@@ -687,7 +687,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_ub);
       break;
    case(TYPE_UINT):
-      data_ui = (uint *)DXAllocateLocal(sizeof(uint)*dimsize[dim]);
+      data_ui = (uint *)DXAllocate(sizeof(uint)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_ui))!=0)
          return -1;
       else{
@@ -701,7 +701,7 @@ int read_scale(Type type,int dim,int *dimsize,float *pos)
       DXFree(data_ui);
       break;
    case(TYPE_USHORT):
-      data_us = (ushort *)DXAllocateLocal(sizeof(ushort)*dimsize[dim]);
+      data_us = (ushort *)DXAllocate(sizeof(ushort)*dimsize[dim]);
       if ((DFSDgetdimscale(dim+1,dimsize[dim],data_us))!=0)
          return -1;
       else{

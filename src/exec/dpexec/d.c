@@ -22,8 +22,8 @@
 #include "sysvars.h"
 #include "distp.h"
 
-#define	DICT_LOCK(l,d)		if (l) DXlock (&(d)->lock, exJID)
-#define	DICT_UNLOCK(l,d)	if (l) DXunlock (&(d)->lock, exJID)
+#define	DICT_LOCK(l,d)		if (l) DXlock (&(d)->lock, DXProcessorId())
+#define	DICT_UNLOCK(l,d)	if (l) DXunlock (&(d)->lock, DXProcessorId())
 
 typedef struct _EXDictElement 	   	   *EXDictElement;
 typedef struct _EXDictElementSorted	   *EXDictElementSorted;
@@ -96,7 +96,7 @@ DXMarkTimeLocal("D create");
     n  = sizeof (_EXDictionary);
     n += sizeof (_EXDictHead) * size;
 
-    d = (EXDictionary) (local ? DXAllocateLocal (n) : DXAllocate (n));
+    d = (EXDictionary) (local ? DXAllocate (n) : DXAllocate (n));
     if (! d)
 	_dxf_ExDie ("_dxf_ExDictionaryCreate:  DXAllocate failed");
     
@@ -365,7 +365,7 @@ _dxf_ExAllocateNewDictionaryElement(EXDictionary d)
 	size = sizeof(struct _EXDictElement);
 	
     return d->local ?
-	    (EXDictElement)DXAllocateLocalZero(size) :
+	    (EXDictElement)DXAllocateZero(size) :
 	    (EXDictElement)DXAllocateZero(size);
 }
 
@@ -566,6 +566,21 @@ DXMarkTimeLocal("-D delete");
     return (OK);
 }
 
+EXObj
+_dxf_ExGetDictObject(EXDictionary d, Pointer key)
+{
+    Pointer		h;
+    int			b;
+    Pointer		k;
+    EXDictElement	e;
+    EXObj		o;
+
+    h = (Pointer) _dxf_ExCRCString (EX_INITIAL_CRC, key);
+    b = (long) h & d->mask;
+    e = ExDictionarySearchE (d, b, key, h);
+    if (e) return e->obj;
+    else return NULL;
+}
 
 /*
  * Deletes an element from a dictionary.  This ignores locking because
@@ -817,6 +832,9 @@ _dxf_ExMakeNewest(EXDictionary d, EXDictElement de)
 Error
 _dxf_ExDictionaryBeginIterateSorted(EXDictionary d, int reverse)
 {
+   // GDA
+   DICT_LOCK (d->locking, d);
+   
     if (! d->sorted)
     {
 	DXSetError(ERROR_INTERNAL,

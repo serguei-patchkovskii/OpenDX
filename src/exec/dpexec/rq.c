@@ -5,6 +5,8 @@
 /* This code licensed under the                                        */
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
+#include <pthread.h>
+
 #include <dx/dx.h>
 #include <dxconfig.h>
 
@@ -31,7 +33,6 @@ typedef struct _EXRQJob
     int		repeat;			/* number of repetitions for job*/
 } _EXRQJob;
 
-
 typedef struct
 {
     volatile int        count;
@@ -41,8 +42,51 @@ typedef struct
 } _EXRQ, *EXRQ;
 
 static EXRQ runQueue = NULL;
-static lock_type *RQlock;
 static int send_RQ_message = 1;
+
+static pthread_mutex_t rql = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t rqw = PTHREAD_COND_INITIALIZER;
+
+static pthread_t rq_holder;
+
+void
+rq_lock()
+{
+    pthread_mutex_lock(&rql);
+    rq_holder = pthread_self();
+}
+
+void
+rq_unlock()
+{
+    if (rq_holder != pthread_self())
+	DXSetError(ERROR_INTERNAL, "non-holder unlocking rq lock\n");
+
+    rq_holder = 0;
+    pthread_mutex_unlock(&rql);
+}
+
+void
+rq_wait()
+{
+    if (rq_holder != pthread_self())
+	DXSetError(ERROR_INTERNAL, "non-holder waiting on rq lock\n");
+
+    rq_holder = 0;
+    pthread_cond_wait(&rqw, &rql);
+    rq_holder = pthread_self();
+}
+
+void
+rq_broadcast()
+{
+    if (rq_holder != pthread_self())
+	DXSetError(ERROR_INTERNAL, "non-holder signalling rq\n");
+
+    pthread_cond_broadcast(&rqw);
+}
+
+static int kill_slaves = 0;
 
 Error _dxf_ExRQInit (void)
 {
@@ -54,19 +98,6 @@ Error _dxf_ExRQInit (void)
     if (runQueue == NULL)
 	return (ERROR);
 
-    RQlock = (lock_type*) DXAllocate (sizeof (lock_type));
-    if (!RQlock) {
-	DXFree((Pointer)runQueue);
-	return ERROR;
-    }
-
-    tmp = DXcreate_lock ((lock_type *) RQlock, "Runqueue");
-    if (tmp != OK) {
-	DXFree((Pointer)runQueue);
-	DXFree((Pointer)RQlock);
-	return (ERROR);
-    }
-
     runQueue->count = 0;
     runQueue->free = NULL;
     runQueue->head = NULL;
@@ -75,31 +106,193 @@ Error _dxf_ExRQInit (void)
     return (OK);
 }
 
-void _dxf_ExRQEnqueue (PFI func, Pointer arg, int repeat,
+int _dxf_ExRQPending(void)
+{
+    return (runQueue->count > 0);
+}
+
+
+static pthread_mutex_t alloc_lock = PTHREAD_MUTEX_INITIALIZER;
+
+static EXRQJob 
+alloc_job()
+{
+    EXRQJob job;
+
+    pthread_mutex_lock(&alloc_lock);
+    if (runQueue->free)
+    {
+	job = runQueue->free;
+	runQueue->free = job->next;
+    }
+    else
+	job = (EXRQJob)DXAllocate(sizeof(struct _EXRQJob));
+    pthread_mutex_unlock(&alloc_lock);
+
+    return job;
+}
+
+static void 
+free_job(EXRQJob job)
+{
+    pthread_mutex_lock(&alloc_lock);
+    job->next = runQueue->free;
+    runQueue->free = job;
+    pthread_mutex_unlock(&alloc_lock);
+}
+
+#if defined(CHECK_RQ)
+static void
+check_rq()
+{
+    EXRQJob j; int i;
+    fprintf(stderr, "runQueue->head: 0x%08lx\n", runQueue->head);
+    for (i = 0, j = runQueue->head; i < 20 && j; i++, j = j->next)
+	fprintf(stderr, "    job: 0x%08lx next: 0x%08lx\n", j, j->next);
+        
+    fprintf(stderr, "runQueue->tail: 0x%08lx\n", runQueue->tail);
+    for (i = 0, j = runQueue->tail; i < 20 && j; i++, j = j->prev)
+	fprintf(stderr, "    job: 0x%08lx prev: 0x%08lx\n", j, j->prev);
+        
+    fprintf(stderr, "runQueue->free: 0x%08lx\n", runQueue->free);
+    for (i = 0, j = runQueue->free; i < 20 && j; i++, j = j->next)
+	fprintf(stderr, "    job: 0x%08lx next: 0x%08lx\n", j, j->next);
+}
+#endif
+
+static EXRQJob 
+getjob_id(int id)
+{
+    EXRQJob job, last;
+
+    job = runQueue->head;
+    last = NULL;
+    while (job)
+    {
+	if (job->JID == id)
+	    break;
+
+	last = job;
+	job = job->next;
+    }
+
+    if (job)
+    {
+	runQueue->count--;
+
+	if (job->repeat > 1)
+	{
+	    EXRQJob newjob = alloc_job();
+	    *newjob = *job;
+	    job->repeat--;
+	    job = newjob;
+	}
+	else
+	{
+	    EXRQJob nextnext = job->next;
+
+	    if (job->next) job->next->prev = job->prev;
+	    if (job->prev) job->prev->next = job->next;
+	    if (runQueue->head == job) runQueue->head = job->next;
+	    if (runQueue->tail == job) runQueue->tail = job->prev;
+	}
+    }
+
+    return job;
+}
+
+static EXRQJob 
+getjob()
+{
+    /*
+     * scan the queue first for one that has to be run
+     * on this thread, then for one that can be run anywhere
+     */
+    EXRQJob job = getjob_id(DXGetThreadPid());
+    if (! job)
+	job = getjob_id(-1);
+
+#if defined(CHECK_RQ)
+    check_rq();
+#endif
+
+    return job;
+}
+
+int
+_dxf_ExRQDequeue()
+{
+    EXRQJob job;
+
+    rq_lock();
+
+    job = getjob();
+
+    rq_unlock();
+
+    if (job)
+    {
+	job->func(job->arg, 0);
+	free_job(job);
+	return 1;
+    }
+    else
+	return 0;
+
+}
+
+void
+_dxf_ExRQKillSlaves()
+{
+    rq_lock();
+    kill_slaves = 1;
+    pthread_cond_broadcast(&rqw);
+    rq_unlock();
+}
+
+int 
+_dxf_ExRQHandler()
+{
+    EXRQJob job;
+
+
+    while (1)
+    {
+	rq_lock();
+
+	while (!kill_slaves && ((job = getjob()) == NULL))
+	    rq_wait();
+
+	rq_unlock();
+
+	if (kill_slaves)
+	    break;
+	
+	if (job)
+	    job->func(job->arg, 0);
+    
+	free_job(job);
+    }
+
+    return 1;
+}
+
+void
+_dxf_ExRQEnqueue (PFI func, Pointer arg, int repeat,
 		       long gid, int JID, int highpri)
 {
-    volatile EXRQ	rq;
-    lock_type		*l;
-    EXRQJob		job	= NULL;
-    _EXRQJob		localJob;
-    EXRQJob		tail;
-    EXRQJob		head;
+    EXRQJob job = alloc_job();
 
-MARK_TIME ("RQE Enter");
     DXsyncmem();
 
-    localJob.next    = NULL;
-    localJob.prev    = NULL;
-    localJob.highpri = highpri;
-    localJob.gid     = gid;
-    localJob.JID     = JID;
-    localJob.func    = func;
-    localJob.arg     = arg;
-    localJob.repeat  = repeat;
-
-
-    rq = runQueue;
-    l  = RQlock;
+    job->next    = NULL;
+    job->prev    = NULL;
+    job->highpri = highpri;
+    job->gid     = gid;
+    job->JID     = JID;
+    job->func    = func;
+    job->arg     = arg;
+    job->repeat  = repeat;
 
     /*
      * Prepare a job block.  If we can then get one from the runqueue's
@@ -108,31 +301,7 @@ MARK_TIME ("RQE Enter");
      * we've gotten the block then fill it in.
      */
 
-MARK_TIME ("RQE Alloc");
-    if (rq->free)
-    {
-	DXlock (l, exJID);
-	job = rq->free;
-	if (job)
-	    rq->free = job->next;
-	else
-	{
-	    DXunlock (l, exJID);
-	    job = (EXRQJob) DXAllocate (sizeof (_EXRQJob));
-	    DXlock (l, exJID);
-	}
-    }
-    else 
-    {
-	job = (EXRQJob) DXAllocate (sizeof (_EXRQJob));
-	DXlock (l, exJID);
-    }
-    
-    if (! job)
-	_dxf_ExDie ("_dxf_ExRQEnqueue: can't DXAllocate job");
-MARK_TIME ("RQE DoneAlloc");
-    
-    *job = localJob;
+    rq_lock();
 
     /*
      * Now that the job block is set up insert it into the general list.
@@ -144,37 +313,33 @@ MARK_TIME ("RQE DoneAlloc");
      */
     if (highpri)
     {
-	head = rq->head;
-	if (! head)
-	    rq->head = rq->tail = job;
-	else
-	{
-	    job->next  = head;
-	    head->prev = job;
-	    rq->head   = job;
+	if (runQueue->head) 
+   	{
+	    runQueue->head->prev = job;
+	    job->next = runQueue->head;
+	    runQueue->head = job;
 	}
+	else runQueue->head = runQueue->tail = job;
+
+	runQueue->head = job;
     }
     else
     {
-	tail = rq->tail;
-	if (! tail)
-	    rq->head = rq->tail = job;
-	else 
-	{
-	    job->prev  = tail;
-	    tail->next = job;
-	    rq->tail   = job;
+	if (runQueue->tail) 
+   	{
+	    runQueue->tail->next = job;
+	    job->prev = runQueue->tail;
+	    runQueue->tail = job;
 	}
+	else runQueue->head = runQueue->tail = job;
     }
 
-MARK_TIME ("RQE Incr");
-    rq->count += repeat;
-MARK_TIME ("RQE Queued");
-    DXunlock (l, exJID);
-MARK_TIME ("RQE Exit");
+    runQueue->count += repeat;
+
+#if 0
     if(!_dxf_ExReclaimingMemory()) {
         /* child 1 adding something to child 0's queue */
-        if(_dxd_exMyPID == 1 && JID == 1)
+        if(DXGetThreadPid() == 1 && JID == 1)
             _dxf_parent_RQ_message(); 
         else {
             if(send_RQ_message) {
@@ -184,6 +349,16 @@ MARK_TIME ("RQE Exit");
             }
         }
     }
+#else
+    _dxf_ExReclaimingMemory();
+#endif
+
+#if defined(CHECK_RQ)
+    check_rq();
+#endif
+
+    rq_broadcast();
+    rq_unlock();
 }
 
 /*
@@ -195,259 +370,8 @@ MARK_TIME ("RQE Exit");
 void _dxf_ExRQEnqueueMany (int n, PFI func[], Pointer arg[], 
 			int repeat[], long gid, int JID, int highpri)
 {
-    volatile EXRQ	rq;
-    lock_type		*l;
-    _EXRQJob		localJob;
-    EXRQJob		tail;
-    EXRQJob		head;
-    int			i;
-    EXRQJob		queuePartHead;
-    EXRQJob		queuePartTail;
-    EXRQJob		newBlock;
-    EXRQJob		prevBlock;
-    int			totalRepeat;
-
-MARK_TIME ("RQEM Enter");
-
-    if (n == 0)
-	return;
-
-    DXsyncmem();
-
-    rq = runQueue;
-    l  = RQlock;
-
-    queuePartHead = NULL;
-    queuePartTail = NULL;
-
-MARK_TIME ("RQEM Alloc");
-    /* DXAllocate n blocks in a list */
-    i = 0;
-    if (rq->free) 
-    {
-	DXlock (l, exJID);
-	for (; i < n && rq->free; ++i)
-	{
-	    newBlock = rq->free;
-	    if (i == 0)
-		queuePartTail = newBlock;
-	    rq->free = newBlock->next;
-	    newBlock->next = queuePartHead;
-	    queuePartHead = newBlock;
-	}
-	DXunlock (l, exJID);
-    }
-    for (; i < n; ++i)
-    {
-	newBlock = (EXRQJob) DXAllocate (sizeof (_EXRQJob));
-	if (!newBlock)
-	    _dxf_ExDie ("_dxf_ExRQEnqueueMany: can't allocate newBlock");
-	if (i == 0)
-	    queuePartTail = newBlock;
-	newBlock->next = queuePartHead;
-	queuePartHead = newBlock;
-    }
-MARK_TIME ("RQE DoneAlloc");
-
-
-    newBlock = queuePartHead;
-    prevBlock = NULL;
-    totalRepeat = 0;
-    localJob.highpri = highpri;
-    localJob.gid     = gid;
-    localJob.JID     = JID;
-    for (i = 0; i < n; ++i) 
-    {
-	localJob.next    = newBlock->next;
-	localJob.prev    = prevBlock;
-	localJob.func    = func[i];
-	localJob.arg     = arg[i];
-	localJob.repeat  = repeat[i];
-
-	totalRepeat += localJob.repeat;
-	*newBlock = localJob;
-
-	prevBlock = newBlock;
-	newBlock = newBlock->next;
-    }
-
-MARK_TIME ("RQEM DoneFill");
-
-    /*
-     * Now that the job block is set up insert it into the general list.
-     * If the list is currently empty then this job becomes both the head
-     * and the tail of the list and we can quit.
-     *
-     * NOTE: 	high priority jobs are placed at the head of the list, all
-     *		others at the tail.
-     */
-
-    DXlock (l, exJID);
-
-    if (highpri)
-    {
-	head = rq->head;
-	if (! head)
-	{
-	    rq->head = queuePartHead;
-	    rq->tail = queuePartTail;
-	}
-	else
-	{
-	    queuePartTail->next  = head;
-	    head->prev = queuePartTail;
-	    rq->head   = queuePartHead;
-	}
-    }
-    else
-    {
-	tail = rq->tail;
-	if (! tail)
-	{
-	    rq->head = queuePartHead;
-	    rq->tail = queuePartTail;
-	}
-	else 
-	{
-	    queuePartHead->prev  = tail;
-	    tail->next = queuePartHead;
-	    rq->tail   = queuePartTail;
-	}
-    }
-
-MARK_TIME ("RQEM Incr");
-    rq->count += totalRepeat;
-MARK_TIME ("RQEM Queued");
-    DXunlock (l, exJID);
-MARK_TIME ("RQEM Exit");
-    send_RQ_message = 0;
-    _dxf_ExRunOn (1, _dxf_child_RQ_message, &JID, sizeof(int));
-    send_RQ_message = 1;
+    int i;
+    for (i = 0; i < n; i++)
+	_dxf_ExRQEnqueue(func[i], arg[i], repeat[i], gid, JID, highpri);
 }
 
-
-
-int _dxf_ExRQDequeue	(long gid)
-{
-    volatile EXRQ	rq;
-    _EXRQ		localRq;
-    lock_type		*l;
-    EXRQJob		job;
-    _EXRQJob		localJob;
-
-MARK_TIME ("RQD Enter");
-    rq = runQueue;
-
-    l   = RQlock;
-
-    /*
-     * If we got a worker specific job then go ahead and do it.
-     */
-
-    DXsyncmem ();
-
-    if (rq->count <= 0)
-	return (FALSE);
-
-    DXlock (l, exJID);
-MARK_TIME ("RQD PostLock");
-    localRq = *rq;
-
-    if (localRq.count <= 0) 
-    {
-	DXunlock (l, exJID);
-MARK_TIME ("RQD FastDone");
-	return (FALSE);
-    }
-    rq->count = --localRq.count;
-
-    /*
-     * Get a job, removing it from the queue.
-     * There are 3 special cases:
-     * 1)  the DeQueuer wants a specific gid (group ID),
-     * 2)  the job is destined for a specific JID (Processor ID).
-     * 3)  a high priority task exists for a specific JID
-     * If either of these cases is required, skip down the queue until
-     * you find a job.
-     */
-
-MARK_TIME ("RQD GetJob");
-    job = localRq.head;
-    if (!job)
-    {
-	rq->count++;
-	DXunlock (l, exJID);
-	DXSetError (ERROR_INTERNAL, "#8320");
-	return (FALSE);
-    }
-
-    localJob = *job;
-
-MARK_TIME ("RQD GotJob");
-    if (gid != 0 || localJob.JID != 0)
-    {
-MARK_TIME ("RQD Find MYJob");
-	for ( ; job; job = localJob.next)
-	{
-	    localJob = *job;
-	    if ((!gid || localJob.gid == gid || localJob.highpri) && 
-		(!localJob.JID || localJob.JID == exJID))
-		break;
-	}
-	if (!job) 
-	{
-	    rq->count++;
-	    DXunlock (l, exJID);
-	    return (FALSE);
-	}
-    }
-MARK_TIME ("RQD GotMYJob");
-
-    /*
-     * If the job we got is a repeatable one, then just write the local copy
-     * back out to the global copy, otherwize, remove it from the queue and add
-     * it to the free list.
-     */
-    if (--localJob.repeat == 0)
-    {
-	if (localJob.prev)
-	    localJob.prev->next = localJob.next;
-	else
-	    localRq.head = localJob.next;
-	
-	if (localJob.next)
-	    localJob.next->prev = localJob.prev;
-	else
-	    localRq.tail = localJob.prev;
-
-	job->next = localRq.free;
-	localRq.free  = job;
-    }
-    else
-    {
-	*job = localJob;
-    }
-    *rq = localRq; 
-
-MARK_TIME ("RQD DXFree Job");
-    DXunlock (l, exJID);
-
-    /*
-     * We have a valid job to execute.  Pick up its function and argument,
-     * return the job block to the free list, and really execute the 
-     * function.
-     */
-
-    IFINSTRUMENT (++exInstrument[_dxd_exMyPID].tasks);
-
-    (* localJob.func) (localJob.arg, localJob.repeat);
-
-MARK_TIME ("RQD Done");
-    return (TRUE);
-}
-
-
-int _dxf_ExRQPending(void)
-{
-    return (runQueue->count > 0);
-}

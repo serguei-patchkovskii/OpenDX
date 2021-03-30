@@ -1,0 +1,11 @@
+!
+CVS
+Makefile
+Makefile.in
+dxsc
+dx.jar
+libAnyDX.jnilib
+server.jar
+libAnyDX.so
+AnyDX.dll
+classes

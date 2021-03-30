@@ -70,7 +70,7 @@ typedef struct _XmFrameControlRec      * XmFrameControlWidget;
 
 typedef struct {
     unsigned char reason;
-    short value;
+    int value;
 } FrameControlCallbackStruct;
 
 #if defined(__cplusplus) || defined(c_plusplus)

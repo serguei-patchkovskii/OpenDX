@@ -1,0 +1,1752 @@
+   0  $accept : start $end
+
+   1  start : top c_0
+
+   2  c_0 :
+
+   3  top : statement
+   4      | macro
+   5      | empty
+
+   6  macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 block
+   7        | K_MACRO T_ID T_LPAR formal_s0 T_RPAR attributes_0 block
+
+   8  formal_s0 : empty
+   9            | formal_s
+
+  10  formal_s : formal attributes_0
+  11           | formal_s T_COMMA formal attributes_0
+
+  12  formal : T_ID
+  13         | T_ID T_ASSIGN T_ID
+  14         | T_ID T_ASSIGN constant
+  15         | T_ID T_ASSIGN T_ID T_ASSIGN constant
+
+  16  block : T_LBRA statement_s0 T_RBRA
+
+  17  statement_s0 : empty
+  18               | statement_s
+
+  19  statement_s : statement
+  20              | statement_s statement
+
+  21  statement : block
+  22            | assignment attributes_0 T_SEMI
+  23            | function_call attributes_0 T_SEMI
+  24            | include
+  25            | comment
+
+  26  include : K_INCLUDE string
+
+  27  assignment : f_assignment
+  28             | s_assignment
+
+  29  f_assignment : l_value_s T_ASSIGN function_call
+
+  30  s_assignment : l_value_s T_ASSIGN expression_s
+  31               | T_ID T_PP
+  32               | T_ID T_MM
+
+  33  attributes_0 : empty
+  34               | attributes
+
+  35  attributes : T_LSQB attribute_s0 T_RSQB
+
+  36  attribute_s0 : empty
+  37               | attribute_s
+
+  38  attribute_s : attribute
+  39              | attribute_s T_COMMA attribute
+
+  40  attribute : T_ID T_COLON string
+  41            | T_ID T_COLON int
+
+  42  $$1 :
+
+  43  function_call : T_ID $$1 T_LPAR argument_s0 T_RPAR
+
+  44  argument_s0 : empty
+  45              | argument_s
+
+  46  argument_s : argument
+  47             | argument_s T_COMMA argument
+
+  48  argument : value
+  49           | T_ID T_ASSIGN value
+
+  50  value : constant
+  51        | T_ID
+
+  52  comment : T_COMMENT
+
+  53  expression_s : expression
+  54               | expression_s T_COMMA expression
+
+  55  expression : constant
+  56             | r_value
+  57             | T_LPAR expression T_RPAR
+
+  58  constant : scalar
+  59           | tensor
+  60           | list
+  61           | string
+  62           | K_NULL
+
+  63  list : T_LBRA scalar_s T_RBRA
+  64       | T_LBRA tensor_s T_RBRA
+  65       | T_LBRA string_s T_RBRA
+  66       | T_LBRA real T_DOTDOT real T_RBRA
+  67       | T_LBRA real T_DOTDOT real T_COLON real T_RBRA
+
+  68  tensor_s : tensor
+  69           | tensor_s tensor
+  70           | tensor_s T_COMMA tensor
+
+  71  tensor : T_LSQB scalar_s T_RSQB
+  72         | T_LSQB tensor_s T_RSQB
+
+  73  scalar_s : scalar
+  74           | scalar_s scalar
+  75           | scalar_s T_COMMA scalar
+
+  76  scalar : real
+  77         | complex
+  78         | quaternion
+
+  79  real : int
+  80       | float
+
+  81  complex : T_LPAR int T_COMMA int T_RPAR
+  82          | T_LPAR float T_COMMA float T_RPAR
+
+  83  quaternion : T_LPAR int T_COMMA int T_COMMA int T_COMMA int T_RPAR
+  84             | T_LPAR float T_COMMA float T_COMMA float T_COMMA float T_RPAR
+
+  85  int : T_INT
+
+  86  float : T_FLOAT
+
+  87  string_s : string
+  88           | string_s string
+  89           | string_s T_COMMA string
+
+  90  string : T_STRING
+
+  91  id_s0 : empty
+  92        | id_s
+
+  93  id_s : T_ID attributes_0
+  94       | id_s T_COMMA T_ID attributes_0
+
+  95  l_value_s : l_value attributes_0
+  96            | l_value_s T_COMMA l_value attributes_0
+
+  97  l_value : T_ID
+
+  98  r_value : T_ID
+
+  99  empty :
+
+state 0
+	$accept : . start $end  (0)
+	empty : .  (99)
+
+	T_LBRA  shift 1
+	T_COMMENT  shift 2
+	T_ID  shift 3
+	K_INCLUDE  shift 4
+	K_MACRO  shift 5
+	$end  reduce 99
+
+	start  goto 6
+	top  goto 7
+	statement  goto 8
+	macro  goto 9
+	empty  goto 10
+	block  goto 11
+	assignment  goto 12
+	function_call  goto 13
+	include  goto 14
+	comment  goto 15
+	f_assignment  goto 16
+	s_assignment  goto 17
+	l_value_s  goto 18
+	l_value  goto 19
+
+
+state 1
+	block : T_LBRA . statement_s0 T_RBRA  (16)
+	empty : .  (99)
+
+	T_LBRA  shift 1
+	T_COMMENT  shift 2
+	T_ID  shift 3
+	K_INCLUDE  shift 4
+	T_RBRA  reduce 99
+
+	statement  goto 20
+	empty  goto 21
+	block  goto 11
+	statement_s0  goto 22
+	statement_s  goto 23
+	assignment  goto 12
+	function_call  goto 13
+	include  goto 14
+	comment  goto 15
+	f_assignment  goto 16
+	s_assignment  goto 17
+	l_value_s  goto 18
+	l_value  goto 19
+
+
+state 2
+	comment : T_COMMENT .  (52)
+
+	.  reduce 52
+
+
+state 3
+	s_assignment : T_ID . T_PP  (31)
+	s_assignment : T_ID . T_MM  (32)
+	function_call : T_ID . $$1 T_LPAR argument_s0 T_RPAR  (43)
+	l_value : T_ID .  (97)
+	$$1 : .  (42)
+
+	T_PP  shift 24
+	T_MM  shift 25
+	T_LPAR  reduce 42
+	T_LSQB  reduce 97
+	T_ASSIGN  reduce 97
+	T_COMMA  reduce 97
+
+	$$1  goto 26
+
+
+state 4
+	include : K_INCLUDE . string  (26)
+
+	T_STRING  shift 27
+	.  error
+
+	string  goto 28
+
+
+state 5
+	macro : K_MACRO . T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 block  (6)
+	macro : K_MACRO . T_ID T_LPAR formal_s0 T_RPAR attributes_0 block  (7)
+
+	T_ID  shift 29
+	.  error
+
+
+state 6
+	$accept : start . $end  (0)
+
+	$end  accept
+
+
+state 7
+	start : top . c_0  (1)
+	c_0 : .  (2)
+
+	.  reduce 2
+
+	c_0  goto 30
+
+
+state 8
+	top : statement .  (3)
+
+	.  reduce 3
+
+
+state 9
+	top : macro .  (4)
+
+	.  reduce 4
+
+
+state 10
+	top : empty .  (5)
+
+	.  reduce 5
+
+
+state 11
+	statement : block .  (21)
+
+	.  reduce 21
+
+
+state 12
+	statement : assignment . attributes_0 T_SEMI  (22)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_SEMI  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 33
+	attributes  goto 34
+
+
+state 13
+	statement : function_call . attributes_0 T_SEMI  (23)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_SEMI  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 35
+	attributes  goto 34
+
+
+state 14
+	statement : include .  (24)
+
+	.  reduce 24
+
+
+state 15
+	statement : comment .  (25)
+
+	.  reduce 25
+
+
+state 16
+	assignment : f_assignment .  (27)
+
+	.  reduce 27
+
+
+state 17
+	assignment : s_assignment .  (28)
+
+	.  reduce 28
+
+
+state 18
+	f_assignment : l_value_s . T_ASSIGN function_call  (29)
+	s_assignment : l_value_s . T_ASSIGN expression_s  (30)
+	l_value_s : l_value_s . T_COMMA l_value attributes_0  (96)
+
+	T_ASSIGN  shift 36
+	T_COMMA  shift 37
+	.  error
+
+
+state 19
+	l_value_s : l_value . attributes_0  (95)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_ASSIGN  reduce 99
+	T_COMMA  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 38
+	attributes  goto 34
+
+
+state 20
+	statement_s : statement .  (19)
+
+	.  reduce 19
+
+
+state 21
+	statement_s0 : empty .  (17)
+
+	.  reduce 17
+
+
+state 22
+	block : T_LBRA statement_s0 . T_RBRA  (16)
+
+	T_RBRA  shift 39
+	.  error
+
+
+state 23
+	statement_s0 : statement_s .  (18)
+	statement_s : statement_s . statement  (20)
+
+	T_LBRA  shift 1
+	T_COMMENT  shift 2
+	T_ID  shift 3
+	K_INCLUDE  shift 4
+	T_RBRA  reduce 18
+
+	statement  goto 40
+	block  goto 11
+	assignment  goto 12
+	function_call  goto 13
+	include  goto 14
+	comment  goto 15
+	f_assignment  goto 16
+	s_assignment  goto 17
+	l_value_s  goto 18
+	l_value  goto 19
+
+
+state 24
+	s_assignment : T_ID T_PP .  (31)
+
+	.  reduce 31
+
+
+state 25
+	s_assignment : T_ID T_MM .  (32)
+
+	.  reduce 32
+
+
+state 26
+	function_call : T_ID $$1 . T_LPAR argument_s0 T_RPAR  (43)
+
+	T_LPAR  shift 41
+	.  error
+
+
+state 27
+	string : T_STRING .  (90)
+
+	.  reduce 90
+
+
+state 28
+	include : K_INCLUDE string .  (26)
+
+	.  reduce 26
+
+
+state 29
+	macro : K_MACRO T_ID . T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 block  (6)
+	macro : K_MACRO T_ID . T_LPAR formal_s0 T_RPAR attributes_0 block  (7)
+
+	T_LPAR  shift 42
+	.  error
+
+
+state 30
+	start : top c_0 .  (1)
+
+	.  reduce 1
+
+
+state 31
+	attributes : T_LSQB . attribute_s0 T_RSQB  (35)
+	empty : .  (99)
+
+	T_ID  shift 43
+	T_RSQB  reduce 99
+
+	empty  goto 44
+	attribute_s0  goto 45
+	attribute_s  goto 46
+	attribute  goto 47
+
+
+state 32
+	attributes_0 : empty .  (33)
+
+	.  reduce 33
+
+
+state 33
+	statement : assignment attributes_0 . T_SEMI  (22)
+
+	T_SEMI  shift 48
+	.  error
+
+
+state 34
+	attributes_0 : attributes .  (34)
+
+	.  reduce 34
+
+
+state 35
+	statement : function_call attributes_0 . T_SEMI  (23)
+
+	T_SEMI  shift 49
+	.  error
+
+
+state 36
+	f_assignment : l_value_s T_ASSIGN . function_call  (29)
+	s_assignment : l_value_s T_ASSIGN . expression_s  (30)
+
+	T_LPAR  shift 50
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 53
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 57
+	function_call  goto 58
+	string  goto 59
+	expression_s  goto 60
+	int  goto 61
+	expression  goto 62
+	r_value  goto 63
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 37
+	l_value_s : l_value_s T_COMMA . l_value attributes_0  (96)
+
+	T_ID  shift 71
+	.  error
+
+	l_value  goto 72
+
+
+state 38
+	l_value_s : l_value attributes_0 .  (95)
+
+	.  reduce 95
+
+
+state 39
+	block : T_LBRA statement_s0 T_RBRA .  (16)
+
+	.  reduce 16
+
+
+state 40
+	statement_s : statement_s statement .  (20)
+
+	.  reduce 20
+
+
+state 41
+	function_call : T_ID $$1 T_LPAR . argument_s0 T_RPAR  (43)
+	empty : .  (99)
+
+	T_LPAR  shift 73
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 74
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	T_RPAR  reduce 99
+
+	empty  goto 75
+	constant  goto 76
+	string  goto 59
+	int  goto 61
+	argument_s0  goto 77
+	argument_s  goto 78
+	argument  goto 79
+	value  goto 80
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 42
+	macro : K_MACRO T_ID T_LPAR . formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 block  (6)
+	macro : K_MACRO T_ID T_LPAR . formal_s0 T_RPAR attributes_0 block  (7)
+	empty : .  (99)
+
+	T_ID  shift 81
+	T_RPAR  reduce 99
+
+	empty  goto 82
+	formal_s0  goto 83
+	formal_s  goto 84
+	formal  goto 85
+
+
+state 43
+	attribute : T_ID . T_COLON string  (40)
+	attribute : T_ID . T_COLON int  (41)
+
+	T_COLON  shift 86
+	.  error
+
+
+state 44
+	attribute_s0 : empty .  (36)
+
+	.  reduce 36
+
+
+state 45
+	attributes : T_LSQB attribute_s0 . T_RSQB  (35)
+
+	T_RSQB  shift 87
+	.  error
+
+
+state 46
+	attribute_s0 : attribute_s .  (37)
+	attribute_s : attribute_s . T_COMMA attribute  (39)
+
+	T_COMMA  shift 88
+	T_RSQB  reduce 37
+
+
+state 47
+	attribute_s : attribute .  (38)
+
+	.  reduce 38
+
+
+state 48
+	statement : assignment attributes_0 T_SEMI .  (22)
+
+	.  reduce 22
+
+
+state 49
+	statement : function_call attributes_0 T_SEMI .  (23)
+
+	.  reduce 23
+
+
+state 50
+	expression : T_LPAR . expression T_RPAR  (57)
+	complex : T_LPAR . int T_COMMA int T_RPAR  (81)
+	complex : T_LPAR . float T_COMMA float T_RPAR  (82)
+	quaternion : T_LPAR . int T_COMMA int T_COMMA int T_COMMA int T_RPAR  (83)
+	quaternion : T_LPAR . float T_COMMA float T_COMMA float T_COMMA float T_RPAR  (84)
+
+	T_LPAR  shift 50
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 89
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 57
+	string  goto 59
+	int  goto 90
+	expression  goto 91
+	r_value  goto 63
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 92
+
+
+state 51
+	list : T_LBRA . scalar_s T_RBRA  (63)
+	list : T_LBRA . tensor_s T_RBRA  (64)
+	list : T_LBRA . string_s T_RBRA  (65)
+	list : T_LBRA . real T_DOTDOT real T_RBRA  (66)
+	list : T_LBRA . real T_DOTDOT real T_COLON real T_RBRA  (67)
+
+	T_LPAR  shift 73
+	T_LSQB  shift 52
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	.  error
+
+	string  goto 93
+	int  goto 61
+	scalar  goto 94
+	tensor  goto 95
+	scalar_s  goto 96
+	tensor_s  goto 97
+	string_s  goto 98
+	real  goto 99
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 52
+	tensor : T_LSQB . scalar_s T_RSQB  (71)
+	tensor : T_LSQB . tensor_s T_RSQB  (72)
+
+	T_LPAR  shift 73
+	T_LSQB  shift 52
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 61
+	scalar  goto 94
+	tensor  goto 95
+	scalar_s  goto 100
+	tensor_s  goto 101
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 53
+	function_call : T_ID . $$1 T_LPAR argument_s0 T_RPAR  (43)
+	r_value : T_ID .  (98)
+	$$1 : .  (42)
+
+	T_LPAR  reduce 42
+	T_LSQB  reduce 98
+	T_COMMA  reduce 98
+	T_SEMI  reduce 98
+
+	$$1  goto 26
+
+
+state 54
+	int : T_INT .  (85)
+
+	.  reduce 85
+
+
+state 55
+	float : T_FLOAT .  (86)
+
+	.  reduce 86
+
+
+state 56
+	constant : K_NULL .  (62)
+
+	.  reduce 62
+
+
+state 57
+	expression : constant .  (55)
+
+	.  reduce 55
+
+
+state 58
+	f_assignment : l_value_s T_ASSIGN function_call .  (29)
+
+	.  reduce 29
+
+
+state 59
+	constant : string .  (61)
+
+	.  reduce 61
+
+
+state 60
+	s_assignment : l_value_s T_ASSIGN expression_s .  (30)
+	expression_s : expression_s . T_COMMA expression  (54)
+
+	T_COMMA  shift 102
+	T_LSQB  reduce 30
+	T_SEMI  reduce 30
+
+
+state 61
+	real : int .  (79)
+
+	.  reduce 79
+
+
+state 62
+	expression_s : expression .  (53)
+
+	.  reduce 53
+
+
+state 63
+	expression : r_value .  (56)
+
+	.  reduce 56
+
+
+state 64
+	constant : scalar .  (58)
+
+	.  reduce 58
+
+
+state 65
+	constant : tensor .  (59)
+
+	.  reduce 59
+
+
+state 66
+	constant : list .  (60)
+
+	.  reduce 60
+
+
+state 67
+	scalar : real .  (76)
+
+	.  reduce 76
+
+
+state 68
+	scalar : complex .  (77)
+
+	.  reduce 77
+
+
+state 69
+	scalar : quaternion .  (78)
+
+	.  reduce 78
+
+
+state 70
+	real : float .  (80)
+
+	.  reduce 80
+
+
+state 71
+	l_value : T_ID .  (97)
+
+	.  reduce 97
+
+
+state 72
+	l_value_s : l_value_s T_COMMA l_value . attributes_0  (96)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_ASSIGN  reduce 99
+	T_COMMA  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 103
+	attributes  goto 34
+
+
+state 73
+	complex : T_LPAR . int T_COMMA int T_RPAR  (81)
+	complex : T_LPAR . float T_COMMA float T_RPAR  (82)
+	quaternion : T_LPAR . int T_COMMA int T_COMMA int T_COMMA int T_RPAR  (83)
+	quaternion : T_LPAR . float T_COMMA float T_COMMA float T_COMMA float T_RPAR  (84)
+
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 104
+	float  goto 105
+
+
+state 74
+	argument : T_ID . T_ASSIGN value  (49)
+	value : T_ID .  (51)
+
+	T_ASSIGN  shift 106
+	T_RPAR  reduce 51
+	T_COMMA  reduce 51
+
+
+state 75
+	argument_s0 : empty .  (44)
+
+	.  reduce 44
+
+
+state 76
+	value : constant .  (50)
+
+	.  reduce 50
+
+
+state 77
+	function_call : T_ID $$1 T_LPAR argument_s0 . T_RPAR  (43)
+
+	T_RPAR  shift 107
+	.  error
+
+
+state 78
+	argument_s0 : argument_s .  (45)
+	argument_s : argument_s . T_COMMA argument  (47)
+
+	T_COMMA  shift 108
+	T_RPAR  reduce 45
+
+
+state 79
+	argument_s : argument .  (46)
+
+	.  reduce 46
+
+
+state 80
+	argument : value .  (48)
+
+	.  reduce 48
+
+
+state 81
+	formal : T_ID .  (12)
+	formal : T_ID . T_ASSIGN T_ID  (13)
+	formal : T_ID . T_ASSIGN constant  (14)
+	formal : T_ID . T_ASSIGN T_ID T_ASSIGN constant  (15)
+
+	T_ASSIGN  shift 109
+	T_RPAR  reduce 12
+	T_LSQB  reduce 12
+	T_COMMA  reduce 12
+
+
+state 82
+	formal_s0 : empty .  (8)
+
+	.  reduce 8
+
+
+state 83
+	macro : K_MACRO T_ID T_LPAR formal_s0 . T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 block  (6)
+	macro : K_MACRO T_ID T_LPAR formal_s0 . T_RPAR attributes_0 block  (7)
+
+	T_RPAR  shift 110
+	.  error
+
+
+state 84
+	formal_s0 : formal_s .  (9)
+	formal_s : formal_s . T_COMMA formal attributes_0  (11)
+
+	T_COMMA  shift 111
+	T_RPAR  reduce 9
+
+
+state 85
+	formal_s : formal . attributes_0  (10)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_RPAR  reduce 99
+	T_COMMA  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 112
+	attributes  goto 34
+
+
+state 86
+	attribute : T_ID T_COLON . string  (40)
+	attribute : T_ID T_COLON . int  (41)
+
+	T_INT  shift 54
+	T_STRING  shift 27
+	.  error
+
+	string  goto 113
+	int  goto 114
+
+
+state 87
+	attributes : T_LSQB attribute_s0 T_RSQB .  (35)
+
+	.  reduce 35
+
+
+state 88
+	attribute_s : attribute_s T_COMMA . attribute  (39)
+
+	T_ID  shift 43
+	.  error
+
+	attribute  goto 115
+
+
+state 89
+	r_value : T_ID .  (98)
+
+	.  reduce 98
+
+
+state 90
+	real : int .  (79)
+	complex : T_LPAR int . T_COMMA int T_RPAR  (81)
+	quaternion : T_LPAR int . T_COMMA int T_COMMA int T_COMMA int T_RPAR  (83)
+
+	T_COMMA  shift 116
+	T_RPAR  reduce 79
+
+
+state 91
+	expression : T_LPAR expression . T_RPAR  (57)
+
+	T_RPAR  shift 117
+	.  error
+
+
+state 92
+	real : float .  (80)
+	complex : T_LPAR float . T_COMMA float T_RPAR  (82)
+	quaternion : T_LPAR float . T_COMMA float T_COMMA float T_COMMA float T_RPAR  (84)
+
+	T_COMMA  shift 118
+	T_RPAR  reduce 80
+
+
+state 93
+	string_s : string .  (87)
+
+	.  reduce 87
+
+
+state 94
+	scalar_s : scalar .  (73)
+
+	.  reduce 73
+
+
+state 95
+	tensor_s : tensor .  (68)
+
+	.  reduce 68
+
+
+state 96
+	list : T_LBRA scalar_s . T_RBRA  (63)
+	scalar_s : scalar_s . scalar  (74)
+	scalar_s : scalar_s . T_COMMA scalar  (75)
+
+	T_LPAR  shift 73
+	T_RBRA  shift 119
+	T_COMMA  shift 120
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 61
+	scalar  goto 121
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 97
+	list : T_LBRA tensor_s . T_RBRA  (64)
+	tensor_s : tensor_s . tensor  (69)
+	tensor_s : tensor_s . T_COMMA tensor  (70)
+
+	T_RBRA  shift 122
+	T_LSQB  shift 52
+	T_COMMA  shift 123
+	.  error
+
+	tensor  goto 124
+
+
+state 98
+	list : T_LBRA string_s . T_RBRA  (65)
+	string_s : string_s . string  (88)
+	string_s : string_s . T_COMMA string  (89)
+
+	T_RBRA  shift 125
+	T_COMMA  shift 126
+	T_STRING  shift 27
+	.  error
+
+	string  goto 127
+
+
+state 99
+	list : T_LBRA real . T_DOTDOT real T_RBRA  (66)
+	list : T_LBRA real . T_DOTDOT real T_COLON real T_RBRA  (67)
+	scalar : real .  (76)
+
+	T_DOTDOT  shift 128
+	T_LPAR  reduce 76
+	T_RBRA  reduce 76
+	T_COMMA  reduce 76
+	T_INT  reduce 76
+	T_FLOAT  reduce 76
+
+
+state 100
+	tensor : T_LSQB scalar_s . T_RSQB  (71)
+	scalar_s : scalar_s . scalar  (74)
+	scalar_s : scalar_s . T_COMMA scalar  (75)
+
+	T_LPAR  shift 73
+	T_RSQB  shift 129
+	T_COMMA  shift 120
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 61
+	scalar  goto 121
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 101
+	tensor_s : tensor_s . tensor  (69)
+	tensor_s : tensor_s . T_COMMA tensor  (70)
+	tensor : T_LSQB tensor_s . T_RSQB  (72)
+
+	T_LSQB  shift 52
+	T_RSQB  shift 130
+	T_COMMA  shift 123
+	.  error
+
+	tensor  goto 124
+
+
+state 102
+	expression_s : expression_s T_COMMA . expression  (54)
+
+	T_LPAR  shift 50
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 89
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 57
+	string  goto 59
+	int  goto 61
+	expression  goto 131
+	r_value  goto 63
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 103
+	l_value_s : l_value_s T_COMMA l_value attributes_0 .  (96)
+
+	.  reduce 96
+
+
+state 104
+	complex : T_LPAR int . T_COMMA int T_RPAR  (81)
+	quaternion : T_LPAR int . T_COMMA int T_COMMA int T_COMMA int T_RPAR  (83)
+
+	T_COMMA  shift 116
+	.  error
+
+
+state 105
+	complex : T_LPAR float . T_COMMA float T_RPAR  (82)
+	quaternion : T_LPAR float . T_COMMA float T_COMMA float T_COMMA float T_RPAR  (84)
+
+	T_COMMA  shift 118
+	.  error
+
+
+state 106
+	argument : T_ID T_ASSIGN . value  (49)
+
+	T_LPAR  shift 73
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 132
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 76
+	string  goto 59
+	int  goto 61
+	value  goto 133
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 107
+	function_call : T_ID $$1 T_LPAR argument_s0 T_RPAR .  (43)
+
+	.  reduce 43
+
+
+state 108
+	argument_s : argument_s T_COMMA . argument  (47)
+
+	T_LPAR  shift 73
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 74
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 76
+	string  goto 59
+	int  goto 61
+	argument  goto 134
+	value  goto 80
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 109
+	formal : T_ID T_ASSIGN . T_ID  (13)
+	formal : T_ID T_ASSIGN . constant  (14)
+	formal : T_ID T_ASSIGN . T_ID T_ASSIGN constant  (15)
+
+	T_LPAR  shift 73
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_ID  shift 135
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 136
+	string  goto 59
+	int  goto 61
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 110
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR . T_RA T_LPAR formal_s0 T_RPAR attributes_0 block  (6)
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR . attributes_0 block  (7)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_RA  shift 137
+	T_LBRA  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 138
+	attributes  goto 34
+
+
+state 111
+	formal_s : formal_s T_COMMA . formal attributes_0  (11)
+
+	T_ID  shift 81
+	.  error
+
+	formal  goto 139
+
+
+state 112
+	formal_s : formal attributes_0 .  (10)
+
+	.  reduce 10
+
+
+state 113
+	attribute : T_ID T_COLON string .  (40)
+
+	.  reduce 40
+
+
+state 114
+	attribute : T_ID T_COLON int .  (41)
+
+	.  reduce 41
+
+
+state 115
+	attribute_s : attribute_s T_COMMA attribute .  (39)
+
+	.  reduce 39
+
+
+state 116
+	complex : T_LPAR int T_COMMA . int T_RPAR  (81)
+	quaternion : T_LPAR int T_COMMA . int T_COMMA int T_COMMA int T_RPAR  (83)
+
+	T_INT  shift 54
+	.  error
+
+	int  goto 140
+
+
+state 117
+	expression : T_LPAR expression T_RPAR .  (57)
+
+	.  reduce 57
+
+
+state 118
+	complex : T_LPAR float T_COMMA . float T_RPAR  (82)
+	quaternion : T_LPAR float T_COMMA . float T_COMMA float T_COMMA float T_RPAR  (84)
+
+	T_FLOAT  shift 55
+	.  error
+
+	float  goto 141
+
+
+state 119
+	list : T_LBRA scalar_s T_RBRA .  (63)
+
+	.  reduce 63
+
+
+state 120
+	scalar_s : scalar_s T_COMMA . scalar  (75)
+
+	T_LPAR  shift 73
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 61
+	scalar  goto 142
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 121
+	scalar_s : scalar_s scalar .  (74)
+
+	.  reduce 74
+
+
+state 122
+	list : T_LBRA tensor_s T_RBRA .  (64)
+
+	.  reduce 64
+
+
+state 123
+	tensor_s : tensor_s T_COMMA . tensor  (70)
+
+	T_LSQB  shift 52
+	.  error
+
+	tensor  goto 143
+
+
+state 124
+	tensor_s : tensor_s tensor .  (69)
+
+	.  reduce 69
+
+
+state 125
+	list : T_LBRA string_s T_RBRA .  (65)
+
+	.  reduce 65
+
+
+state 126
+	string_s : string_s T_COMMA . string  (89)
+
+	T_STRING  shift 27
+	.  error
+
+	string  goto 144
+
+
+state 127
+	string_s : string_s string .  (88)
+
+	.  reduce 88
+
+
+state 128
+	list : T_LBRA real T_DOTDOT . real T_RBRA  (66)
+	list : T_LBRA real T_DOTDOT . real T_COLON real T_RBRA  (67)
+
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 61
+	real  goto 145
+	float  goto 70
+
+
+state 129
+	tensor : T_LSQB scalar_s T_RSQB .  (71)
+
+	.  reduce 71
+
+
+state 130
+	tensor : T_LSQB tensor_s T_RSQB .  (72)
+
+	.  reduce 72
+
+
+state 131
+	expression_s : expression_s T_COMMA expression .  (54)
+
+	.  reduce 54
+
+
+state 132
+	value : T_ID .  (51)
+
+	.  reduce 51
+
+
+state 133
+	argument : T_ID T_ASSIGN value .  (49)
+
+	.  reduce 49
+
+
+state 134
+	argument_s : argument_s T_COMMA argument .  (47)
+
+	.  reduce 47
+
+
+state 135
+	formal : T_ID T_ASSIGN T_ID .  (13)
+	formal : T_ID T_ASSIGN T_ID . T_ASSIGN constant  (15)
+
+	T_ASSIGN  shift 146
+	T_RPAR  reduce 13
+	T_LSQB  reduce 13
+	T_COMMA  reduce 13
+
+
+state 136
+	formal : T_ID T_ASSIGN constant .  (14)
+
+	.  reduce 14
+
+
+state 137
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA . T_LPAR formal_s0 T_RPAR attributes_0 block  (6)
+
+	T_LPAR  shift 147
+	.  error
+
+
+state 138
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR attributes_0 . block  (7)
+
+	T_LBRA  shift 1
+	.  error
+
+	block  goto 148
+
+
+state 139
+	formal_s : formal_s T_COMMA formal . attributes_0  (11)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_RPAR  reduce 99
+	T_COMMA  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 149
+	attributes  goto 34
+
+
+state 140
+	complex : T_LPAR int T_COMMA int . T_RPAR  (81)
+	quaternion : T_LPAR int T_COMMA int . T_COMMA int T_COMMA int T_RPAR  (83)
+
+	T_RPAR  shift 150
+	T_COMMA  shift 151
+	.  error
+
+
+state 141
+	complex : T_LPAR float T_COMMA float . T_RPAR  (82)
+	quaternion : T_LPAR float T_COMMA float . T_COMMA float T_COMMA float T_RPAR  (84)
+
+	T_RPAR  shift 152
+	T_COMMA  shift 153
+	.  error
+
+
+state 142
+	scalar_s : scalar_s T_COMMA scalar .  (75)
+
+	.  reduce 75
+
+
+state 143
+	tensor_s : tensor_s T_COMMA tensor .  (70)
+
+	.  reduce 70
+
+
+state 144
+	string_s : string_s T_COMMA string .  (89)
+
+	.  reduce 89
+
+
+state 145
+	list : T_LBRA real T_DOTDOT real . T_RBRA  (66)
+	list : T_LBRA real T_DOTDOT real . T_COLON real T_RBRA  (67)
+
+	T_RBRA  shift 154
+	T_COLON  shift 155
+	.  error
+
+
+state 146
+	formal : T_ID T_ASSIGN T_ID T_ASSIGN . constant  (15)
+
+	T_LPAR  shift 73
+	T_LBRA  shift 51
+	T_LSQB  shift 52
+	T_INT  shift 54
+	T_STRING  shift 27
+	T_FLOAT  shift 55
+	K_NULL  shift 56
+	.  error
+
+	constant  goto 156
+	string  goto 59
+	int  goto 61
+	scalar  goto 64
+	tensor  goto 65
+	list  goto 66
+	real  goto 67
+	complex  goto 68
+	quaternion  goto 69
+	float  goto 70
+
+
+state 147
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR . formal_s0 T_RPAR attributes_0 block  (6)
+	empty : .  (99)
+
+	T_ID  shift 81
+	T_RPAR  reduce 99
+
+	empty  goto 82
+	formal_s0  goto 157
+	formal_s  goto 84
+	formal  goto 85
+
+
+state 148
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR attributes_0 block .  (7)
+
+	.  reduce 7
+
+
+state 149
+	formal_s : formal_s T_COMMA formal attributes_0 .  (11)
+
+	.  reduce 11
+
+
+state 150
+	complex : T_LPAR int T_COMMA int T_RPAR .  (81)
+
+	.  reduce 81
+
+
+state 151
+	quaternion : T_LPAR int T_COMMA int T_COMMA . int T_COMMA int T_RPAR  (83)
+
+	T_INT  shift 54
+	.  error
+
+	int  goto 158
+
+
+state 152
+	complex : T_LPAR float T_COMMA float T_RPAR .  (82)
+
+	.  reduce 82
+
+
+state 153
+	quaternion : T_LPAR float T_COMMA float T_COMMA . float T_COMMA float T_RPAR  (84)
+
+	T_FLOAT  shift 55
+	.  error
+
+	float  goto 159
+
+
+state 154
+	list : T_LBRA real T_DOTDOT real T_RBRA .  (66)
+
+	.  reduce 66
+
+
+state 155
+	list : T_LBRA real T_DOTDOT real T_COLON . real T_RBRA  (67)
+
+	T_INT  shift 54
+	T_FLOAT  shift 55
+	.  error
+
+	int  goto 61
+	real  goto 160
+	float  goto 70
+
+
+state 156
+	formal : T_ID T_ASSIGN T_ID T_ASSIGN constant .  (15)
+
+	.  reduce 15
+
+
+state 157
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 . T_RPAR attributes_0 block  (6)
+
+	T_RPAR  shift 161
+	.  error
+
+
+state 158
+	quaternion : T_LPAR int T_COMMA int T_COMMA int . T_COMMA int T_RPAR  (83)
+
+	T_COMMA  shift 162
+	.  error
+
+
+state 159
+	quaternion : T_LPAR float T_COMMA float T_COMMA float . T_COMMA float T_RPAR  (84)
+
+	T_COMMA  shift 163
+	.  error
+
+
+state 160
+	list : T_LBRA real T_DOTDOT real T_COLON real . T_RBRA  (67)
+
+	T_RBRA  shift 164
+	.  error
+
+
+state 161
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR . attributes_0 block  (6)
+	empty : .  (99)
+
+	T_LSQB  shift 31
+	T_LBRA  reduce 99
+
+	empty  goto 32
+	attributes_0  goto 165
+	attributes  goto 34
+
+
+state 162
+	quaternion : T_LPAR int T_COMMA int T_COMMA int T_COMMA . int T_RPAR  (83)
+
+	T_INT  shift 54
+	.  error
+
+	int  goto 166
+
+
+state 163
+	quaternion : T_LPAR float T_COMMA float T_COMMA float T_COMMA . float T_RPAR  (84)
+
+	T_FLOAT  shift 55
+	.  error
+
+	float  goto 167
+
+
+state 164
+	list : T_LBRA real T_DOTDOT real T_COLON real T_RBRA .  (67)
+
+	.  reduce 67
+
+
+state 165
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 . block  (6)
+
+	T_LBRA  shift 1
+	.  error
+
+	block  goto 168
+
+
+state 166
+	quaternion : T_LPAR int T_COMMA int T_COMMA int T_COMMA int . T_RPAR  (83)
+
+	T_RPAR  shift 169
+	.  error
+
+
+state 167
+	quaternion : T_LPAR float T_COMMA float T_COMMA float T_COMMA float . T_RPAR  (84)
+
+	T_RPAR  shift 170
+	.  error
+
+
+state 168
+	macro : K_MACRO T_ID T_LPAR formal_s0 T_RPAR T_RA T_LPAR formal_s0 T_RPAR attributes_0 block .  (6)
+
+	.  reduce 6
+
+
+state 169
+	quaternion : T_LPAR int T_COMMA int T_COMMA int T_COMMA int T_RPAR .  (83)
+
+	.  reduce 83
+
+
+state 170
+	quaternion : T_LPAR float T_COMMA float T_COMMA float T_COMMA float T_RPAR .  (84)
+
+	.  reduce 84
+
+
+Rules never reduced:
+	id_s0 : empty  (91)
+	id_s0 : id_s  (92)
+	id_s : T_ID attributes_0  (93)
+	id_s : id_s T_COMMA T_ID attributes_0  (94)
+
+
+84 terminals, 49 nonterminals
+100 grammar rules, 171 states

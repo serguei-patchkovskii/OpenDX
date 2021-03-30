@@ -193,7 +193,7 @@ static Display *open_status_display (void)
     if ((disp = XOpenDisplay (name)) == (Display *) NULL)
     {
 	fprintf (stderr, "%2d: _dxf_ExInitStatus:  can't open display '%s'\n",
-		_dxd_exMyPID, name);
+		DXGetThreadPid(), name);
 	return ((Display *) NULL);
     }
 

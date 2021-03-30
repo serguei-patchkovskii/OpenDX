@@ -28,10 +28,10 @@
  * The routine is called to compute the recipes for non-array objects.
  */
 
-static uint32
+static EXCRC
 computeDefaultRecipe (Object obj)
 {
-    uint32  crc = 0xFFFFFFFF;
+    EXCRC  crc = 0xFFFFFFFF;
 
     if (obj)
     {
@@ -50,9 +50,9 @@ computeDefaultRecipe (Object obj)
  */
 
 static
-uint32 computeStringRecipe (String a)
+EXCRC computeStringRecipe (String a)
 {
-    uint32 		crc;
+    EXCRC 		crc;
     unsigned char	*p;
 
     crc = 0xFFFFFFFF;
@@ -80,10 +80,10 @@ uint32 computeStringRecipe (String a)
  * bytes representing the data stored in the array.
  */
 
-static uint32
+static EXCRC
 computeArrayRecipe (Array a)
 {
-    uint32 		crc;
+    EXCRC 		crc;
     Type		type;
     Category		category;
     int			items;
@@ -107,7 +107,7 @@ computeArrayRecipe (Array a)
         Pointer origin;
         Pointer delta; 
 
-        origin = DXAllocateLocal(2*size);
+        origin = DXAllocate(2*size);
         delta = (Pointer)((char *)origin + size);
         DXGetRegularArrayInfo((RegularArray)a, NULL, origin, delta);
 	crc = _dxf_ExCRCByteV (crc, (unsigned char *) "regulararray", 1, 12);
@@ -134,12 +134,12 @@ computeArrayRecipe (Array a)
     return (EXTAG(crc));
 }
 
-static uint32 
+static EXCRC 
 computeRecipe(Program *p, int ind)
 {
     ProgramVariable *pv;
     Object obj;
-    uint32 tcrc;
+    EXCRC tcrc;
     gvar *gv;
 
     if (ind == -1) 
@@ -198,7 +198,7 @@ computeRecipe(Program *p, int ind)
 /*            setting of a user specified "cache once" switch?   */  
 /*---------------------------------------------------------------*/
 int
-_dxf_ExManageCacheTable(ModPath *mod_path, uint32 reccrc, int outnbr)
+_dxf_ExManageCacheTable(ModPath *mod_path, EXCRC reccrc, int outnbr)
 {
     int i, limit;
     pathtag  *pt;
@@ -278,9 +278,9 @@ void _dxf_ExComputeRecipes(Program *p, int funcInd)
     gfunc	*n = FETCH_LIST(p->funcs, funcInd);
     int		i, j, size, ntags, macro_tags=0, extra_tags, async_tags=0;
     gvar	*gv;
-    uint32 	tcrc;
+    EXCRC 	tcrc;
     gvar	*out;
-    uint32 	*inTags, staticTags[STATIC_TAGS];
+    EXCRC 	*inTags, staticTags[STATIC_TAGS];
     int		varInd, *varIndp;
     int		varInd2;
     ProgramVariable *pv, *inpv, *pv_key;
@@ -290,7 +290,7 @@ void _dxf_ExComputeRecipes(Program *p, int funcInd)
     _excache    pvcache;
     Program     *subP=NULL;
     int  tag_changed = FALSE;
-    uint32 crc = 0xFFFFFFFF;
+    EXCRC crc = 0xFFFFFFFF;
     char 	*async_name=NULL, *name;
     int		passthru = FALSE;
     char mod_cache_str[ MAX_PATH_STR_LEN ], *mod;
@@ -374,7 +374,7 @@ check_async:
     ntags = n->nin+extra_tags;
 
     if(ntags > STATIC_TAGS)
-        inTags = (uint32 *)DXAllocate(ntags*sizeof(uint32));
+        inTags = (EXCRC *)DXAllocate(ntags*sizeof(EXCRC));
     else inTags = staticTags;
 
     /* add the crc of all of the module inputs to the total crc */
@@ -434,7 +434,7 @@ check_async:
     if(n->flags & (MODULE_CONTAINS_STATE | MODULE_CHANGES_STATE))
     {
         Object new_tag_obj, old_tag_obj;
-        uint32 oldtag, newtag;
+        EXCRC oldtag, newtag;
 
         newtag = _dxf_ExGenCacheTag (n->name,0,ntags,inTags);
         new_tag_obj = (Object)DXMakeInteger(newtag);
@@ -451,7 +451,7 @@ check_async:
             /* this macro will run this time, save the new cache tag */
             if(oldtag == 0) {
                 DXSetCacheEntry(new_tag_obj,CACHE_PERMANENT,mod_cache_str,ntags,0);
-                DXDelete(old_tag_obj);
+                // GDA DXDelete(old_tag_obj);
             }
             else if(oldtag != newtag) {
                 /* An input has changed since last time, we need to */ 
@@ -461,7 +461,7 @@ check_async:
                 DXDelete(new_tag_obj);
                 new_tag_obj = (Object)DXMakeInteger(0);
                 DXSetCacheEntry(new_tag_obj,CACHE_PERMANENT,mod_cache_str,ntags,0);
-                DXDelete(old_tag_obj);
+                // GDA DXDelete(old_tag_obj);
                 goto check_async;
             }
             else DXDelete(new_tag_obj);
@@ -500,8 +500,13 @@ check_async:
 	    /* make process group name part of cache tag */
 	    if(n->procgroupid) {
 		size = strlen (n->procgroupid);
+#if 1
 		out->reccrc = EXTAG(_dxf_ExCRCByteV(out->reccrc & 0x7fffffff,
 		    (unsigned char *) n->procgroupid, 1, size));
+#else
+		out->reccrc = EXTAG(_dxf_ExCRCByteV(out->reccrc,
+		    (unsigned char *) n->procgroupid, 1, size));
+#endif
 	    }
 	    ExDebug ("1", "Cache value for %s.%d = 0x%08x ",
 			    n->name, i, out->reccrc);
@@ -539,60 +544,3 @@ check_async:
     if(ntags > STATIC_TAGS)
         DXFree(inTags);
 }
-
-#if 0
-/* This routine is for calculating the output tag of a macro */
-void _dxf_ExComputeOutTags(Program *p)
-{
-    uint32 inTags[100];
-    int	varInd, *varIndp;
-    ProgramVariable *pv;
-    ProgramRef *pr;
-    MacroRef *mr;
-    int i, j, extra_tags, macro_tags;
-    Program *subP;
-    gfunc *gf;
-    uint32 crc = 0xFFFFFFFF;
- 
-    gf = FETCH_LIST(p->funcs, p->cursor);
-
-    for (i = 0; i < SIZE_LIST(gf->inputs) && i < 100; i++)
-    {
-	varIndp = FETCH_LIST(gf->inputs, i);
-        if(varIndp == NULL)
-            _dxf_ExDie("Executive Inconsistency: _dxf_ExComputeOutTags");
-        varInd = *varIndp;
-      
-	if (varInd == -1)
-	    inTags[i] = computeDefaultRecipe (NULL);
-	else
-	{
-	    pv = FETCH_LIST(p->vars, varInd);
-            inTags[i] = pv->gv->reccrc;
-         }
-    }
-
-    subP = gf->func.subP;
-
-    macro_tags = SIZE_LIST(subP->macros);
-    for (j = 0; j < macro_tags && i < 100; j++, i++)
-    {
-        mr = FETCH_LIST(subP->macros, j);
-        inTags[i] = _dxf_ExCRCInt(crc, mr->index);
-    }
-
-    extra_tags = macro_tags;
-
-    for (i = 0; i < SIZE_LIST(gf->outputs); i++)
-    {
-	varIndp = FETCH_LIST(gf->outputs, i);
-        if(varIndp == NULL)
-            _dxf_ExDie("Executive Inconsistency: _dxf_ExComputeOutTags");
-        varInd = *varIndp;
-	pv = FETCH_LIST(p->vars, varInd);
-        pv->reccrc = pv->gv->reccrc = _dxf_ExGenCacheTag(gf->name, i, 
-                                                         gf->nin + extra_tags,
-                                                         inTags);
-    }
-}
-#endif

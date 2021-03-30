@@ -566,6 +566,7 @@ _dxfDestroyRenderModule(tdmChildGlobalP globals)
 static int
 XChecker(int fd, void *d)
 {
+    int p;
     tdmChildGlobalP globals = (tdmChildGlobalP)d;
     DEFGLOBALDATA(globals) ;
     return XPending(DPY);

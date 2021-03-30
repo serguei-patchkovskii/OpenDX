@@ -99,7 +99,7 @@ main_Format_1_out_1 =
     // decorator Annotate	pos=(12,162) size=28x28 style(Marker), value = <NULL>
     // annotation user_begin: 130
     // annotation user: /*
-    // annotation user:  * $Header: /src/master/dx/src/uipp/ui/testssheet.net,v 1.1 1999/06/02 20:36:25 gda Exp $
+    // annotation user:  * $Header: /cvsroot/opendx2/dx/src/uipp/ui/testssheet.net,v 1.1 1999/06/02 20:36:25 gda Exp $
     // annotation user:  */
     // annotation user_end: <NULL>
 // network: end of macro body

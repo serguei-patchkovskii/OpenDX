@@ -1464,7 +1464,7 @@ Error _dxfGetColorBarAnnotationColors(Object colors, Object which,
       if (!_dxfHowManyStrings(colors, &numcolors))
 	goto error;
       /* allocate space for the 3-vectors */
-      colorlist = DXAllocateLocal(numcolors*sizeof(RGBColor));
+      colorlist = DXAllocate(numcolors*sizeof(RGBColor));
       if (!colorlist) goto error;
       for (i=0; i<numcolors;i++) {
         DXExtractNthString(colors,i,&colorstring);
@@ -1484,7 +1484,7 @@ Error _dxfGetColorBarAnnotationColors(Object colors, Object which,
 	goto error;
       }
       /* it's a list of 3-vectors */
-      colorlist = DXAllocateLocal(numcolors*sizeof(RGBColor));
+      colorlist = DXAllocate(numcolors*sizeof(RGBColor));
       if (!colorlist) goto error;
       if (!DXExtractParameter(colors, TYPE_FLOAT, 3, numcolors, 
 			      (Pointer)colorlist)) {

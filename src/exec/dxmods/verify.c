@@ -838,7 +838,7 @@ static Error pushchild(struct plist *p, Object newo)
 	    pp = pp->next;
     } while (pp->next);
 
-    pl = (struct plist *)DXAllocateLocal(sizeof(struct plist));
+    pl = (struct plist *)DXAllocate(sizeof(struct plist));
     if (!pl) 
 	return ERROR;
 

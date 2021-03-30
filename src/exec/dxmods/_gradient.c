@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_gradient.c,v 1.5 2000/08/24 20:04:12 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_gradient.c,v 1.5 2000/08/24 20:04:12 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -977,7 +977,7 @@ _dxfGradientIrregular(Field field)
     dA = (Array)DXGetComponentValue(field, "data");
     DXGetArrayInfo(dA, NULL, &dataType, NULL, NULL, NULL);
 
-    data = DXGetArrayDataLocal(dA);
+    data = DXGetArrayData(dA);
     if (DXGetError() != ERROR_NONE)
 	goto error;
     
@@ -1040,7 +1040,7 @@ _dxfGradientIrregular(Field field)
      * Allocation a counts array, recalling the number of element
      * gradients that have been accumulated for each position.
      */
-    counts = (byte *)DXAllocateLocalZero(nPoints);
+    counts = (byte *)DXAllocateZero(nPoints);
     if (! counts)
     {
        DXResetError();
@@ -1054,7 +1054,7 @@ _dxfGradientIrregular(Field field)
      * If insufficient memory is available, use the output array directly
      * to avoid an unnecessary copy.
      */
-    gradients = (float *)DXAllocateLocalZero(nPoints * pDim * sizeof(float));
+    gradients = (float *)DXAllocateZero(nPoints * pDim * sizeof(float));
     if (! gradients)
     {
        DXResetError();
@@ -1163,9 +1163,6 @@ _dxfGradientIrregular(Field field)
 	gradients = NULL;
     }
 
-    if (dA && data)
-	DXFreeArrayDataLocal(dA, (Pointer)data);
-
     /*
      * DXInsert the gradient array into the field
      */
@@ -1196,8 +1193,6 @@ error:
 	DXFreeArrayHandle(cHandle);
     if (pHandle)
 	DXFreeArrayHandle(pHandle);
-    if (dA && data)
-	DXFreeArrayDataLocal(dA, (Pointer)data);
 
     if (gA)
 	DXDelete((Object)gA);

@@ -57,6 +57,9 @@ _dxf_EXO_init (void)
 	return (ERROR);
     if (DXcreate_lock (&freeList->lock, "exobj freeList") != OK)
 	return (ERROR);
+
+    DXlock(&freeList->lock, "crap");
+    DXunlock(&freeList->lock, "crap");
     allocLock = (lock_type *)DXAllocateZero (sizeof (lock_type));
     if (DXcreate_lock (allocLock, "exobj freeList allocation") != OK)
 	return (ERROR);
@@ -102,7 +105,7 @@ _dxf_EXO_compact (void)
     EXO_Object		obj;
 
     DXlock (allocLock, 0);
-    DXlock (&freeList->lock, exJID);
+    DXlock (&freeList->lock, DXProcessorId());
     result = freeList->gvarHead != NULL;
     while (freeList->gvarHead)
     {
@@ -116,9 +119,9 @@ _dxf_EXO_compact (void)
 	DXFree((Pointer) obj);
     }
     DXunlock (allocLock, 0);
-    DXunlock (&freeList->lock, exJID);
+    DXunlock (&freeList->lock, DXProcessorId());
 
-    if (!result && exJID == 1)
+    if (!result && DXProcessorId() == 0)
     {
 	result = FuncFreeList != NULL;
 	while (FuncFreeList != NULL)
@@ -176,7 +179,7 @@ EXO_create_object_worker (EXO_Class exclass, int size, PFIP *methods, int local)
     {
 	case EXO_CLASS_FUNCTION:
 	    if (FuncFreeList == NULL)
-		obj = (EXObj) DXAllocateLocal (size);
+		obj = (EXObj) DXAllocate (size);
 	    else
 	    {
 		obj = (EXObj) FuncFreeList;
@@ -191,14 +194,14 @@ EXO_create_object_worker (EXO_Class exclass, int size, PFIP *methods, int local)
 		locked = freeList->gvarHead->next == NULL;
 		if (locked)
 		{
-		    DXlock (&freeList->lock, exJID);
+		    DXlock (&freeList->lock, DXProcessorId());
 		    if (freeList->gvarHead->next == NULL)
 			freeList->gvarTail = NULL;
 		}
 		obj = (EXO_Object) freeList->gvarHead;
 		freeList->gvarHead = ((gvar *) obj)->next;
 		if (locked)
-		    DXunlock (&freeList->lock, exJID);
+		    DXunlock (&freeList->lock, DXProcessorId());
 		DXunlock (allocLock, 0);
 	    }
 	    else 
@@ -209,7 +212,7 @@ EXO_create_object_worker (EXO_Class exclass, int size, PFIP *methods, int local)
 	    break;
 
 	default:
-	    obj = (EXO_Object) (local ? DXAllocateLocal (size)
+	    obj = (EXO_Object) (local ? DXAllocate (size)
 				      : DXAllocate (size));
 	    break;
     }
@@ -280,13 +283,13 @@ int _dxf_EXO_delete (EXO_Object obj)
 
 	    case EXO_CLASS_GVAR:
 		((gvar *) obj)->next = NULL;
-		DXlock (&freeList->lock, exJID);
+		DXlock (&freeList->lock, DXProcessorId());
 		if (freeList->gvarTail)
 		    freeList->gvarTail->next = (gvar *) obj;
 		else
 		    freeList->gvarHead = (gvar *) obj;
 		freeList->gvarTail = (gvar *) obj;
-		DXunlock (&freeList->lock, exJID);
+		DXunlock (&freeList->lock, DXProcessorId());
 		break;
 
 	    default:

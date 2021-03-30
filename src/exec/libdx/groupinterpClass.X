@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 //
-// $Header: /src/master/dx/src/exec/libdx/groupinterpClass.X,v 1.3 2003/07/11 05:50:42 davidt Exp $
+// $Header: /cvsroot/opendx2/dx/src/exec/libdx/groupinterpClass.X,v 1.3 2003/07/11 05:50:42 davidt Exp $
 //
 
 
@@ -16,7 +16,7 @@ typedef struct groupinterpolator *GroupInterpolator;
 INCLUDE  interpClass.X
 
 SUBCLASS    GroupInterpolator     OF Interpolator
-IMPLEMENTS Interpolate Delete Copy LocalizeInterpolator
+IMPLEMENTS  Interpolate Delete Copy 
 
 GroupInterpolator NewGroupInterpolator(Group, enum interp_init, float fuzz);
 

@@ -12,7 +12,7 @@
 #ifndef tdmInteractor_h
 #define tdmInteractor_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwInteractor.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwInteractor.h,v $
   Author: Mark Hood
 
   This include file defines core data structures used by the direct
@@ -34,7 +34,7 @@
 #endif
 
 #ifdef STANDALONE 
-#define tdmAllocateLocal malloc
+#define tdmAllocate malloc
 #define tdmFree free
 #endif
 

@@ -466,13 +466,3 @@ _dxfInitializeTask(Pointer p)
     return _dxfInitialize(*(LinesRR1DInterpolator *)p);
 }
 
-Interpolator
-_dxfLinesRR1DInterpolator_LocalizeInterpolator(LinesRR1DInterpolator li)
-{
-    if (li->fieldInterpolator.localized)
-	return (Interpolator)li;
-
-    li->fieldInterpolator.localized = 1;
-
-    return (Interpolator)li;
-}

@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/map.c,v 1.5 2006/01/03 17:02:23 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/map.c,v 1.5 2006/01/03 17:02:23 davidt Exp $:
  */
 
 #include <dxconfig.h>

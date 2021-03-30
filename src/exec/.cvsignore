@@ -1,0 +1,8 @@
+!
+CVS
+Makefile
+Makefile.in
+tmp
+.libs
+libDX.la
+libDXcallm.la

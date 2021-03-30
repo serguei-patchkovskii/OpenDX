@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/runtime/LabelGroup.java,v 1.2 2005/10/27 19:43:08 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/runtime/LabelGroup.java,v 1.3 2006/09/12 15:43:43 davidt Exp $
  */
 package dx.runtime;
 import java.awt.*;
@@ -110,7 +110,7 @@ public class LabelGroup extends Panel
 
         else {
             Label lab = ( Label ) label_array[ next ];
-            System.out.println("Setting text to: " + txt);
+            //System.out.println("Setting text to: " + txt);
             lab.setText( txt );
         }
 

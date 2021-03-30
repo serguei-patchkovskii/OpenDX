@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/reduce.c,v 1.8 2006/01/03 17:02:24 davidt Exp $:
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/reduce.c,v 1.8 2006/01/03 17:02:24 davidt Exp $:
  */
 
 /***
@@ -1392,7 +1392,7 @@ ReduceSumAxis(Pointer inBuf, Pointer outBuf, int filter, int nDim, int nElts,
      * Get buffer and accumulator that will span the
      * box filter in the current filter axis.
      */
-    buf = (float *)DXAllocateLocal(filter*nElts*sizeof(float));
+    buf = (float *)DXAllocate(filter*nElts*sizeof(float));
     if (! buf)
     {
 	DXResetError();
@@ -1401,7 +1401,7 @@ ReduceSumAxis(Pointer inBuf, Pointer outBuf, int filter, int nDim, int nElts,
     if (! buf)
 	goto error;
     
-    sumPtr = (float *)DXAllocateLocal(nElts*sizeof(float));
+    sumPtr = (float *)DXAllocate(nElts*sizeof(float));
     if (! sumPtr)
     {
 	DXResetError();
@@ -1410,7 +1410,7 @@ ReduceSumAxis(Pointer inBuf, Pointer outBuf, int filter, int nDim, int nElts,
     if (! sumPtr)
 	goto error;
 
-    lastSumPtr = (float *)DXAllocateLocal(nElts*sizeof(float));
+    lastSumPtr = (float *)DXAllocate(nElts*sizeof(float));
     if (! lastSumPtr)
     {
 	DXResetError();

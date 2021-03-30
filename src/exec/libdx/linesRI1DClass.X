@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 //
-// $Header: /src/master/dx/src/exec/libdx/linesRI1DClass.X,v 1.3 2003/07/11 05:50:45 davidt Exp $
+// $Header: /cvsroot/opendx2/dx/src/exec/libdx/linesRI1DClass.X,v 1.3 2003/07/11 05:50:45 davidt Exp $
 //
 
 
@@ -15,7 +15,7 @@ typedef struct linesri1dinterpolator *LinesRI1DInterpolator;
 
 INCLUDE      fieldinterpClass.X
 SUBCLASS    LinesRI1DInterpolator OF FieldInterpolator
-IMPLEMENTS  PrimitiveInterpolate Delete Copy LocalizeInterpolator
+IMPLEMENTS  PrimitiveInterpolate Delete Copy 
 
 LinesRI1DInterpolator _dxfNewLinesRI1DInterpolator(Field,
 				enum interp_init, double, Matrix *);

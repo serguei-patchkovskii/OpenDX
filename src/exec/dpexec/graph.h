@@ -16,6 +16,7 @@
 #define	_GRAPH_H
 
 #include "exobject.h"
+#include "crc.h"
 #include "parse.h"
 #include "d.h"
 
@@ -91,7 +92,7 @@ typedef struct gvar
     struct exo_object	object;
     struct gvar		*next;
     _gvtype		type;
-    uint32 		reccrc;		/* cache tag		*/
+    EXCRC 		reccrc;		/* cache tag		*/
     double		cost;
     _skip_state		skip;		/* error or turned off by route */
     int			disable_cache;	/* disable output cacheing */
@@ -119,8 +120,8 @@ typedef struct ProgramVariable {
     _excache	excache;	        /* output caching indicator	*/
     int		cacheattr;        	/* cache attr specified ?       */
     int		refs;			/* How many refs does the prog have? */
-    uint32 	reccrc;			/* cache tag			*/
-    LIST(uint32) cts;			/* Stack of cache tags 		*/
+    EXCRC 	reccrc;			/* cache tag			*/
+    LIST(EXCRC) cts;			/* Stack of cache tags 		*/
     int          is_output;             /* is this an output            */
 } ProgramVariable;
 
@@ -268,7 +269,8 @@ int     DXGetModuleCacheStr(char *);
 
 
 #define MAX_PATH_STR_LEN 1024
-#define EX_PIN_PROC 1
+// #define EX_PIN_PROC 1 GDA
+#define EX_PIN_PROC 0
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

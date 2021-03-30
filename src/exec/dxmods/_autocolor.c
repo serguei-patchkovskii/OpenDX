@@ -1438,7 +1438,7 @@ static Error AutoColorDelayedField(Pointer ptr)
   /* first make opacity map, if necessary */
   if (setopacities) {
     /* need to figure out how many entries I need */
-    opacityarray = DXAllocateLocal(numentries*sizeof(float));
+    opacityarray = DXAllocate(numentries*sizeof(float));
     if (!opacityarray) {
       DXAddMessage("cannot allocate delayed opacity map with %d entries",
 		   numentries);
@@ -1462,7 +1462,7 @@ static Error AutoColorDelayedField(Pointer ptr)
     }
   } 
   /* now do colors */
-  colorarray = DXAllocateLocal(numentries*sizeof(RGBColor));
+  colorarray = DXAllocate(numentries*sizeof(RGBColor));
   if (!colorarray) {
     DXAddMessage("cannot allocate delayed color map with %d entries",
 		 numentries);

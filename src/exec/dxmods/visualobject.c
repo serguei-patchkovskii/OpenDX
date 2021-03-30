@@ -730,7 +730,7 @@ static Node *newnode(int level, int isattr, int number, int dup, Class class,
 {
     Node *np = NULL;
 
-    if (!(np = DXAllocateLocalZero(sizeof(Node))))
+    if (!(np = DXAllocateZero(sizeof(Node))))
 	return NULL;
 
 #if 1  /* debug */
@@ -791,7 +791,7 @@ static Error addparent(Node *np, Node *parent)
 {
     Nlist *lp;
     
-    if (!(lp = DXAllocateLocal(sizeof(Nlist))))
+    if (!(lp = DXAllocate(sizeof(Nlist))))
 	return ERROR;
 		
     lp->this = parent;
@@ -816,7 +816,7 @@ static Error setptag(Node *np, char *ptag)
 	return OK;
 
     len = strlen(ptag) + 1;
-    np->ptag = DXAllocateLocal(len);
+    np->ptag = DXAllocate(len);
     if (!np->ptag)
 	return ERROR;
 
@@ -834,7 +834,7 @@ static Error setctag(Node *np, char *ctag)
 	return OK;
 
     len = strlen(ctag) + 1;
-    np->ctag = DXAllocateLocal(len);
+    np->ctag = DXAllocate(len);
     if (!np->ctag)
 	return ERROR;
 

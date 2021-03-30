@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/cachegraph.h,v 1.3 2000/08/11 15:28:09 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/cachegraph.h,v 1.3 2000/08/11 15:28:09 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -28,6 +28,6 @@
 /*  Question: Should this be conditional -i.e. based on the      */
 /*            setting of a user specified "cache once" switch?   */
 /*---------------------------------------------------------------*/
-int _dxf_ExManageCacheTable(ModPath *cpath, uint32 reccrc, int outnbr);
+int _dxf_ExManageCacheTable(ModPath *cpath, EXCRC reccrc, int outnbr);
 
 #endif	/* _CACHEGRAPH_H */

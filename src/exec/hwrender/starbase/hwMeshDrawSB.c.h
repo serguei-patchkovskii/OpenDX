@@ -12,7 +12,7 @@
 #ifndef hwMeshDrawSB_c_h
 #define hwMeshDrawSB_c_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwMeshDrawSB.c.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwMeshDrawSB.c.h,v $
   Author: Mark Hood
 
   This routine takes a DX field, looks up the previously generated Starbase

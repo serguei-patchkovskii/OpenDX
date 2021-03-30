@@ -12,7 +12,7 @@
 #ifndef tdmMatrix_h
 #define tdmMatrix_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwMatrix.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwMatrix.h,v $
 
   Stuff for matrix routines.
 

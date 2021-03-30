@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/xgl/hwMeshDraw.c.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwMeshDraw.c.h,v $
 
  Most of triangle strip construction is treated in the same way as with HP's
  Starbase API, especially for the vertex information.  Facet colors are

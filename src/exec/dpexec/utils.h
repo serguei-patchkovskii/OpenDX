@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dpexec/utils.h,v 1.9 2004/06/09 16:14:29 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dpexec/utils.h,v 1.9 2004/06/09 16:14:29 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -83,7 +83,7 @@ Array 		_dxfExNewInteger 		(int n);
 #define INIT_LIST(list) ((list).nalloc = (list).nused = 0, (list).vals = NULL)
 #define INIT_LIST_LOCAL(t, list) ( \
     (list).nalloc = (list).nused = 0, \
-    (list).vals = (t *) DXAllocateLocal(1) \
+    (list).vals = (t *) DXAllocate(1) \
     )
 #define COPY_LIST(dstlist, srclist) ( \
     (dstlist).nalloc = (srclist).nalloc, (dstlist).nused = (srclist).nused, \

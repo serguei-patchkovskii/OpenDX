@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /* 
- * $Header: /src/master/dx/src/exec/hwrender/hwInitScreen.c,v 1.8 2006/01/03 17:02:27 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/hwrender/hwInitScreen.c,v 1.8 2006/01/03 17:02:27 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -16,7 +16,7 @@
 
 /*
  * Environment:		Risc System 6000
- * Current Source:	$Source: /src/master/dx/src/exec/hwrender/hwInitScreen.c,v $
+ * Current Source:	$Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwInitScreen.c,v $
  * Author:		Dave Owens
  *
  */

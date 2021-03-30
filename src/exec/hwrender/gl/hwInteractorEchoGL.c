@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/gl/hwInteractorEchoGL.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/gl/hwInteractorEchoGL.c,v $
 
   These are the IBM GL implementations of the TDM direct interactor echos,
   along with miscellaneous utility routines.  Each function needs to be

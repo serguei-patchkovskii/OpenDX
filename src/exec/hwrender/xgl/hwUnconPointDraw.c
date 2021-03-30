@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
-$Source: /src/master/dx/src/exec/hwrender/xgl/hwUnconPointDraw.c,v $
+$Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwUnconPointDraw.c,v $
 $Log: hwUnconPointDraw.c,v $
 Revision 1.3  1999/05/10 15:45:40  gda
 Copyright message

@@ -7,7 +7,7 @@
 /***********************************************************************/
 
 //
-// $Header: /src/master/dx/src/exec/libdx/linesII1DClass.X,v 1.3 2003/07/11 05:50:45 davidt Exp $
+// $Header: /cvsroot/opendx2/dx/src/exec/libdx/linesII1DClass.X,v 1.3 2003/07/11 05:50:45 davidt Exp $
 //
 
 
@@ -15,7 +15,7 @@ typedef struct linesii1dinterpolator *LinesII1DInterpolator;
 
 INCLUDE      fieldinterpClass.X
 SUBCLASS    LinesII1DInterpolator OF FieldInterpolator
-IMPLEMENTS  PrimitiveInterpolate Delete Copy LocalizeInterpolator
+IMPLEMENTS  PrimitiveInterpolate Delete Copy 
 
 #include "binSort.h"
 

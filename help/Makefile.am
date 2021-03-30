@@ -257,7 +257,7 @@ install-data-hook:
 		 $(LN_S) hlpalhtl svsmstrh ; \
 		 $(LN_S) hlpalhtl ugidx ; \
 		 $(LN_S) hlpalhtl usrefidx ; \
-		 $(LN_S) HelpDir GarHelpDir ; \
+		 $(LN_S) HelpDir GARHelpDir ; \
 		 $(LN_S) HelpDir MBHelpDir ; \
 		 echo "cd $(DESTDIR)$(helpdir)" ; \
 		 echo "$(LN_S) hlpalhtl mbidx" ; \
@@ -265,6 +265,6 @@ install-data-hook:
 		 echo "$(LN_S) hlpalhtl svsmstrh" ; \
 		 echo "$(LN_S) hlpalhtl ugidx" ; \
 		 echo "$(LN_S) hlpalhtl usrefidx" ; \
-		 echo "$(LN_S) HelpDir GarHelpDir" ; \
+		 echo "$(LN_S) HelpDir GARHelpDir" ; \
 		 echo "$(LN_S) HelpDir MBHelpDir" ) \
 	'

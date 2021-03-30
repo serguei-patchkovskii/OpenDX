@@ -1,0 +1,28 @@
+#!/bin/sh
+if test "`cc 2>&1 | grep gcc`" != "" ; then
+	echo cc is gcc ... windows cc must precede gcc!
+fi
+
+HERE="`pwd`"
+XDKINC=`cygpath -s -m "$XDKDEV"`/include
+XDKLIB=`cygpath -s -m "$XDKDEV"`/lib
+
+ARCH=intelnt \
+	AR=ar \
+	RANLIB=ranlib \
+	CC=cc \
+	CPP=cpp \
+	CXX=cxx \
+	CXXCPP=cxxcpp \
+	CFLAGS="-O2 -DDLL_NETCDF -D_MAGICKLIB_" \
+	CXXFLAGS="-O2" \
+	LD=cxx \
+	LDFLAGS="-B" \
+	LN_S=cp \
+	configure --disable-shared --enable-static --prefix=/usr/local --enable-new-keylayout \
+        --with-jni-path="/cygdrive/c/Progra~1/Java/jdk1.5.0_06/include/win32:/cygdrive/c/Progra~1/Java/jdk1.5.0_06/include" \
+        --with-java40jar-path=c:/cygwin/usr/local/src/java40.jar \
+        --with-cosmojar-path=c:/cygwin/usr/local/src/npcosmop211.jar \
+	--with-statmagick \
+        --x-includes="$XDKINC" --x-libraries="$XDKLIB" 
+

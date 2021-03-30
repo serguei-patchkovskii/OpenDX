@@ -13,7 +13,7 @@
 #define tdmGather_h
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/hwGather.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/hwGather.h,v $
   Author: Tim Murphy
 
   This file contains definitions for the 'gather' structure. This structure

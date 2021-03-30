@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
- * $Header: /src/master/dx/src/uipp/java/dx/net/DXLinkApplication.java,v 1.4 2006/03/28 20:07:52 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/java/dx/net/DXLinkApplication.java,v 1.4 2006/03/28 20:07:52 davidt Exp $
  */
 package dx.net;
 /*

@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/_getfield.h,v 1.5 2001/04/06 16:59:15 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/_getfield.h,v 1.5 2001/04/06 16:59:15 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -117,9 +117,6 @@ typedef struct  _array_info
     Error     (*get_item) (); /* ( int, array_info, Pointer ); */
     ArrayHandle  handle;      /* DXCreateArrayHandle */
               /* requires component 'class' information to work */
-#if 0
-    Pointer   data_local;     /* DXGetArrayDataLocal */
-#endif
 }
 *array_info;
 

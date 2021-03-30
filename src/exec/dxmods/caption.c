@@ -10,7 +10,7 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/dxmods/caption.c,v 1.5 2002/03/21 02:57:33 rhh Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/caption.c,v 1.5 2002/03/21 02:57:33 rhh Exp $
  */
 
 

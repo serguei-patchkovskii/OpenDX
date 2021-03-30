@@ -10,7 +10,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwQmeshDrawSB.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwQmeshDrawSB.c,v $
   Author: Mark Hood
 
 \*---------------------------------------------------------------------------*/

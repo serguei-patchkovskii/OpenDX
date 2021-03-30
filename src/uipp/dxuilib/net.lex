@@ -16,7 +16,7 @@
 /*****************************************************************************/
 
 /*
- * $Header: /src/master/dx/src/uipp/dxuilib/net.lex,v 1.4 2002/02/06 19:17:29 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/uipp/dxuilib/net.lex,v 1.4 2002/02/06 19:17:29 davidt Exp $
  * $Log: net.lex,v $
  * Revision 1.4  2002/02/06 19:17:29  davidt
  * Have you ever wondered why after loading a network with a missing macro,

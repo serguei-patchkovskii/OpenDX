@@ -10,7 +10,7 @@
 #include "../hwDeclarations.h"
 
 /*---------------------------------------------------------------------------*\
-$Header: /src/master/dx/src/exec/hwrender/opengl/hwLoadOGL.c,v 1.8 2003/07/11 05:50:39 davidt Exp $
+$Header: /cvsroot/opendx2/dx/src/exec/hwrender/opengl/hwLoadOGL.c,v 1.8 2003/07/11 05:50:39 davidt Exp $
 \*---------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <math.h>

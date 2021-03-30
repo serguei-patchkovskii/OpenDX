@@ -591,7 +591,7 @@ int _dxfExRemoteExec(int dconnect, char *host, char *ruser, int r_argc,
     /* add hostname, port number and trailing NULL to arguments */   
     nargc = r_argc + 2;
  
-    nargv = (char **)DXAllocateLocalZero((nargc + 1) * sizeof(char *));
+    nargv = (char **)DXAllocateZero((nargc + 1) * sizeof(char *));
     if(nargv == NULL) {
         DXUIMessage("ERROR", "Could not allocate memory for argument list");
         goto error;
@@ -600,7 +600,7 @@ int _dxfExRemoteExec(int dconnect, char *host, char *ruser, int r_argc,
         nargv[i] = r_argv[i];
 
     if(outboard) {
-        nargv[r_argc] = (char *)DXAllocateLocal(
+        nargv[r_argc] = (char *)DXAllocate(
                                      (strlen(myhost)+1)*sizeof(char));
         if(nargv[r_argc] == NULL) {
             DXUIMessage("ERROR", 
@@ -608,7 +608,7 @@ int _dxfExRemoteExec(int dconnect, char *host, char *ruser, int r_argc,
             goto error;
         }
         strcpy(nargv[r_argc], myhost);
-        nargv[r_argc+1] = (char *)DXAllocateLocal(5*sizeof(char));
+        nargv[r_argc+1] = (char *)DXAllocate(5*sizeof(char));
         if(nargv[r_argc+1] == NULL) {
             DXUIMessage("ERROR", 
                         "Could not allocate memory for argument list");
@@ -618,7 +618,7 @@ int _dxfExRemoteExec(int dconnect, char *host, char *ruser, int r_argc,
         nargv[r_argc+2] = NULL;
     }
     else {
-        nargv[r_argc] = (char *)DXAllocateLocal(
+        nargv[r_argc] = (char *)DXAllocate(
                                      (strlen("-connect")+1)*sizeof(char));
         if(nargv[r_argc] == NULL) {
             DXUIMessage("ERROR", 
@@ -626,7 +626,7 @@ int _dxfExRemoteExec(int dconnect, char *host, char *ruser, int r_argc,
             goto error;
         }
         strcpy(nargv[r_argc], "-connect");
-        nargv[r_argc+1] = (char *)DXAllocateLocal(
+        nargv[r_argc+1] = (char *)DXAllocate(
                                   (strlen(myhost) + 6)*sizeof(char));
         if(nargv[r_argc+1] == NULL) {
             DXUIMessage("ERROR", 

@@ -12,7 +12,7 @@
 #ifndef hwPolyhedrawDraw_c_h
 #define hwPolyhedrawDraw_c_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/starbase/hwPolyhedraDrawSB.c.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/starbase/hwPolyhedraDrawSB.c.h,v $
   Author: Mark Hood
 
 \*---------------------------------------------------------------------------*/

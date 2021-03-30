@@ -425,7 +425,7 @@ void _dxf_ExVCRCommand (int comm, long arg1, int arg2)
     struct node		*oldtree = NULL;
     vcr_mode		mode;
 
-    if (exJID != 1) 
+    if (DXProcessorId() != 0) 
     {
 	VCRCommandTaskArg *arg = 
 	    (VCRCommandTaskArg *)DXAllocate (sizeof (VCRCommandTaskArg));

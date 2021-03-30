@@ -268,12 +268,11 @@ ComputeProductArray_GetArrayData(ProductArray a, Pointer *p)
     int i=0, j, k, l, nterms, ndim, nl, nr, rank;
     Array *terms = NULL;
     float *result = (float*)p, *res, *right=NULL, *rt, *left, *lt;
-    int freelocal = 0;
     int shape[100];
     int totalItems;
 
     DXGetProductArrayInfo(a, &nterms, NULL);
-    terms = DXAllocateLocal(nterms * sizeof (Array));
+    terms = DXAllocate(nterms * sizeof (Array));
     if (!terms)
 	goto error;
     DXGetProductArrayInfo(a, NULL, terms);
@@ -301,14 +300,12 @@ ComputeProductArray_GetArrayData(ProductArray a, Pointer *p)
     } else for (i=1; i<nterms; i++) {
 
 	/* right operand is next term */
-	right = (float *) DXGetArrayDataLocal(terms[i]);
+	right = (float *) DXGetArrayData(terms[i]);
 	if (!right) {
-	    freelocal = 0;
 	    right = (float *) DXGetArrayData(terms[i]);
 	    if (!right)
 		goto error;
-	} else
-	    freelocal = 1;
+	} 
 	    
 	DXGetArrayInfo(terms[i], &nr, NULL, NULL, NULL, NULL);
 	/*ASSERT(terms[i]->shape[0]==ndim);*/
@@ -372,8 +369,6 @@ ComputeProductArray_GetArrayData(ProductArray a, Pointer *p)
 	    DXFree((Pointer)left);
 	left = result;
 	nl *= nr;
-	if (freelocal)
-	    DXFreeArrayDataLocal(terms[i], (Pointer)right);
     }
 
 /*     ASSERT(nl==totalItems); */
@@ -384,8 +379,6 @@ ComputeProductArray_GetArrayData(ProductArray a, Pointer *p)
     return (Pointer) result;
 
 error:
-    if (freelocal)
-	DXFreeArrayDataLocal(terms[i], (Pointer)right);    /* and fall thru */
     DXFree((Pointer)terms);
     return NULL;
 }
@@ -505,7 +498,7 @@ defaultCase:
 	    status = ERROR;
 	    goto error;
 	}
-	scratch = DXAllocateLocal(size);
+	scratch = DXAllocate(size);
 	if (!scratch) {
 	    status = ERROR;
 	    goto error;
@@ -1277,13 +1270,13 @@ AddSymbol(char *name, MetaType *type)
     
     /* We have to extend the symbol table */
     if (symbolTableSize == 0)
-	symbolTable = (SymTab*)DXAllocateLocal(5 * sizeof (SymTab));
+	symbolTable = (SymTab*)DXAllocate(5 * sizeof (SymTab));
     else
 	symbolTable = (SymTab*)DXReAllocate((Pointer)symbolTable,
 	    (symbolTableSize + 5) * sizeof (SymTab));
     symbolTableSize += 5;
 
-    symbolTable[symbolTableUsed].name = (char*)DXAllocateLocal(strlen(name)+1);
+    symbolTable[symbolTableUsed].name = (char*)DXAllocate(strlen(name)+1);
     if (symbolTable[symbolTableUsed].name == NULL)
 	return ERROR;
     strcpy(symbolTable[symbolTableUsed].name, name);
@@ -1317,7 +1310,7 @@ DefineSymbol(char *name, ObjStruct *os, Pointer value,
 	    for (j = 0; j < symbolTable[i].metaType.rank; ++j)
 		size *= symbolTable[i].metaType.shape[j];
 
-	    symbolTable[i].value = DXAllocateLocal(size);
+	    symbolTable[i].value = DXAllocate(size);
 	    if (symbolTable[i].value == NULL) {
 		DXResetError();
 		symbolTable[i].value = DXAllocate(size);
@@ -3959,7 +3952,7 @@ _dxfComputeExecuteNode(
 	    args = args->next;
 	args = pt->args;
 	subData = (Pointer *) 
-	    DXAllocateLocalZero (numArgs * sizeof (Pointer));
+	    DXAllocateZero (numArgs * sizeof (Pointer));
 	if (subData == NULL) {
 	    DXResetError();
 	    subData = (Pointer *) 
@@ -3969,7 +3962,7 @@ _dxfComputeExecuteNode(
 	}
 
 	subInvalids = (InvalidComponentHandle *) 
-	    DXAllocateLocalZero (numArgs * sizeof (InvalidComponentHandle));
+	    DXAllocateZero (numArgs * sizeof (InvalidComponentHandle));
 	if (subInvalids == NULL) {
 	    DXResetError();
 	    subInvalids = (InvalidComponentHandle *) 
@@ -3987,7 +3980,7 @@ _dxfComputeExecuteNode(
 	    subSize = DXTypeSize (args->metaType.type) *
 		   DXCategorySize (args->metaType.category) *
 		   numBasic;
-	    subData[argIndex] = DXAllocateLocal(pt->metaType.items*subSize);
+	    subData[argIndex] = DXAllocate(pt->metaType.items*subSize);
 	    if (subData[argIndex] == NULL) {
 		DXResetError();
 		subData[argIndex] = DXAllocate(pt->metaType.items*subSize);

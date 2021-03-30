@@ -1,0 +1,7 @@
+!
+CVS
+Makefile
+Makefile.in
+*.lo
+.libs
+libHW.la

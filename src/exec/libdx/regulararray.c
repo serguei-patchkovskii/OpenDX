@@ -65,7 +65,7 @@ DXGetRegularArrayInfo(RegularArray a, int *count, Pointer origin, Pointer delta)
 #define EXPAND(type) {							\
 									\
     type *data = (type *) DXAllocate(size * items);			\
-    type *origin = (type *) DXAllocateLocal(2 * size);			\
+    type *origin = (type *) DXAllocate(2 * size);			\
     type *delta = origin + n;						\
     type *d;								\
 									\

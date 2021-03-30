@@ -44,7 +44,7 @@ CascadeMenu::CascadeMenu(char*    name, Widget parent) : UIComponent(name)
             (name,
              xmCascadeButtonWidgetClass,
              parent,
-             XmNsubMenuId, subMenu, 
+             // XmNsubMenuId, subMenu, 
              NULL);
 
     this->setRootWidget(cascade);

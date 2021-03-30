@@ -13,7 +13,7 @@
 
 
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/xgl/hwPortXGL.c,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/xgl/hwPortXGL.c,v $
 
  This file contains the implementation of the basic DX porting layer for the
  Sun XGL graphics API.

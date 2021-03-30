@@ -688,9 +688,3 @@ _dxf_CopyCubesRRInterpolator(CubesRRInterpolator new,
     return new;
 }
 
-Interpolator
-_dxfCubesRRInterpolator_LocalizeInterpolator(CubesRRInterpolator ci)
-{
-    ci->fieldInterpolator.localized = 1;
-    return (Interpolator)ci;
-}

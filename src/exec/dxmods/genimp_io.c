@@ -6,7 +6,7 @@
 /*    "IBM PUBLIC LICENSE - Open Visualization Data Explorer"          */
 /***********************************************************************/
 /*
- * $Header: /src/master/dx/src/exec/dxmods/genimp_io.c,v 1.10 2006/01/04 22:00:51 davidt Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/dxmods/genimp_io.c,v 1.10 2006/01/04 22:00:51 davidt Exp $
  */
 
 #include <dxconfig.h>
@@ -1881,7 +1881,7 @@ _dxfdenormalize(void **XF)
 /*
  * Convert cnt items of type from_type in the given array to floats.
  * Return a pointer to the converted array. 
- * We do an DXAllocateLocal here, because we know that the array data 
+ * We do an DXAllocate here, because we know that the array data 
  * will eventually be copied into an Array with DXAddArrayData.
  */
 static Pointer 
@@ -1890,7 +1890,7 @@ locations2float(Pointer from, Type from_type, int cnt)
     int i;
     float *f;
 
-    f = (float*)DXAllocateLocal(cnt * sizeof(float));
+    f = (float*)DXAllocate(cnt * sizeof(float));
     if (!f) {
 	f = (float *)DXAllocate(cnt * sizeof(float));
 	if (!f)

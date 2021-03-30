@@ -10,13 +10,13 @@
 
 
 /*
- * $Header: /src/master/dx/src/exec/hwrender/gl/hwPortGL.h,v 1.3 1999/05/10 15:45:36 gda Exp $
+ * $Header: /cvsroot/opendx2/dx/src/exec/hwrender/gl/hwPortGL.h,v 1.3 1999/05/10 15:45:36 gda Exp $
  */
 
 #ifndef tdmPortGL_h
 #define tdmPortGL_h
 /*---------------------------------------------------------------------------*\
- $Source: /src/master/dx/src/exec/hwrender/gl/hwPortGL.h,v $
+ $Source: /cvsroot/opendx2/dx/src/exec/hwrender/gl/hwPortGL.h,v $
   Author: Mark Hood
 
   Data structures used by IBM GL implementation of the TDM renderer.
