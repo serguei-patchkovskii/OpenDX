@@ -143,6 +143,7 @@ _dxf_ExCheckPacket(char *packet, int length)
 	{
 	    if (sts > 0 && (!tmpbufferused || *tmpbufferused == 0))
 	    {
+                sts = 0 ; // http://www.opendx.org/bugs/view.php?id=251, copied from macports
 		if(SFILEIoctl(_dxd_exSockFD, FIONBIO, &one) >= 0)
 	        sts = writeToSFILE(_dxd_exSockFD, packet, length);
 		SFILEIoctl(_dxd_exSockFD, FIONBIO, &zero);
