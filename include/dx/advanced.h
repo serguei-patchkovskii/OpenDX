@@ -41,6 +41,8 @@ typedef volatile mutex_t lock_type;
 #elif defined(alphax)
 #include <sys/mman.h>
 typedef msemaphore lock_type;
+#elif defined(linux)
+typedef volatile void * lock_type;
 #else
 typedef volatile int lock_type;
 #endif

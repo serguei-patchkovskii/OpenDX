@@ -39,7 +39,11 @@
  * dx headers cause conflicts - such as array, String.
  */
 
+#ifdef linux
+typedef volatile void * lock_type;
+#else
 typedef volatile int lock_type;
+#endif
 typedef int Error;
 typedef void *Pointer;
 

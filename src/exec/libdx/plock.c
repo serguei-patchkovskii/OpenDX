@@ -141,8 +141,10 @@ bump(int l, int v)
 
     while ((semop(locks->_sbufs[sid]._semid, &sops, 1) != 0) && (errno == EINTR));
 
-    if (errno)
+    if (errno) {
+        fprintf(stderr,"l = %d, v = %d, sid = %d, soff = %d\n", l, v, sid, soff) ;
         perror("error bumping lock");
+        }
 }
 
 static void
